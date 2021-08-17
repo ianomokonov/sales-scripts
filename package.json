@@ -9,14 +9,13 @@
     "test": "ng test",
     "lint": "ng lint"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged --relative"
-    }
-  },
   "lint-staged": {
-    "*.{js,ts}": [
+    "*.{ts,js}": [
+      "prettier --write --config .prettierrc.js ./src/**/*.{ts,js}",
       "eslint --fix"
+    ],
+    "*.{html,less,css}": [
+      "prettier --write --config .prettierrc.js ./src/**/*.{html,less,css}"
     ]
   },
   "private": true,
