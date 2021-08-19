@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.17.5] #версия node.js на которой разарабатывался проект
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      # Setup keyy
+      - run: set -eu
+      - run: mkdir "$HOME/.ssh"
+      - run: echo "${{ secrets.stand1 }}" > "$HOME/.ssh/stand1" # stand1 - название секрета
+      - run: chmod 600 "$HOME/.ssh/stand1"
+      # Build
+      - run: npm ci
+      - run: npm run build
+      # Deploy sales-script - название проекта
+      - run: cd dist/sales-script && rsync -e "ssh -i $HOME/.ssh/stand1 -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
