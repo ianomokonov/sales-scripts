@@ -25,4 +25,4 @@ jobs:
       - run: npm ci
       - run: npm run build
       # Deploy sales-script - название проекта
-      - run: cd dist/sales-script && rsync -e "ssh -i $HOME/.ssh/stand1 -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
+      - run: cd dist/sales-script && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
