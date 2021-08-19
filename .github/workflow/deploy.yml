@@ -19,7 +19,7 @@ jobs:
       # Setup keyy
       - run: set -eu
       - run: mkdir "$HOME/.ssh"
-      - run: echo "${{ secrets.stand1 }}" > "$HOME/.ssh/stand1" # stand1 - название секрета
+      - run: echo "${{ secrets.stand1 }}" > "$HOME/.ssh/secret_volik_25" # secret_volik_25 - название секрета
       - run: chmod 600 "$HOME/.ssh/stand1"
       # Build
       - run: npm ci
