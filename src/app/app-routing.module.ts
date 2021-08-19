@@ -8,7 +8,7 @@ const routes: Routes = [
       import('./dialog-panel/dialog-panel.module').then((m) => m.DialogPanelModule),
   },
   {
-    path: 'lk',
+    path: 'profile',
     loadChildren: () =>
       import('./personal-cabinet/personal-cabinet.module').then((m) => m.PersonalCabinetModule),
   },

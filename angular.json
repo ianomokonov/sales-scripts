@@ -125,7 +125,6 @@
   },
   "defaultProject": "sales-scripts",
   "cli": {
-    "analytics": "b9ce025f-b36b-4ffd-a6c3-0e79c1a30a7d",
     "defaultCollection": "@angular-eslint/schematics"
   }
 }
