@@ -14,6 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
+      - uses: php-actions/composer@v6
         with:
           node-version: ${{ matrix.node-version }}
       # Setup keyy
@@ -27,4 +28,4 @@ jobs:
       # Deploy sales-scripts - название проекта
       - run: cd dist/sales-scripts && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
         # Deploy back
-      - run: cd back && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html/api # полный путь до папки, куда нужно скопировать файлы
+      - run: cd back && composer install && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html/api # полный путь до папки, куда нужно скопировать файлы
