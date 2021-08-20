@@ -27,4 +27,4 @@ jobs:
       # Deploy sales-scripts - название проекта
       - run: cd dist/sales-scripts && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
         # Deploy back
-      - run: cd ../../back && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html/api # полный путь до папки, куда нужно скопировать файлы
+      - run: cd ../back && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html/api # полный путь до папки, куда нужно скопировать файлы
