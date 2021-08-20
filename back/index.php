@@ -21,7 +21,7 @@ $token = new Token();
 $app = AppFactory::create();
 $app->setBasePath(rtrim($_SERVER['PHP_SELF'], '/index.php'));
 
-// Add error middlewar
+// Add error middleware
 $app->addErrorMiddleware(true, true, true);
 // Add routes
 $app->post('/login', function (Request $request, Response $response) use ($dataBase) {
