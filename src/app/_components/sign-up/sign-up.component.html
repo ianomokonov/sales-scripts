@@ -1,0 +1,41 @@
+<div class='grid mt-8'>
+  <p-card class='col-8 m-auto'>
+    <div class='grid'>
+      <h3 class='col-6 m-auto text-center'>Регистрация</h3>
+    </div>
+    <div class='col-6 m-auto'>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left">
+          <i class="pi pi-envelope"></i>
+          <input type="text" id="email_field" pInputText>
+          <label for="email_field">Почта</label>
+      </span>
+      </div>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left">
+          <i class="pi pi-user"></i>
+          <input type="text" id="login_field" pInputText>
+          <label for="login_field">Логин</label>
+      </span>
+      </div>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left">
+          <i class="pi pi-lock"></i>
+          <input type="text" id="password_field" pInputText>
+          <label for="password_field">Пароль</label>
+      </span>
+      </div>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left">
+          <i class="pi pi-clone"></i>
+          <input type="text" id="password_field_repeat" pInputText>
+          <label for="password_field_repeat">Повторите пароль</label>
+      </span>
+      </div>
+    </div>
+    <div class='flex justify-content-center'>
+      <p-button label="Авторизация" styleClass="p-button-info" [routerLink]='["/sign-in"]'></p-button>
+      <p-button label="Подтвердить" styleClass="p-button-success ml-2"></p-button>
+    </div>
+  </p-card>
+</div>
