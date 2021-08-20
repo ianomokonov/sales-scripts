@@ -14,7 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      - uses: php-actions/composer@v6
         with:
           node-version: ${{ matrix.node-version }}
       # Setup keyy
