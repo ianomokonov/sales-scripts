@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "http://stand1.progoff.ru/api",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
