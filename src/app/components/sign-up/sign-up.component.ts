@@ -32,7 +32,7 @@ export class SignUpComponent {
       return;
     }
     const signUpData = this.signUpForm?.getRawValue();
-    this.userService.addUser(signUpData).subscribe((user) => {
+    this.userService.signUp(signUpData).subscribe((user) => {
       if (user) {
         this.router.navigate(['/profile']);
       }

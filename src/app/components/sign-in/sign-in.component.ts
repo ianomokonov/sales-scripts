@@ -17,7 +17,7 @@ export class SignInComponent {
 
   public signIn() {
     const logData = this.logInForm?.getRawValue();
-    this.userService.logIn(logData).subscribe((user) => {
+    this.userService.signIn(logData).subscribe((user) => {
       if (user) {
         this.router.navigate(['/profile']);
       }

@@ -16,7 +16,7 @@ export class UserService {
 
   constructor(private http: HttpClient, private authService: AuthService, private router: Router) {}
 
-  public logIn(data: any): Observable<User> {
+  public signIn(data: any): Observable<User> {
     return this.http.post<string[]>(`${this.baseUrl}/login`, data).pipe(
       tap((tokens: string[]) => {
         this.authService.storeTokens(tokens);
@@ -27,7 +27,7 @@ export class UserService {
     );
   }
 
-  public logOut() {
+  public signOut() {
     const token = this.authService.getRefreshToken();
     return (
       token
@@ -45,7 +45,7 @@ export class UserService {
     );
   }
 
-  public addUser(data: any): Observable<User> {
+  public signUp(data: any): Observable<User> {
     return this.http.post<string[]>(`${this.baseUrl}/sign-up`, data).pipe(
       tap((tokens: string[]) => {
         this.authService.storeTokens(tokens);
