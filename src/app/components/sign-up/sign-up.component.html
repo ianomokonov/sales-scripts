@@ -1,0 +1,84 @@
+<div class='grid mt-6'>
+  <p-card class='col-8 m-auto'>
+    <div class='grid'>
+      <h3 class='col-6 m-auto text-center'>Регистрация</h3>
+    </div>
+    <div class='col-6 m-auto' [formGroup]='signUpForm'>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left w-12">
+          <i class="pi pi-envelope"></i>
+          <input pInputText
+                 type="email"
+                 id="email_field"
+                 formControlName='email'>
+          <label for="email_field">Почта</label>
+      </span>
+      </div>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left w-12">
+          <i class="pi pi-phone"></i>
+          <p-inputMask inputId="phone_field"
+                       styleClass='padding-left'
+                       type='tel'
+                       mask="+7 (999) 999-99-99"
+                       formControlName='phone'></p-inputMask>
+          <label for="phone_field">Телефон</label>
+      </span>
+      </div>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left w-12">
+          <i class="pi pi-user"></i>
+          <input pInputText
+                 type="text"
+                 id="login_field"
+                 formControlName='login'>
+          <label for="login_field">Логин</label>
+      </span>
+      </div>
+      <div class="field col-12 flex justify-content-center">
+        <div class="p-inputgroup">
+          <span class="p-float-label p-input-icon-left w-12">
+            <i class="pi pi-lock"></i>
+            <input pInputText
+                   [type]="showPassword ? 'text' : 'password'"
+                   id="password_field"
+                   formControlName='password'
+                   (keydown)='passwordError ? passwordError = false : null'>
+            <label for="password_field">Пароль</label>
+          </span>
+          <span class="p-inputgroup-addon pointer">
+                <i class="pi"
+                   [ngClass]='showPassword ? "pi-eye" : "pi-eye-slash"'
+                   (mousedown)='showPassword = true'
+                   (mouseup)='showPassword = false'></i>
+            </span>
+        </div>
+      </div>
+      <div class="field col-12 flex flex-column justify-content-center">
+        <div class="p-inputgroup">
+          <span class="p-float-label p-input-icon-left">
+              <i class="pi pi-clone"></i>
+              <input pInputText
+                     [type]="showPasswordConfirm ? 'text' : 'password'"
+                     id="password_confirm"
+                     [ngClass]='passwordError ? "ng-dirty ng-invalid" : ""'
+                     formControlName='passwordConfirm'
+                     (keydown)='passwordError ? passwordError = false : null'>
+              <label for="password_confirm">Повторите пароль</label>
+          </span>
+          <span class="p-inputgroup-addon pointer">
+                <i class="pi"
+                   [ngClass]='showPasswordConfirm ? "pi-eye" : "pi-eye-slash"'
+                   (mousedown)='showPasswordConfirm = true'
+                   (mouseup)='showPasswordConfirm = false'></i>
+            </span>
+        </div>
+        <span *ngIf='passwordError' class='p-error mt-2'>Пароли не совпадают</span>
+      </div>
+    </div>
+    <div class='flex justify-content-center'>
+      <p-button label="Авторизация" styleClass="p-button-info" [routerLink]='["/sign-in"]'></p-button>
+      <p-button type='submit' label="Подтвердить" styleClass="p-button-success ml-2" (onClick)='signUp()'></p-button>
+    </div>
+  </p-card>
+</div>
