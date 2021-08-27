@@ -2,9 +2,9 @@
 //класс базы данных
 class DataBase
 {
-    private $dbname = "jung563255_jungliki";
-    private $login = "jung563255_admin";
-    private $password = "StasStasStas3714222";
+    private $dbname = "nomokoiw_scripts";
+    private $login = "nomokoiw_scripts";
+    private $password = "a33kvI&e";
     public $db;
     public function __construct()
     {
