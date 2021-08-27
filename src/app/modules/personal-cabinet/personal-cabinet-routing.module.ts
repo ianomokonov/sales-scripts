@@ -10,9 +10,9 @@ const routes: Routes = [
     children: [
       {
         path: 'script/:id',
-        component: SaleScriptComponent
-      }
-    ]
+        component: SaleScriptComponent,
+      },
+    ],
   },
 ];
 
