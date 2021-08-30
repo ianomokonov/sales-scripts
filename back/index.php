@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: https://stand1.progoff.ru/api");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization");
 
