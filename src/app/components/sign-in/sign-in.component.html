@@ -1,0 +1,33 @@
+<div class='grid mt-6'>
+  <p-card class='col-8 m-auto'>
+    <div class='grid'>
+      <h3 class='col-6 m-auto text-center'>Авторизация</h3>
+    </div>
+    <div class='col-6 m-auto' [formGroup]='logInForm'>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left">
+          <i class="pi pi-user"></i>
+          <input pInputText
+                 type="text"
+                 id="login_field"
+                 formControlName='login'>
+          <label for="login_field">Логин</label>
+      </span>
+      </div>
+      <div class="field col-12 flex justify-content-center">
+      <span class="p-float-label p-input-icon-left">
+          <i class="pi pi-lock"></i>
+          <input pInputText
+                 type="password"
+                 id="password_field"
+                 formControlName='password'>
+          <label for="password_field">Пароль</label>
+      </span>
+      </div>
+    </div>
+    <div class='flex justify-content-center'>
+      <p-button label="Регистрация" styleClass="p-button-primary" [routerLink]='["/sign-up"]'></p-button>
+      <p-button label="Вход" styleClass="p-button-success ml-2" (onClick)='signIn()'></p-button>
+    </div>
+  </p-card>
+</div>
