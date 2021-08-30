@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { UserService } from '../../_services/back/user.service';
 import { isFormInvalid } from '../../_utils/formValidCheck';
 
@@ -21,7 +22,12 @@ export class SignUpComponent {
   public showPassword = false;
   public showPasswordConfirm = false;
 
-  constructor(private userService: UserService, private router: Router, private fb: FormBuilder) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private fb: FormBuilder,
+    private messageService: MessageService,
+  ) {
     this.signUpForm = this.fb.group(
       {
         email: ['', [Validators.email, Validators.required]],
@@ -37,11 +43,20 @@ export class SignUpComponent {
   public signUp() {
     if (isFormInvalid(this.signUpForm)) return;
     const signUpData = this.signUpForm?.getRawValue();
-    this.userService.signUp(signUpData).subscribe((user) => {
-      if (user) {
-        this.router.navigate(['/profile']);
-      }
-    });
+    this.userService.signUp(signUpData).subscribe(
+      (user) => {
+        if (user) {
+          this.router.navigate(['/profile']);
+        }
+      },
+      ({ error }) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Что-то пошло не так...',
+          detail: error.message,
+        });
+      },
+    );
   }
 
   private checkPasswords: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
