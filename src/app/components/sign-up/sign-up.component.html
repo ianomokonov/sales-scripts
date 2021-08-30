@@ -45,11 +45,11 @@
                    formControlName='password'>
             <label for="password_field">Пароль</label>
           </span>
-          <span class="p-inputgroup-addon pointer">
+          <span class="p-inputgroup-addon pointer"
+                (mousedown)='showPassword = true'
+                (mouseup)='showPassword = false'>
                 <i class="pi"
-                   [ngClass]='showPassword ? "pi-eye" : "pi-eye-slash"'
-                   (mousedown)='showPassword = true'
-                   (mouseup)='showPassword = false'></i>
+                   [ngClass]='showPassword ? "pi-eye" : "pi-eye-slash"'></i>
             </span>
         </div>
       </div>
@@ -64,11 +64,11 @@
                      formControlName='passwordConfirm'>
               <label for="password_confirm">Повторите пароль</label>
           </span>
-          <span class="p-inputgroup-addon pointer">
+          <span class="p-inputgroup-addon pointer"
+                (mousedown)='showPasswordConfirm = true'
+                (mouseup)='showPasswordConfirm = false'>
                 <i class="pi"
-                   [ngClass]='showPasswordConfirm ? "pi-eye" : "pi-eye-slash"'
-                   (mousedown)='showPasswordConfirm = true'
-                   (mouseup)='showPasswordConfirm = false'></i>
+                   [ngClass]='showPasswordConfirm ? "pi-eye" : "pi-eye-slash"'></i>
             </span>
         </div>
         <span *ngIf='signUpForm.hasError("notSame")' class='p-error mt-2'>Пароли не совпадают</span>
