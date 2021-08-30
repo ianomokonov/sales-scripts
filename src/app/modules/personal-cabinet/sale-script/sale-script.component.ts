@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { ScriptBlock } from './models/script-block';
 
 @Component({
@@ -55,18 +56,22 @@ export class SaleScriptComponent {
     { id: 19, name: 'Name 3', isFavorite: false, index: 2 },
     { id: 20, name: 'Name 4', isFavorite: true, index: 3 },
   ];
-  private targetTabId: number | null = null;
 
   /** Список отмеченных блоков */
   public get favoriteBlocks(): ScriptBlock[] {
     return this.scriptBlocks?.filter((b) => b.isFavorite);
   }
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(private confirmService: ConfirmationService) {}
 
   public onRemoveBlock(id: number, event: MouseEvent) {
     event.stopPropagation();
-    this.scriptBlocks = this.scriptBlocks.filter((b) => b.id !== id);
+    this.confirmService.confirm({
+      message: 'Удалить блок из скрипта?',
+      accept: () => {
+        this.scriptBlocks = this.scriptBlocks.filter((b) => b.id !== id);
+      },
+    });
   }
 
   public onMarkBlock(id: number, event: MouseEvent) {
