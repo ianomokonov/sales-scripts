@@ -35,11 +35,11 @@ export class SignUpComponent {
 
   public signUp() {
     if (this.signUpForm.invalid) {
-      for (const control in this.signUpForm.controls) {
+      Object.keys(this.signUpForm.controls).forEach((control) => {
         if (this.signUpForm.get(control)?.invalid) {
           this.signUpForm.get(control)?.markAsDirty();
         }
-      }
+      });
       return;
     }
     const signUpData = this.signUpForm?.getRawValue();
