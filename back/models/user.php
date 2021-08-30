@@ -9,9 +9,9 @@ class User
     private $token;
     private $fileUploader;
     // private $baseUrl = 'http://localhost:4200/back';
-    private $baseUrl = 'http://stand1.progoff.ru/api';
+    private $baseUrl = 'http://stand1.progoff.ru/back';
 
-    // конструктор класса User 
+    // конструктор класса User
     public function __construct(DataBase $dataBase)
     {
         $this->dataBase = $dataBase;
@@ -36,7 +36,7 @@ class User
             $this->table
         );
 
-        // подготовка запроса 
+        // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query[0]);
         if ($query[1][0] != null) {
             $stmt->execute($query[1]);
@@ -123,15 +123,15 @@ class User
     {
         $query = "SELECT id FROM refreshTokens WHERE token = ? AND userId = ?";
 
-        // подготовка запроса 
+        // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query);
-        // инъекция 
+        // инъекция
         $token = htmlspecialchars(strip_tags($token));
         $userId = htmlspecialchars(strip_tags($userId));
-        // выполняем запрос 
+        // выполняем запрос
         $stmt->execute(array($token, $userId));
 
-        // получаем количество строк 
+        // получаем количество строк
         $num = $stmt->rowCount();
 
         if ($num > 0) {
@@ -222,14 +222,14 @@ class User
     {
         $query = "SELECT id FROM " . $this->table . " WHERE login = ?";
 
-        // подготовка запроса 
+        // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query);
-        // инъекция 
+        // инъекция
         $email = json_encode(htmlspecialchars(strip_tags($login)));
-        // выполняем запрос 
+        // выполняем запрос
         $stmt->execute(array($email));
 
-        // получаем количество строк 
+        // получаем количество строк
         $num = $stmt->rowCount();
 
         if ($num > 0) {
