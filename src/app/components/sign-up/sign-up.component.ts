@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../_services/back/user.service';
+import { isFormInvalid } from '../../_utils/formValidCheck';
 
 @Component({
   selector: 'app-sign-up',
@@ -34,14 +35,7 @@ export class SignUpComponent {
   }
 
   public signUp() {
-    if (this.signUpForm.invalid) {
-      Object.keys(this.signUpForm.controls).forEach((control) => {
-        if (this.signUpForm.get(control)?.invalid) {
-          this.signUpForm.get(control)?.markAsDirty();
-        }
-      });
-      return;
-    }
+    if (isFormInvalid(this.signUpForm)) return;
     const signUpData = this.signUpForm?.getRawValue();
     this.userService.signUp(signUpData).subscribe((user) => {
       if (user) {

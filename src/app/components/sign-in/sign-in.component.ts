@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../_services/back/user.service';
+import { isFormInvalid } from '../../_utils/formValidCheck';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,6 +20,7 @@ export class SignInComponent {
   }
 
   public signIn() {
+    if (isFormInvalid(this.logInForm)) return;
     const logData = this.logInForm?.getRawValue();
     this.userService.signIn(logData).subscribe((user) => {
       if (user) {
