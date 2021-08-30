@@ -23,7 +23,7 @@ $app->setBasePath(rtrim($_SERVER['PHP_SELF'], '/index.php'));
 
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
-// Add routes
+// Add routess
 $app->post('/login', function (Request $request, Response $response) use ($dataBase) {
 
     $user = new User($dataBase);
