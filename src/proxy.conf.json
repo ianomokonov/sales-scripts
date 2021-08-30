@@ -1,6 +1,6 @@
 {
-  "/api": {
-    "target": "http://stand1.progoff.ru/api",
+  "/back": {
+    "target": "http://stand1.progoff.ru/back",
     "secure": false,
     "changeOrigin": true
   }
