@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: https://stand1.progoff.ru/api");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization");
 
@@ -23,7 +23,7 @@ $app->setBasePath(rtrim($_SERVER['PHP_SELF'], '/index.php'));
 
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
-// Add routes
+// Add routess
 $app->post('/login', function (Request $request, Response $response) use ($dataBase) {
 
     $user = new User($dataBase);
