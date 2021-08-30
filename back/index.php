@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: https://info-ecology.com/back/controller.php");
+header("Access-Control-Allow-Origin: https://stand1.progoff.ru/api");
 header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization");
 
@@ -29,7 +29,7 @@ $app->post('/login', function (Request $request, Response $response) use ($dataB
     $user = new User($dataBase);
     $requestData = $request->getParsedBody();
     try {
-        $response->getBody()->write(json_encode($user->login($requestData['email'], $requestData['password'])));
+        $response->getBody()->write(json_encode($user->login($requestData['login'], $requestData['password'])));
         return $response;
     } catch (Exception $e) {
         $response->getBody()->write(json_encode(array("message" => "Пользователь не найден")));

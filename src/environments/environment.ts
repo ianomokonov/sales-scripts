@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   baseUrl: 'http://stand1.progoff.ru/api',
+  // baseUrl: 'http://localhost/back',
 };
 
 /*
