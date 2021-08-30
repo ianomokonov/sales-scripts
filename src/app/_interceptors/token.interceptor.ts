@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take, switchMap, filter } from 'rxjs/operators';
-import { AuthService } from '../_services/front/auth.service';
+import { TokenService } from '../_services/front/token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class TokenInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: TokenService) {}
 
   public intercept(req: HttpRequest<{}>, next: HttpHandler): Observable<HttpEvent<{}>> {
     let params = req;

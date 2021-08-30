@@ -42,8 +42,7 @@
             <input pInputText
                    [type]="showPassword ? 'text' : 'password'"
                    id="password_field"
-                   formControlName='password'
-                   (keydown)='passwordError ? passwordError = false : null'>
+                   formControlName='password'>
             <label for="password_field">Пароль</label>
           </span>
           <span class="p-inputgroup-addon pointer">
@@ -61,9 +60,8 @@
               <input pInputText
                      [type]="showPasswordConfirm ? 'text' : 'password'"
                      id="password_confirm"
-                     [ngClass]='passwordError ? "ng-dirty ng-invalid" : ""'
-                     formControlName='passwordConfirm'
-                     (keydown)='passwordError ? passwordError = false : null'>
+                     [ngClass]='signUpForm.hasError("notSame") ? "ng-dirty ng-invalid" : ""'
+                     formControlName='passwordConfirm'>
               <label for="password_confirm">Повторите пароль</label>
           </span>
           <span class="p-inputgroup-addon pointer">
@@ -73,11 +71,11 @@
                    (mouseup)='showPasswordConfirm = false'></i>
             </span>
         </div>
-        <span *ngIf='passwordError' class='p-error mt-2'>Пароли не совпадают</span>
+        <span *ngIf='signUpForm.hasError("notSame")' class='p-error mt-2'>Пароли не совпадают</span>
       </div>
     </div>
     <div class='flex justify-content-center'>
-      <p-button label="Авторизация" styleClass="p-button-info" [routerLink]='["/sign-in"]'></p-button>
+      <p-button label="Авторизация" styleClass="p-button-primary" [routerLink]='["/sign-in"]'></p-button>
       <p-button type='submit' label="Подтвердить" styleClass="p-button-success ml-2" (onClick)='signUp()'></p-button>
     </div>
   </p-card>
