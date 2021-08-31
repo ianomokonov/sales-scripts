@@ -22,14 +22,14 @@ jobs:
       - run: echo "${{ secrets.secret_volik_25 }}" > "$HOME/.ssh/secret_volik_25" # secret_volik_25 - название секрета
       - run: chmod 600 "$HOME/.ssh/secret_volik_25"
       # Build
-      - run: npm ci
-      - run: npm run build
-      # Deploy sales-scripts - название проекта
-      - run: cd dist/sales-scripts && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
-      - run: cd htaccess && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
-        # Deploy back
-      - run: cd back && composer install && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html/back # полный путь до папки, куда нужно скопировать файлы
+      # - run: npm ci
+      # - run: npm run build
+      # # Deploy sales-scripts - название проекта
+      # - run: cd dist/sales-scripts && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress --delete . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
+      # - run: cd htaccess && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
+      #   # Deploy back
+      # - run: cd back && composer install && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html/back # полный путь до папки, куда нужно скопировать файлы
 
        # Deploy db
       - run: sudo /etc/init.d/mysql start 
-              mysql -u nomokoiw_scripts -p ${{ secrets.nomokoiw_scripts_password }} nomokoiw_scripts < db/init.sql # полный путь до папки, куда нужно скопировать файлы
+              mysql -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" -u nomokoiw_scripts -p ${{ secrets.nomokoiw_scripts_password }} nomokoiw_scripts < db/init.sql # полный путь до папки, куда нужно скопировать файлы
