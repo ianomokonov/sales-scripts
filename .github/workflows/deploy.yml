@@ -34,4 +34,4 @@ jobs:
       - name: Deploy database
         run: |
               sudo /etc/init.d/mysql start 
-              mysql -h nomokoiw.beget.tech -u nomokoiw_scripts -p a33kv_e nomokoiw_scripts < db/init.sql
+              mysql -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" -h nomokoiw.beget.tech -u nomokoiw_scripts -p a33kv_e nomokoiw_scripts < db/init.sql
