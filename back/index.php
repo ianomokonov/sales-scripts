@@ -7,6 +7,7 @@ require_once 'vendor/autoload.php';
 require_once './utils/database.php';
 require_once './utils/token.php';
 require_once './models/user.php';
+require_once './models/script.php';
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Response as ResponseClass;
@@ -84,57 +85,21 @@ $app->post('/update-password', function (Request $request, Response $response) u
 });
 
 $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
-    $group->group('user',  function (RouteCollectorProxy $userGroup) use ($dataBase) {
+    $group->group('script',  function (RouteCollectorProxy $scriptGroup) use ($dataBase) {
 
-        $userGroup->get('/user-info', function (Request $request, Response $response) use ($dataBase) {
-            $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
-            $response->getBody()->write(json_encode($user->read($userId)));
+        $scriptGroup->get('/{scriptId}', function (Request $request, Response $response) use ($dataBase) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $scriptId = $route->getArgument('scriptId');
+            $script = new Script($dataBase);
+            $response->getBody()->write(json_encode($script->read($scriptId)));
             return $response;
         });
-
-        $userGroup->get('/check-admin', function (Request $request, Response $response) use ($dataBase) {
-            $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
-            $response->getBody()->write(json_encode($user->checkAdmin($userId)));
-            return $response;
-        });
-
-        $userGroup->post('/update-user-info', function (Request $request, Response $response) use ($dataBase) {
-            $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
-            if (isset($_FILES['image'])) {
-                $response->getBody()->write(json_encode($user->update($userId, $request->getParsedBody(), $_FILES['image'])));
-            } else {
-                $response->getBody()->write(json_encode($user->update($userId, $request->getParsedBody())));
-            }
-
-            return $response;
-        });
-
-        $userGroup->post('/send-message', function (Request $request, Response $response) use ($dataBase) {
-            $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
-            $response->getBody()->write(json_encode($user->sendMessage($userId, $request->getParsedBody())));
-            return $response;
-        });
-
-        $userGroup->post('/update-password', function (Request $request, Response $response) use ($dataBase) {
-            $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
-            $response->getBody()->write(json_encode($user->updatePassword($userId, $request->getParsedBody()['password'])));
-            return $response;
-        });
-
-        $userGroup->post('/delete-token', function (Request $request, Response $response) use ($dataBase) {
-            $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
-            $response->getBody()->write(json_encode($user->removeRefreshToken($userId)));
-            return $response;
-        });
+        
     });
 
     $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($dataBase) {
+
     })->add(function (Request $request, RequestHandler $handler) use ($dataBase) {
         $userId = $request->getAttribute('userId');
 
@@ -150,9 +115,9 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
     });
 })->add(function (Request $request, RequestHandler $handler) use ($token) {
     try {
-        $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
-        $userId = $token->decode($jwt)->data->id;
-        $request = $request->withAttribute('userId', $userId);
+        // $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
+        // $userId = $token->decode($jwt)->data->id;
+        // $request = $request->withAttribute('userId', $userId);
         $response = $handler->handle($request);
 
         return $response;

@@ -64,16 +64,19 @@
   </div>
   <ng-container *ngIf="favoriteBlocks?.length">
     <p-divider layout="vertical" styleClass="m-3 my-0 p-0"></p-divider>
-    <div class="col-fixed marked-blocks px-0">
-      <button
-        pButton
-        pRipple
-        type="button"
-        [label]="block.name"
-        class="p-button-outlined mr-2 mb-2"
-        *ngFor="let block of favoriteBlocks"
-        (click)="onMarkedBlockClick(block.id)"
-      ></button>
+    <div class="col-fixed px-0">
+      <h2 class="mt-0">Быстрые переходы</h2>
+      <div class="marked-blocks">
+        <button
+          pButton
+          pRipple
+          type="button"
+          [label]="block.name"
+          class="p-button-outlined mr-2 mb-2"
+          *ngFor="let block of favoriteBlocks"
+          (click)="onMarkedBlockClick(block.id)"
+        ></button>
+      </div>
     </div>
   </ng-container>
 </div>
