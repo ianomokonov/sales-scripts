@@ -7,6 +7,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { OrderListModule } from 'primeng/orderlist';
 import { ScriptService } from 'src/app/_services/back/script.service';
+import { BlockService } from 'src/app/_services/back/block.service';
 import { PersonalCabinetRoutingModule } from './personal-cabinet-routing.module';
 import { PersonalCabinetComponent } from './personal-cabinet.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -22,6 +23,6 @@ import { SaleScriptComponent } from './sale-script/sale-script.component';
     ConfirmDialogModule,
     OrderListModule,
   ],
-  providers: [ConfirmationService, ScriptService],
+  providers: [ConfirmationService, ScriptService, BlockService],
 })
 export class PersonalCabinetModule {}
