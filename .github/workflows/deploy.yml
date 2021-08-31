@@ -34,4 +34,4 @@ jobs:
       - name: Deploy database
         run: |
               ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no
-              mysql -h localhost -u nomokoiw_scripts -p a33kvI&e
+              mysql -h localhost -u nomokoiw_scripts -p a33kv_e
