@@ -8,7 +8,7 @@ import { refreshTokenKey, tokenKey } from '../../_utils/constants';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class TokenService {
   private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}

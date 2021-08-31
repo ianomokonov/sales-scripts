@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DialogPanelRoutingModule } from './dialog-panel-routing.module';
-import { DialogPanelComponent } from './dialog-panel/dialog-panel.component';
+import { DialogPanelComponent } from './dialog-panel.component';
 
 @NgModule({
   declarations: [DialogPanelComponent],

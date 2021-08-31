@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://stand1.progoff.ru/api',
+  baseUrl: 'http://stand1.progoff.ru/back',
+  // baseUrl: 'http://localhost/back',
 };
 
 /*

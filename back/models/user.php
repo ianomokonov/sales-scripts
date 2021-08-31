@@ -5,13 +5,13 @@ require_once __DIR__ . '/../utils/filesUpload.php';
 class User
 {
     private $dataBase;
-    private $table = 'jungleUser';
+    private $table = 'user';
     private $token;
     private $fileUploader;
-    // private $baseUrl = 'http://localhost:4200';
-    private $baseUrl = 'http://jungliki.com';
+    // private $baseUrl = 'http://localhost:4200/back';
+    private $baseUrl = 'http://stand1.progoff.ru/back';
 
-    // конструктор класса User 
+    // конструктор класса User
     public function __construct(DataBase $dataBase)
     {
         $this->dataBase = $dataBase;
@@ -23,9 +23,10 @@ class User
     {
         $password = htmlspecialchars(strip_tags($userData->password));
         unset($userData->password);
+        unset($userData->passwordConfirm);
         $userData = $this->dataBase->stripAll((array)$userData);
         $password = password_hash($password, PASSWORD_BCRYPT);
-        if ($this->EmailExists($userData['email'])) {
+        if ($this->LoginExists($userData['login'])) {
             throw new Exception('Пользователь уже существует');
         }
         // Вставляем запрос
@@ -35,7 +36,7 @@ class User
             $this->table
         );
 
-        // подготовка запроса 
+        // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query[0]);
         if ($query[1][0] != null) {
             $stmt->execute($query[1]);
@@ -52,7 +53,13 @@ class User
     // Получение пользовательской информации
     public function read($userId)
     {
-        return null;
+        $query = "SELECT login, email, phone FROM $this->table WHERE id='$userId'";
+        $user = $this->dataBase->decode($this->dataBase->db->query($query)->fetch());
+        // if($user == true){
+        //     throw new Exception("User not found", 404);
+        // }
+        // file_put_contents('logs.txt', PHP_EOL.json_encode($user), FILE_APPEND);
+        return $user;
     }
 
     // Получение пользовательской информации
@@ -63,7 +70,7 @@ class User
 
     public function getUsers()
     {
-        $query = "SELECT id, name, surname, hasDiscount FROM " . $this->table;
+        $query = "SELECT id, name, surname FROM " . $this->table;
         $stmt = $this->dataBase->db->query($query);
         $users = [];
         while ($user = $stmt->fetch()) {
@@ -91,11 +98,11 @@ class User
         return $stmt->fetch()['image'];
     }
 
-    public function login($email, $password)
+    public function login($login, $password)
     {
-        if ($email != null) {
-            $sth = $this->dataBase->db->prepare("SELECT id, password FROM " . $this->table . " WHERE email = ? LIMIT 1");
-            $sth->execute(array(json_encode($email)));
+        if ($login != null) {
+            $sth = $this->dataBase->db->prepare("SELECT id, password FROM " . $this->table . " WHERE login = ? LIMIT 1");
+            $sth->execute(array(json_encode($login)));
             $fullUser = $this->dataBase->decode($sth->fetch());
             if ($fullUser) {
                 if (!password_verify($password, $fullUser['password'])) {
@@ -116,15 +123,15 @@ class User
     {
         $query = "SELECT id FROM refreshTokens WHERE token = ? AND userId = ?";
 
-        // подготовка запроса 
+        // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query);
-        // инъекция 
+        // инъекция
         $token = htmlspecialchars(strip_tags($token));
         $userId = htmlspecialchars(strip_tags($userId));
-        // выполняем запрос 
+        // выполняем запрос
         $stmt->execute(array($token, $userId));
 
-        // получаем количество строк 
+        // получаем количество строк
         $num = $stmt->rowCount();
 
         if ($num > 0) {
@@ -191,7 +198,7 @@ class User
 
     public function getUpdateLink($email)
     {
-        $userId = $this->EmailExists($email);
+        $userId = $this->LoginExists($email);
         $path = 'logs.txt';
 
         if (!$userId) {
@@ -211,18 +218,18 @@ class User
         return true;
     }
 
-    private function EmailExists(string $email)
+    private function LoginExists(string $login)
     {
-        $query = "SELECT id FROM " . $this->table . " WHERE email = ?";
+        $query = "SELECT id FROM " . $this->table . " WHERE login = ?";
 
-        // подготовка запроса 
+        // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query);
-        // инъекция 
-        $email = json_encode(htmlspecialchars(strip_tags($email)));
-        // выполняем запрос 
+        // инъекция
+        $email = json_encode(htmlspecialchars(strip_tags($login)));
+        // выполняем запрос
         $stmt->execute(array($email));
 
-        // получаем количество строк 
+        // получаем количество строк
         $num = $stmt->rowCount();
 
         if ($num > 0) {

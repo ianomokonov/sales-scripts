@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../_services/back/user.service';
+import { isFormInvalid } from '../../_utils/formValidCheck';
 
 @Component({
   selector: 'app-sign-in',
@@ -12,22 +13,19 @@ export class SignInComponent {
   public logInForm: FormGroup;
 
   constructor(private userService: UserService, private router: Router, private fb: FormBuilder) {
-    this.logInForm = this.initForm();
+    this.logInForm = this.fb.group({
+      login: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+    });
   }
 
   public signIn() {
+    if (isFormInvalid(this.logInForm)) return;
     const logData = this.logInForm?.getRawValue();
     this.userService.signIn(logData).subscribe((user) => {
       if (user) {
         this.router.navigate(['/profile']);
       }
-    });
-  }
-
-  private initForm() {
-    return this.fb.group({
-      login: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
     });
   }
 }

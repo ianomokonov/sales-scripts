@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../front/auth.service';
+import { TokenService } from '../front/token.service';
 import { environment } from '../../../environments/environment';
 import { User } from '../../_entities/user.entity';
 
@@ -14,7 +14,11 @@ export class UserService {
   private baseUrl = environment.baseUrl;
   private user: User | undefined;
 
-  constructor(private http: HttpClient, private authService: AuthService, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private authService: TokenService,
+    private router: Router,
+  ) {}
 
   public signIn(data: any): Observable<User> {
     return this.http.post<string[]>(`${this.baseUrl}/login`, data).pipe(

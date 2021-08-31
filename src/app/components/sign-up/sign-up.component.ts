@@ -1,7 +1,15 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../_services/back/user.service';
+import { isFormInvalid } from '../../_utils/formValidCheck';
 
 @Component({
   selector: 'app-sign-up',
@@ -10,27 +18,24 @@ import { UserService } from '../../_services/back/user.service';
 })
 export class SignUpComponent {
   public signUpForm: FormGroup;
-  public passwordError = false;
   public showPassword = false;
   public showPasswordConfirm = false;
 
   constructor(private userService: UserService, private router: Router, private fb: FormBuilder) {
-    this.signUpForm = this.initForm();
+    this.signUpForm = this.fb.group(
+      {
+        email: ['', [Validators.email, Validators.required]],
+        login: ['', [Validators.required]],
+        phone: [''],
+        password: ['', [Validators.required]],
+        passwordConfirm: [''],
+      },
+      { validators: this.checkPasswords },
+    );
   }
 
   public signUp() {
-    if (this.signUpForm.invalid) {
-      for (const control in this.signUpForm.controls) {
-        if (this.signUpForm.get(control)?.invalid) {
-          this.signUpForm.get(control)?.markAsDirty();
-        }
-      }
-      return;
-    }
-    if (!this.checkPassword()) {
-      this.passwordError = true;
-      return;
-    }
+    if (isFormInvalid(this.signUpForm)) return;
     const signUpData = this.signUpForm?.getRawValue();
     this.userService.signUp(signUpData).subscribe((user) => {
       if (user) {
@@ -39,18 +44,9 @@ export class SignUpComponent {
     });
   }
 
-  private initForm() {
-    return this.fb.group({
-      email: new FormControl('', [Validators.email, Validators.required]),
-      phone: new FormControl('', [Validators.required]),
-      login: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-      passwordConfirm: new FormControl('', [Validators.required]),
-    });
-  }
-
-  private checkPassword() {
-    const { password, passwordConfirm } = this.signUpForm.getRawValue();
-    return password === passwordConfirm;
-  }
+  private checkPasswords: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+    const pass = group.get('password')?.value;
+    const confirmPass = group.get('passwordConfirm')?.value;
+    return pass === confirmPass ? null : { notSame: true };
+  };
 }

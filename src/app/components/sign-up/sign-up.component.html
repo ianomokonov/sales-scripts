@@ -42,15 +42,14 @@
             <input pInputText
                    [type]="showPassword ? 'text' : 'password'"
                    id="password_field"
-                   formControlName='password'
-                   (keydown)='passwordError ? passwordError = false : null'>
+                   formControlName='password'>
             <label for="password_field">Пароль</label>
           </span>
-          <span class="p-inputgroup-addon pointer">
+          <span class="p-inputgroup-addon pointer"
+                (mousedown)='showPassword = true'
+                (mouseup)='showPassword = false'>
                 <i class="pi"
-                   [ngClass]='showPassword ? "pi-eye" : "pi-eye-slash"'
-                   (mousedown)='showPassword = true'
-                   (mouseup)='showPassword = false'></i>
+                   [ngClass]='showPassword ? "pi-eye" : "pi-eye-slash"'></i>
             </span>
         </div>
       </div>
@@ -61,23 +60,22 @@
               <input pInputText
                      [type]="showPasswordConfirm ? 'text' : 'password'"
                      id="password_confirm"
-                     [ngClass]='passwordError ? "ng-dirty ng-invalid" : ""'
-                     formControlName='passwordConfirm'
-                     (keydown)='passwordError ? passwordError = false : null'>
+                     [ngClass]='signUpForm.hasError("notSame") ? "ng-dirty ng-invalid" : ""'
+                     formControlName='passwordConfirm'>
               <label for="password_confirm">Повторите пароль</label>
           </span>
-          <span class="p-inputgroup-addon pointer">
+          <span class="p-inputgroup-addon pointer"
+                (mousedown)='showPasswordConfirm = true'
+                (mouseup)='showPasswordConfirm = false'>
                 <i class="pi"
-                   [ngClass]='showPasswordConfirm ? "pi-eye" : "pi-eye-slash"'
-                   (mousedown)='showPasswordConfirm = true'
-                   (mouseup)='showPasswordConfirm = false'></i>
+                   [ngClass]='showPasswordConfirm ? "pi-eye" : "pi-eye-slash"'></i>
             </span>
         </div>
-        <span *ngIf='passwordError' class='p-error mt-2'>Пароли не совпадают</span>
+        <span *ngIf='signUpForm.hasError("notSame")' class='p-error mt-2'>Пароли не совпадают</span>
       </div>
     </div>
     <div class='flex justify-content-center'>
-      <p-button label="Авторизация" styleClass="p-button-info" [routerLink]='["/sign-in"]'></p-button>
+      <p-button label="Авторизация" styleClass="p-button-primary" [routerLink]='["/sign-in"]'></p-button>
       <p-button type='submit' label="Подтвердить" styleClass="p-button-success ml-2" (onClick)='signUp()'></p-button>
     </div>
   </p-card>
