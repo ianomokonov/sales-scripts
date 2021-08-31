@@ -29,3 +29,6 @@ jobs:
       - run: cd htaccess && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html # полный путь до папки, куда нужно скопировать файлы
         # Deploy back
       - run: cd back && composer install && rsync -e "ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no" --archive --compress . nomokoiw@nomokoiw.beget.tech:/home/n/nomokoiw/stand1/public_html/back # полный путь до папки, куда нужно скопировать файлы
+
+       # Deploy db
+      - run: mysql -u nomokoiw_scripts -p ${{ secrets.nomokoiw_scripts_password }} nomokoiw_scripts < db/init.sql # полный путь до папки, куда нужно скопировать файлы

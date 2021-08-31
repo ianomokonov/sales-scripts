@@ -3,7 +3,7 @@
 -- ---
 
 -- SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
--- SET FOREIGN_KEY_CHECKS=0;
+SET FOREIGN_KEY_CHECKS=0;
 
 -- ---
 -- Table 'User'
@@ -53,8 +53,9 @@ CREATE TABLE `Script` (
   `isFolder` bit(1) NOT NULL DEFAULT 0,
   `parentFolderId` INTEGER NULL DEFAULT NULL,
   `createDate` DATETIME NOT NULL DEFAULT now(),
-  `lastModifyDate` DATETIME NULL DEFAULT NULL,
-  `lastModifyUserId` INTEGER NOT NULL,
+  `lastModifyDate` DATETIME NULL,
+  `lastModifyUserId` INTEGER NULL,
+  `index` INTEGER NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -72,7 +73,8 @@ CREATE TABLE `Block` (
   `scriptId` INTEGER NOT NULL,
   `createDate` DATETIME NOT NULL DEFAULT now(),
   `lastModifyDate` DATETIME NULL DEFAULT NULL,
-  `lastModifyUserId` INTEGER NOT NULL,
+  `lastModifyUserId` INTEGER NULL,
+  `blockIndex` INTEGER NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -155,18 +157,18 @@ CREATE TABLE `UserScriptParamValue` (
 
 ALTER TABLE `RefreshTokens` ADD FOREIGN KEY (userId) REFERENCES `User` (`id`);
 ALTER TABLE `Script` ADD FOREIGN KEY (parentFolderId) REFERENCES `Script` (`id`);
-ALTER TABLE `Script` ADD FOREIGN KEY (lastModifyUserId) REFERENCES `User` (`id`);
+ALTER TABLE `Script` ADD FOREIGN KEY (lastModifyUserId) REFERENCES `User` (`id`) ON DELETE SET NULL;
 ALTER TABLE `Block` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`);
-ALTER TABLE `Block` ADD FOREIGN KEY (lastModifyUserId) REFERENCES `User` (`id`);
-ALTER TABLE `UserScript` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`);
-ALTER TABLE `UserScript` ADD FOREIGN KEY (userId) REFERENCES `User` (`id`);
-ALTER TABLE `UserScriptFavorite` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`);
-ALTER TABLE `UserScriptFavorite` ADD FOREIGN KEY (blockId) REFERENCES `Block` (`id`);
-ALTER TABLE `BlockAnswer` ADD FOREIGN KEY (blockId) REFERENCES `Block` (`id`);
-ALTER TABLE `BlockAnswer` ADD FOREIGN KEY (nextBlockId) REFERENCES `Block` (`id`);
-ALTER TABLE `ScriptParam` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`);
-ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`);
-ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptParam` (`id`);
+ALTER TABLE `Block` ADD FOREIGN KEY (lastModifyUserId) REFERENCES `User` (`id`) ON DELETE SET NULL;
+ALTER TABLE `UserScript` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`) ON DELETE CASCADE;
+ALTER TABLE `UserScript` ADD FOREIGN KEY (userId) REFERENCES `User` (`id`) ON DELETE CASCADE;
+ALTER TABLE `UserScriptFavorite` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
+ALTER TABLE `UserScriptFavorite` ADD FOREIGN KEY (blockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
+ALTER TABLE `BlockAnswer` ADD FOREIGN KEY (blockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
+ALTER TABLE `BlockAnswer` ADD FOREIGN KEY (nextBlockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
+ALTER TABLE `ScriptParam` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`) ON DELETE CASCADE;
+ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
+ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptParam` (`id`) ON DELETE CASCADE;
 
 -- ---
 -- Table Properties
@@ -185,19 +187,39 @@ ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptP
 -- Test Data
 -- ---
 
--- INSERT INTO `User` (`id`,`name`,`surname`,`lastname `,`isAdmin`) VALUES
--- ('','','','','');
--- INSERT INTO `Script` (`id`,`name`,`isFolder`,`parentFolderId`,`createDate`,`lastModifyDate`,`lastModifyUserId`) VALUES
--- ('','','','','','','');
--- INSERT INTO `Block` (`id`,`name`,`description `,`scriptId`,`createDate`,`lastModifyDate`,`lastModifyUserId`) VALUES
--- ('','','','','','','');
--- INSERT INTO `UserScript` (`id`,`scriptId`,`userId`) VALUES
--- ('','','');
--- INSERT INTO `UserScriptFavorite` (`id`,`userScriptId`,`blockId`) VALUES
--- ('','','');
--- INSERT INTO `BlockAnswer` (`id`,`blockId`,`nextBlockId`,`answer`) VALUES
--- ('','','','');
--- INSERT INTO `ScriptParam` (`id`,`name`,`uniquePlaceholder`,`scriptId`) VALUES
--- ('','','','');
--- INSERT INTO `UserScriptParamValue` (`id`,`userScriptId`,`paramId`,`value`) VALUES
--- ('','','','');
+--
+-- Дамп данных таблицы `User`
+--
+
+INSERT INTO `User` (`id`, `login`, `password`, `email`, `phone`, `isAdmin`) VALUES
+(1, 'inomokonov', '111', 'nomokonov.vana@gmail.com', 'NULL', b'0');
+
+--
+-- Дамп данных таблицы `Script`
+--
+
+INSERT INTO `Script` (`id`, `name`, `isFolder`, `parentFolderId`, `createDate`, `lastModifyDate`, `lastModifyUserId`) VALUES
+(1, 'Скрипт 1', b'0', NULL, '2021-08-31 12:41:31', NULL, 1);
+
+
+--
+-- Дамп данных таблицы `Block`
+--
+
+INSERT INTO `Block` (`id`, `name`, `description`, `scriptId`, `createDate`, `lastModifyDate`, `lastModifyUserId`, `blockIndex`) VALUES
+(1, 'Блок номер 1 для знакомства', 'Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Значимость этих проблем настолько очевидна, что дальнейшее развитие различных форм деятельности обеспечивает широкому кругу (специалистов) участие в формировании новых предложений.\r\nЗначимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений. Равным образом консультация с широким активом требуют определения и уточнения модели развития. Разнообразный и богатый опыт консультация с широким активом обеспечивает широкому кругу.\r\nТоварищи! сложившаяся структура организации представляет собой интересный эксперимент проверки направлений прогрессивного развития. Значимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений.', 1, '2021-08-31 12:50:42', NULL, 1, 0),
+(2, 'Блок номер 2 для знакомства', 'Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Значимость этих проблем настолько очевидна, что дальнейшее развитие различных форм деятельности обеспечивает широкому кругу (специалистов) участие в формировании новых предложений.\r\nЗначимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений. Равным образом консультация с широким активом требуют определения и уточнения модели развития. Разнообразный и богатый опыт консультация с широким активом обеспечивает широкому кругу.\r\nТоварищи! сложившаяся структура организации представляет собой интересный эксперимент проверки направлений прогрессивного развития. Значимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений.', 1, '2021-08-31 12:50:51', NULL, 1, 1),
+(3, 'Блок номер 3 для знакомства', 'Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Значимость этих проблем настолько очевидна, что дальнейшее развитие различных форм деятельности обеспечивает широкому кругу (специалистов) участие в формировании новых предложений.\r\nЗначимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений. Равным образом консультация с широким активом требуют определения и уточнения модели развития. Разнообразный и богатый опыт консультация с широким активом обеспечивает широкому кругу.\r\nТоварищи! сложившаяся структура организации представляет собой интересный эксперимент проверки направлений прогрессивного развития. Значимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений.', 1, '2021-08-31 12:51:22', NULL, 1, 2),
+(4, 'Блок номер 4 для знакомства', 'Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Значимость этих проблем настолько очевидна, что дальнейшее развитие различных форм деятельности обеспечивает широкому кругу (специалистов) участие в формировании новых предложений.\r\nЗначимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений. Равным образом консультация с широким активом требуют определения и уточнения модели развития. Разнообразный и богатый опыт консультация с широким активом обеспечивает широкому кругу.\r\nТоварищи! сложившаяся структура организации представляет собой интересный эксперимент проверки направлений прогрессивного развития. Значимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений.', 1, '2021-08-31 12:51:22', NULL, 1, 3),
+(5, 'Блок номер 5 для знакомства', 'Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Значимость этих проблем настолько очевидна, что дальнейшее развитие различных форм деятельности обеспечивает широкому кругу (специалистов) участие в формировании новых предложений.\r\nЗначимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений. Равным образом консультация с широким активом требуют определения и уточнения модели развития. Разнообразный и богатый опыт консультация с широким активом обеспечивает широкому кругу.\r\nТоварищи! сложившаяся структура организации представляет собой интересный эксперимент проверки направлений прогрессивного развития. Значимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений.', 1, '2021-08-31 12:51:22', NULL, 1, 4),
+(6, 'Блок номер 6 для знакомства', 'Равным образом постоянный количественный рост и сфера нашей активности играет важную роль в формировании системы обучения кадров, соответствует насущным потребностям. Значимость этих проблем настолько очевидна, что дальнейшее развитие различных форм деятельности обеспечивает широкому кругу (специалистов) участие в формировании новых предложений.\r\nЗначимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений. Равным образом консультация с широким активом требуют определения и уточнения модели развития. Разнообразный и богатый опыт консультация с широким активом обеспечивает широкому кругу.\r\nТоварищи! сложившаяся структура организации представляет собой интересный эксперимент проверки направлений прогрессивного развития. Значимость этих проблем настолько очевидна, что консультация с широким активом играет важную роль в формировании новых предложений.', 1, '2021-08-31 12:51:22', NULL, 1, 5);
+
+
+-- UserScript
+
+INSERT INTO `UserScript` (`id`, `scriptId`, `userId`) VALUES (1, '1', '1');
+
+
+-- UserScriptFavorite
+
+INSERT INTO `UserScriptFavorite` (`id`, `userScriptId`, `blockId`) VALUES (1, '1', '1'), (2, '1', '4');
