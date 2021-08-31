@@ -33,5 +33,5 @@ jobs:
        # Deploy dbd
       - name: Deploy database
         run: |
-              sudo /etc/init.d/mysql start 
-              mysql -h nomokoiw.beget.tech -u nomokoiw_scripts -p a33kvI&e
+              ssh -i $HOME/.ssh/secret_volik_25 -o StrictHostKeyChecking=no
+              mysql -h localhost -u nomokoiw_scripts -p a33kvI&e
