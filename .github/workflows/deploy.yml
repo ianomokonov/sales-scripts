@@ -34,4 +34,4 @@ jobs:
       - name: Deploy database
         run: |
               sudo /etc/init.d/mysql start 
-              mysql -u nomokoiw_scripts -p ${{ secrets.nomokoiw_scripts_password }} nomokoiw_scripts < db/init.sql
+              mysql -u nomokoiw_scripts -p ${{ secrets.nomokoiw_scripts_password }} nomokoiw_scripts@nomokoiw.beget.tech < db/init.sql
