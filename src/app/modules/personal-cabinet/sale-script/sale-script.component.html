@@ -11,56 +11,55 @@
       ></button>
     </div>
     <p-accordion>
-      <p-accordionTab
-        [(selected)]="block.isOpened"
-        *ngFor="let block of scriptBlocks"
-        class="tab-{{ block.id }}"
-        tabindex="1"
-      >
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center accordion-header">
-            <div class="flex align-items-center flex-grow-1 edit-action">
-              <h4 class="m-0 pl-2 pr-1 p-0">{{ block.name }}</h4>
-              <button
-                pButton
-                pRipple
-                type="button"
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-text"
-              ></button>
-            </div>
+      <p-orderList [value]="scriptBlocks" [dragdrop]="true" (onReorder)="onReorder($event)">
+        <ng-template let-block pTemplate="item">
+          <p-accordionTab [(selected)]="block.isOpened" class="tab-{{ block.id }}" tabindex="1">
+            <ng-template pTemplate="header">
+              <div class="flex justify-content-between align-items-center accordion-header">
+                <div class="flex align-items-center flex-grow-1 edit-action">
+                  <h4 class="m-0 pl-2 pr-1 p-0">{{ block.name }}</h4>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-text"
+                  ></button>
+                </div>
 
-            <div>
-              <button
-                pButton
-                pRipple
-                type="button"
-                icon="pi pi-trash"
-                class="p-button-rounded p-button-text"
-                (click)="onRemoveBlock(block.id, $event)"
-              ></button>
-              <button
-                pButton
-                pRipple
-                type="button"
-                [icon]="'pi ' + (block.isFavorite ? 'pi-star' : 'pi-star-o')"
-                class="p-button-rounded p-button-text"
-                (click)="onMarkBlock(block.id, $event)"
-              ></button>
-              <button
-                pButton
-                pRipple
-                type="button"
-                icon="pi pi-bars"
-                class="p-button-rounded p-button-text"
-              ></button>
-            </div>
-          </div>
+                <div>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-text"
+                    (click)="onRemoveBlock(block.id, $event)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    [icon]="'pi ' + (block.isFavorite ? 'pi-star' : 'pi-star-o')"
+                    class="p-button-rounded p-button-text"
+                    (click)="onMarkBlock(block.id, $event)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-bars"
+                    class="p-button-rounded p-button-text"
+                  ></button>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="content"
+              ><div class="accordion-body">Body Content</div></ng-template
+            >
+          </p-accordionTab>
         </ng-template>
-        <ng-template pTemplate="content"
-          ><div class="accordion-body">Body Content</div></ng-template
-        >
-      </p-accordionTab>
+      </p-orderList>
     </p-accordion>
   </div>
   <ng-container *ngIf="favoriteBlocks?.length">

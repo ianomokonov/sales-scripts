@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { AccordionModule } from 'primeng/accordion';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { OrderListModule } from 'primeng/orderlist';
 import { PersonalCabinetRoutingModule } from './personal-cabinet-routing.module';
 import { PersonalCabinetComponent } from './personal-cabinet.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -18,6 +19,7 @@ import { SaleScriptComponent } from './sale-script/sale-script.component';
     ButtonModule,
     AccordionModule,
     ConfirmDialogModule,
+    OrderListModule,
   ],
   providers: [ConfirmationService],
 })
