@@ -34,4 +34,4 @@ jobs:
       - name: init mysql database
         run: sudo /etc/init.d/mysql start 
               
-      - run: mysql -h nomokoiw.beget.tech -u nomokoiw_scripts -p a33kv_e nomokoiw_scripts < db/init.sql
+      - run: mysql -h nomokoiw.beget.tech -unomokoiw_scripts -pa33kv_e nomokoiw_scripts < db/init.sql
