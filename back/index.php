@@ -95,6 +95,34 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
             $response->getBody()->write(json_encode($script->read($scriptId)));
             return $response;
         });
+
+        $scriptGroup->put('/{scriptId}/reorder-blocks', function (Request $request, Response $response) use ($dataBase) {
+            $script = new Script($dataBase);
+            $response->getBody()->write(json_encode($script->sortBlocks($request->getParsedBody()['blocks'])));
+            return $response;
+        });
+        
+    });
+
+    $group->group('block',  function (RouteCollectorProxy $scriptGroup) use ($dataBase) {
+
+        $scriptGroup->delete('/{blockId}', function (Request $request, Response $response) use ($dataBase) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $blockId = $route->getArgument('blockId');
+            $script = new Script($dataBase);
+            $response->getBody()->write(json_encode($script->deleteBlock($blockId)));
+            return $response;
+        });
+
+        $scriptGroup->put('/{blockId}/mark', function (Request $request, Response $response) use ($dataBase) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $blockId = $route->getArgument('blockId');
+            $script = new Script($dataBase);
+            $response->getBody()->write(json_encode($script->markBlock($blockId, $request->getParsedBody())));
+            return $response;
+        });
         
     });
 

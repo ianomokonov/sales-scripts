@@ -14,4 +14,8 @@ export class ScriptService {
   public getScript(id: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/script/${id}`);
   }
+
+  public reorderBlocks(id: number, blocks: { id: number; index: number }[]): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/script/${id}/reorder-blocks`, { blocks });
+  }
 }

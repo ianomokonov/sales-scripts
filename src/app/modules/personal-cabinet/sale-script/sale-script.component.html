@@ -11,7 +11,7 @@
       ></button>
     </div>
     <p-accordion>
-      <p-orderList [value]="scriptBlocks" [dragdrop]="true" (onReorder)="onReorder($event)">
+      <p-orderList [value]="script?.blocks || []" [dragdrop]="true" (onReorder)="onReorder($event)">
         <ng-template let-block pTemplate="item">
           <p-accordionTab [(selected)]="block.isOpened" class="tab-{{ block.id }}" tabindex="1">
             <ng-template pTemplate="header">
@@ -34,7 +34,7 @@
                     type="button"
                     icon="pi pi-trash"
                     class="p-button-rounded p-button-text"
-                    (click)="onRemoveBlock(block.id, $event)"
+                    (click)="onRemoveBlock(block.id, $event, block.blockIndex)"
                   ></button>
                   <button
                     pButton

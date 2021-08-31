@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Block } from 'src/app/_entities/block.entity';
+import { Script } from 'src/app/_entities/script.entity';
+import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
 
 @Component({
@@ -10,18 +12,18 @@ import { ScriptService } from 'src/app/_services/back/script.service';
   styleUrls: ['./sale-script.component.less'],
 })
 export class SaleScriptComponent {
-  /** Список всех блоков скрипта */
-  public scriptBlocks: Block[] = [];
+  public script: Script | undefined;
 
   /** Список отмеченных блоков */
   public get favoriteBlocks(): Block[] {
-    return this.scriptBlocks?.filter((b) => b.isFavorite);
+    return this.script?.blocks.filter((b) => b.isFavorite) || [];
   }
 
   constructor(
     private confirmService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
     private scriptService: ScriptService,
+    private blockService: BlockService,
   ) {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
@@ -32,32 +34,49 @@ export class SaleScriptComponent {
 
   private getScript(id: number) {
     this.scriptService.getScript(id).subscribe((script) => {
-      this.scriptBlocks = script.blocks;
+      this.script = script;
     });
   }
 
-  public onRemoveBlock(id: number, event: MouseEvent) {
+  public onRemoveBlock(id: number, event: MouseEvent, index: number) {
     event.stopPropagation();
+
     this.confirmService.confirm({
       message: 'Удалить блок из скрипта?',
       accept: () => {
-        this.scriptBlocks = this.scriptBlocks.filter((b) => b.id !== id);
+        if (!this.script) {
+          return;
+        }
+
+        this.script.blocks = this.script.blocks.filter((b) => b.id !== id);
+        const result: any[] = [];
+        for (let i = this.script.blocks.length - 1; i >= index; i -= 1) {
+          this.script.blocks[i].blockIndex = i;
+          result.push({ id: this.script.blocks[i].id, index: this.script.blocks[i].blockIndex });
+        }
+        this.blockService.delete(id).subscribe(() => {
+          if (!this.script) {
+            return;
+          }
+          this.scriptService.reorderBlocks(this.script.id, result).subscribe();
+        });
       },
     });
   }
 
   public onMarkBlock(id: number, event: MouseEvent) {
-    const block = this.scriptBlocks.find((b) => b.id === id);
-    if (!block) {
+    const block = this.script?.blocks.find((b) => b.id === id);
+    if (!block || !this.script) {
       return;
     }
 
     event.stopPropagation();
     block.isFavorite = !block.isFavorite;
+    this.blockService.markFavorite(id, block.isFavorite, this.script.id).subscribe();
   }
 
   public onMarkedBlockClick(id: number) {
-    const markedBlock = this.scriptBlocks.find((b) => b.id === id);
+    const markedBlock = this.script?.blocks.find((b) => b.id === id);
     if (!markedBlock) {
       return;
     }
@@ -75,15 +94,23 @@ export class SaleScriptComponent {
   }
 
   public onReorder([block]: Block[]) {
-    const curIndex = this.scriptBlocks.findIndex((b) => b.id === block.id);
-    if (curIndex < block.blockIndex) {
-      for (let i = block.blockIndex; i >= curIndex; i -= 1) {
-        this.scriptBlocks[i].blockIndex = i;
-      }
+    if (!this.script) {
       return;
     }
-    for (let i = block.blockIndex; i <= curIndex; i += 1) {
-      this.scriptBlocks[i].blockIndex = i;
+    const result = [];
+    const curIndex = this.script.blocks.findIndex((b) => b.id === block.id);
+    if (curIndex < block.blockIndex) {
+      for (let i = block.blockIndex; i >= curIndex; i -= 1) {
+        this.script.blocks[i].blockIndex = i;
+        result.push({ id: this.script.blocks[i].id, index: this.script.blocks[i].blockIndex });
+      }
+    } else {
+      for (let i = block.blockIndex; i <= curIndex; i += 1) {
+        this.script.blocks[i].blockIndex = i;
+        result.push({ id: this.script.blocks[i].id, index: this.script.blocks[i].blockIndex });
+      }
     }
+
+    this.scriptService.reorderBlocks(this.script.id, result).subscribe();
   }
 }
