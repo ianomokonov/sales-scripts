@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PersonalCabinetComponent } from './personal-cabinet.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
+import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
 
 const routes: Routes = [
   {
@@ -9,7 +10,11 @@ const routes: Routes = [
     component: PersonalCabinetComponent,
     children: [
       {
-        path: 'script/:id',
+        path: 'scripts',
+        component: SaleScriptsComponent,
+      },
+      {
+        path: 'scripts/:id',
         component: SaleScriptComponent,
       },
     ],

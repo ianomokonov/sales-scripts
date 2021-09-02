@@ -1,0 +1,29 @@
+<div class='m-0 grid px-3'>
+  <div class='col mt-2'>
+    <div class='flex align-items-center mx-3'>
+      <button pButton
+              (click)='addFolder()'
+              type="button"
+              icon="pi pi-plus"
+              iconPos="left"
+              label='Добавить папку'
+              class='mr-2' ></button>
+      <button pButton
+              (click)='addScript()'
+              type="button"
+              icon="pi pi-plus"
+              iconPos="left"
+              label='Добавить скрипт'></button>
+    </div>
+    <div class='mx-3 my-2'>
+      <p-tree [value]="treeData">
+        <ng-template let-item pTemplate="default">
+          <b class='cursor-pointer' (click)='toggle(item)'>{{item.label}}</b>
+        </ng-template>
+        <ng-template let-item pTemplate="script">
+          <div class='cursor-pointer hover-underline' [routerLink]='[item.key]'>{{item.label}}</div>
+        </ng-template>
+      </p-tree>
+    </div>
+  </div>
+</div>

@@ -8,21 +8,41 @@ import { ConfirmationService } from 'primeng/api';
 import { OrderListModule } from 'primeng/orderlist';
 import { ScriptService } from 'src/app/_services/back/script.service';
 import { BlockService } from 'src/app/_services/back/block.service';
+import { TreeModule } from 'primeng/tree';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PersonalCabinetRoutingModule } from './personal-cabinet-routing.module';
 import { PersonalCabinetComponent } from './personal-cabinet.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
+import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
+import { AddFolderComponent } from './_modals/add-folder/add-folder.component';
+import { AddScriptComponent } from './sale-script/add-script/add-script.component';
 
 @NgModule({
-  declarations: [PersonalCabinetComponent, SaleScriptComponent],
+  declarations: [
+    PersonalCabinetComponent,
+    SaleScriptComponent,
+    SaleScriptsComponent,
+    AddFolderComponent,
+    AddScriptComponent,
+  ],
   imports: [
     CommonModule,
     PersonalCabinetRoutingModule,
     DividerModule,
+    DynamicDialogModule,
     ButtonModule,
     AccordionModule,
     ConfirmDialogModule,
     OrderListModule,
+    TreeModule,
+    InputTextModule,
+    DropdownModule,
+    ReactiveFormsModule,
+    FormsModule,
   ],
-  providers: [ConfirmationService, ScriptService, BlockService],
+  providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })
 export class PersonalCabinetModule {}

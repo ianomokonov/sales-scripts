@@ -36,7 +36,7 @@ export class SignUpComponent {
 
   public signUp() {
     if (isFormInvalid(this.signUpForm)) return;
-    const signUpData = this.signUpForm?.getRawValue();
+    const signUpData = this.signUpForm.getRawValue();
     this.userService.signUp(signUpData).subscribe((user) => {
       if (user) {
         this.router.navigate(['/profile']);

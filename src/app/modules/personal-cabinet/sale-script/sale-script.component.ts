@@ -43,6 +43,10 @@ export class SaleScriptComponent {
 
     this.confirmService.confirm({
       message: 'Удалить блок из скрипта?',
+      acceptLabel: 'Да',
+      rejectLabel: 'Нет',
+      header: 'Удаление блока',
+      icon: 'pi pi-exclamation-triangle',
       accept: () => {
         if (!this.script) {
           return;
