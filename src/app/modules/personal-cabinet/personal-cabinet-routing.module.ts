@@ -10,6 +10,10 @@ const routes: Routes = [
     component: PersonalCabinetComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'scripts',
+      },
+      {
         path: 'scripts',
         component: SaleScriptsComponent,
       },
