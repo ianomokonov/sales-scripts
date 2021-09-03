@@ -78,7 +78,7 @@ class Token
             // декодирование jwt 
             $token = JWT::encode($token, $this->authKey);
             $refreshToken = JWT::encode($refreshTokenData, $this->refreshKey);
-            return array($token, $refreshToken);
+            return array("token" => $token, "refreshToken" => $refreshToken);
         }
 
         // если декодирование не удалось, это означает, что JWT является недействительным 

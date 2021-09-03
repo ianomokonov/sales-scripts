@@ -15,6 +15,7 @@ class DataBase
 
     public function genInsertQuery($ins, $t)
     {
+        $ins = (array) $ins;
         $res = array('INSERT INTO ' . $t . ' (', array());
         $q = '';
         for ($i = 0; $i < count(array_keys((array)$ins)); $i++) {
@@ -46,38 +47,8 @@ class DataBase
 
     public function stripAll($object)
     {
-        for ($i = 0; $i < count(array_keys((array)$object)); $i++) {
-            $key = array_keys((array)$object)[$i];
-
+        foreach(array_keys((array)$object) as $key){
             $object[$key] = htmlspecialchars(strip_tags($object[$key]));
-            if ($this->canStrip($object, $key)) {
-                $object[$key] = json_encode($object[$key]);
-            }
-        }
-        return $object;
-    }
-
-    public function canStrip($object, $key)
-    {
-        // echo json_encode(array($object[$key], !is_numeric($object[$key])
-        // ,strpos($key, 'date') === false
-        // ,$object[$key] != false
-        // ,strpos($key, 'image') === false));
-        return !is_numeric($object[$key])
-            && strpos($key, 'date') === false
-            && $object[$key] != false
-            && strpos($key, 'image') === false;
-    }
-
-    public function decode($object)
-    {
-        for ($i = 0; $i < count(array_keys((array)$object)); $i++) {
-            if (
-                gettype($object[array_keys((array)$object)[$i]]) == 'string'
-                && strpos(array_keys((array)$object)[$i], 'date') === false
-            ) {
-                $object[array_keys((array)$object)[$i]] = json_decode($object[array_keys((array)$object)[$i]]);
-            }
         }
         return $object;
     }
