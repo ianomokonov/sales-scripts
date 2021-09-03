@@ -1,11 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { DividerModule } from 'primeng/divider';
+import { ButtonModule } from 'primeng/button';
+import { AccordionModule } from 'primeng/accordion';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { OrderListModule } from 'primeng/orderlist';
+import { ScriptService } from 'src/app/_services/back/script.service';
+import { BlockService } from 'src/app/_services/back/block.service';
 import { PersonalCabinetRoutingModule } from './personal-cabinet-routing.module';
 import { PersonalCabinetComponent } from './personal-cabinet.component';
+import { SaleScriptComponent } from './sale-script/sale-script.component';
 
 @NgModule({
-  declarations: [PersonalCabinetComponent],
-  imports: [CommonModule, PersonalCabinetRoutingModule],
+  declarations: [PersonalCabinetComponent, SaleScriptComponent],
+  imports: [
+    CommonModule,
+    PersonalCabinetRoutingModule,
+    DividerModule,
+    ButtonModule,
+    AccordionModule,
+    ConfirmDialogModule,
+    OrderListModule,
+  ],
+  providers: [ConfirmationService, ScriptService, BlockService],
 })
 export class PersonalCabinetModule {}

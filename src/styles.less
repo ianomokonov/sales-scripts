@@ -2,3 +2,67 @@
 .pointer {
   cursor: pointer;
 }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+p {
+  margin-top: 0;
+}
+
+app-sale-script {
+  .p-accordion {
+    .p-orderlist {
+      .p-orderlist-controls {
+        display: none;
+      }
+      .p-orderlist-list {
+        border: none;
+        overflow: visible;
+        .p-orderlist-item {
+          padding: 0;
+          overflow: visible;
+        }
+      }
+    }
+    .p-accordion-tab {
+      .p-accordion-header {
+        a.p-accordion-header-link {
+          padding: 0;
+
+          .p-accordion-toggle-icon {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.cdk-drag-preview {
+  font-family: Roboto, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande,
+    sans-serif;
+  font-size: 1rem;
+  &.p-orderlist-item {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .p-accordion-tab {
+    .p-accordion-header {
+      a.p-accordion-header-link {
+        padding: 0;
+
+        .p-accordion-toggle-icon {
+          display: none;
+        }
+      }
+    }
+
+    .p-accordion-content{
+      padding: 1rem 1.5rem;
+    }
+  }
+}
