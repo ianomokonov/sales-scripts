@@ -37,7 +37,6 @@ export class SignInComponent {
       ({ error }) => {
         this.messageService.add({
           severity: 'error',
-          summary: 'Что-то пошло не так...',
           detail: error.message,
         });
       },

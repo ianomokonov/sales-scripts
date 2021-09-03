@@ -43,6 +43,7 @@ export class SignUpComponent {
   public signUp() {
     if (isFormInvalid(this.signUpForm)) return;
     const signUpData = this.signUpForm?.getRawValue();
+    delete signUpData.passwordConfirm;
     this.userService.signUp(signUpData).subscribe(
       (user) => {
         if (user) {
@@ -52,7 +53,6 @@ export class SignUpComponent {
       ({ error }) => {
         this.messageService.add({
           severity: 'error',
-          summary: 'Что-то пошло не так...',
           detail: error.message,
         });
       },

@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { TokensResponse } from 'src/app/_models/responses/tokens.response';
 import { TokenService } from '../front/token.service';
 import { environment } from '../../../environments/environment';
 import { User } from '../../_entities/user.entity';
@@ -21,8 +22,8 @@ export class UserService {
   ) {}
 
   public signIn(data: any): Observable<User> {
-    return this.http.post<string[]>(`${this.baseUrl}/login`, data).pipe(
-      tap((tokens: string[]) => {
+    return this.http.post<TokensResponse>(`${this.baseUrl}/login`, data).pipe(
+      tap((tokens: TokensResponse) => {
         this.authService.storeTokens(tokens);
       }),
       mergeMap(() => {
@@ -50,8 +51,8 @@ export class UserService {
   }
 
   public signUp(data: any): Observable<User> {
-    return this.http.post<string[]>(`${this.baseUrl}/sign-up`, data).pipe(
-      tap((tokens: string[]) => {
+    return this.http.post<TokensResponse>(`${this.baseUrl}/sign-up`, data).pipe(
+      tap((tokens: TokensResponse) => {
         this.authService.storeTokens(tokens);
       }),
       mergeMap(() => {
@@ -61,7 +62,7 @@ export class UserService {
   }
 
   public getUserInfo(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/user/user-info`).pipe(
+    return this.http.get<User>(`${this.baseUrl}/user`).pipe(
       tap((user) => {
         this.user = user;
       }),
