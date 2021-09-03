@@ -12,6 +12,7 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'scripts',
+        pathMatch: 'full',
       },
       {
         path: 'scripts',

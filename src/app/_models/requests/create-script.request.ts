@@ -1,5 +1,5 @@
 export interface CreateScriptRequest {
-  isForlder: boolean;
-  parentFolderId: number;
   name: string;
+  isFolder: boolean;
+  parentFolderId?: number;
 }

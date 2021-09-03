@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ScriptShortView } from 'src/app/_models/script-short-view';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ScriptService } from '../../../_services/back/script.service';
 import { scriptToTreeNodeFormatter } from './scriptToTreeNodeFormatter';
-import { scriptsMock } from './scripts.mock';
 import { AddFolderComponent } from '../_modals/add-folder/add-folder.component';
-import { AddScriptComponent } from '../sale-script/add-script/add-script.component';
+import { AddScriptComponent } from '../_modals/add-script/add-script.component';
 
 @Component({
   selector: 'app-sale-scripts',
@@ -15,19 +15,20 @@ import { AddScriptComponent } from '../sale-script/add-script/add-script.compone
 })
 export class SaleScriptsComponent implements OnInit {
   public treeData: TreeNode[] = [];
-  private scripts: ScriptShortView[] = scriptsMock;
+  private scripts: ScriptShortView[] = [];
 
-  constructor(private scriptService: ScriptService, private ds: DialogService) {}
+  constructor(
+    private scriptService: ScriptService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private ds: DialogService,
+  ) {}
 
   ngOnInit(): void {
-    // TODO [ volik25 | 02.09.2021 ]:
-    //  Удалить моку и раскомментировать запрос
-    //  на сервер после введения бэка в эксплуатацию
-    this.treeData = scriptToTreeNodeFormatter(this.scripts);
-    // this.scriptService.getScripts().subscribe((scripts) => {
-    //   this.scripts = scripts;
-    //   this.data = scriptToTreeNodeFormatter(this.scripts);
-    // });
+    this.scriptService.getScripts().subscribe((scripts) => {
+      this.scripts = scripts;
+      this.treeData = scriptToTreeNodeFormatter(this.scripts);
+    });
   }
 
   public toggle(node: TreeNode) {
@@ -55,10 +56,9 @@ export class SaleScriptsComponent implements OnInit {
       width: '70%',
     });
 
-    modal.onClose.subscribe((newScript) => {
-      if (newScript) {
-        this.scripts.push(newScript);
-        this.treeData = scriptToTreeNodeFormatter(this.scripts);
+    modal.onClose.subscribe((newScriptId) => {
+      if (newScriptId) {
+        this.router.navigate([newScriptId], { relativeTo: this.route });
       }
     });
   }

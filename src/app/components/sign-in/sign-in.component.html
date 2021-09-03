@@ -8,6 +8,7 @@
       <span class="p-float-label p-input-icon-left">
           <i class="pi pi-user"></i>
           <input pInputText
+                 [class.p-filled]='logInForm.controls.login.value'
                  type="text"
                  id="login_field"
                  formControlName='login'>
@@ -18,6 +19,7 @@
       <span class="p-float-label p-input-icon-left">
           <i class="pi pi-lock"></i>
           <input pInputText
+                 [class.p-filled]='logInForm.controls.password.value'
                  type="password"
                  id="password_field"
                  formControlName='password'>
