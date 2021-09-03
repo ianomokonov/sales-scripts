@@ -38,17 +38,6 @@ $app->post('/login', function (Request $request, Response $response) use ($dataB
     }
 });
 
-$app->get('/test', function (Request $request, Response $response) use ($dataBase) {
-
-    try {
-        $response->getBody()->write(json_encode(array("message" => "Success", "request" => $request->getQueryParams())));
-        return $response;
-    } catch (Exception $e) {
-        $response->getBody()->write(json_encode(array("message" => "Ошибка", "error" => $e)));
-        return $response->withStatus(401);
-    }
-});
-
 $app->post('/sign-up', function (Request $request, Response $response) use ($dataBase) {
     $user = new User($dataBase);
     try {
@@ -64,6 +53,18 @@ $app->post('/refresh-token', function (Request $request, Response $response) use
     try {
         $user = new User($dataBase);
         $response->getBody()->write(json_encode($user->refreshToken($request->getParsedBody()['token'])));
+        return $response;
+    } catch (Exception $e) {
+        $response = new ResponseClass();
+        $response->getBody()->write(json_encode(array("error" => $e, "message" => $e->getMessage())));
+        return $response->withStatus(401);
+    }
+});
+
+$app->post('/delete-token', function (Request $request, Response $response) use ($dataBase, $token) {
+    try {
+        $user = new User($dataBase);
+        $response->getBody()->write(json_encode($user->removeRefreshToken($token->decode($request->getParsedBody()['token'], true)->data->id)));
         return $response;
     } catch (Exception $e) {
         $response = new ResponseClass();
@@ -85,7 +86,17 @@ $app->post('/update-password', function (Request $request, Response $response) u
 });
 
 $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
-    $group->group('script',  function (RouteCollectorProxy $scriptGroup) use ($dataBase) {
+    $group->get('folders', function (Request $request, Response $response) use ($dataBase) {
+        $script = new Script($dataBase);
+        $response->getBody()->write(json_encode($script->getFolders()));
+        return $response;
+    });
+    $group->group('scripts',  function (RouteCollectorProxy $scriptGroup) use ($dataBase) {
+        $scriptGroup->get('', function (Request $request, Response $response) use ($dataBase) {
+            $script = new Script($dataBase);
+            $response->getBody()->write(json_encode($script->getList()));
+            return $response;
+        });
 
         $scriptGroup->get('/{scriptId}', function (Request $request, Response $response) use ($dataBase) {
             $routeContext = RouteContext::fromRequest($request);
@@ -101,7 +112,12 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
             $response->getBody()->write(json_encode($script->sortBlocks($request->getParsedBody()['blocks'])));
             return $response;
         });
-        
+
+        $scriptGroup->post('', function (Request $request, Response $response) use ($dataBase) {
+            $script = new Script($dataBase);
+            $response->getBody()->write(json_encode($script->create($request->getParsedBody())));
+            return $response;
+        });
     });
 
     $group->group('block',  function (RouteCollectorProxy $scriptGroup) use ($dataBase) {
@@ -123,11 +139,19 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
             $response->getBody()->write(json_encode($script->markBlock($blockId, $request->getParsedBody())));
             return $response;
         });
-        
+    });
+
+    $group->group('user',  function (RouteCollectorProxy $userGroup) use ($dataBase) {
+
+        $userGroup->get('', function (Request $request, Response $response) use ($dataBase) {
+            $userId = $request->getAttribute('userId');
+            $user = new User($dataBase);
+            $response->getBody()->write(json_encode($user->read($userId)));
+            return $response;
+        });
     });
 
     $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($dataBase) {
-
     })->add(function (Request $request, RequestHandler $handler) use ($dataBase) {
         $userId = $request->getAttribute('userId');
 
@@ -143,9 +167,9 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
     });
 })->add(function (Request $request, RequestHandler $handler) use ($token) {
     try {
-        // $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
-        // $userId = $token->decode($jwt)->data->id;
-        // $request = $request->withAttribute('userId', $userId);
+        $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
+        $userId = $token->decode($jwt)->data->id;
+        $request = $request->withAttribute('userId', $userId);
         $response = $handler->handle($request);
 
         return $response;

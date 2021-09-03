@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { UserService } from '../../_services/back/user.service';
 import { isFormInvalid } from '../../_utils/formValidCheck';
 
@@ -12,7 +13,12 @@ import { isFormInvalid } from '../../_utils/formValidCheck';
 export class SignInComponent {
   public logInForm: FormGroup;
 
-  constructor(private userService: UserService, private router: Router, private fb: FormBuilder) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private fb: FormBuilder,
+    private messageService: MessageService,
+  ) {
     this.logInForm = this.fb.group({
       login: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -22,10 +28,18 @@ export class SignInComponent {
   public signIn() {
     if (isFormInvalid(this.logInForm)) return;
     const logData = this.logInForm?.getRawValue();
-    this.userService.signIn(logData).subscribe((user) => {
-      if (user) {
-        this.router.navigate(['/profile']);
-      }
-    });
+    this.userService.signIn(logData).subscribe(
+      (user) => {
+        if (user) {
+          this.router.navigate(['/profile']);
+        }
+      },
+      ({ error }) => {
+        this.messageService.add({
+          severity: 'error',
+          detail: error.message,
+        });
+      },
+    );
   }
 }
