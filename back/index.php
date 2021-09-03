@@ -141,6 +141,16 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
         });
     });
 
+    $group->group('user',  function (RouteCollectorProxy $userGroup) use ($dataBase) {
+
+        $userGroup->get('', function (Request $request, Response $response) use ($dataBase) {
+            $userId = $request->getAttribute('userId');
+            $user = new User($dataBase);
+            $response->getBody()->write(json_encode($user->read($userId)));
+            return $response;
+        });
+    });
+
     $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($dataBase) {
     })->add(function (Request $request, RequestHandler $handler) use ($dataBase) {
         $userId = $request->getAttribute('userId');
@@ -157,9 +167,9 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
     });
 })->add(function (Request $request, RequestHandler $handler) use ($token) {
     try {
-        // $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
-        // $userId = $token->decode($jwt)->data->id;
-        // $request = $request->withAttribute('userId', $userId);
+        $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
+        $userId = $token->decode($jwt)->data->id;
+        $request = $request->withAttribute('userId', $userId);
         $response = $handler->handle($request);
 
         return $response;

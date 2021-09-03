@@ -53,10 +53,6 @@ class User
     {
         $query = "SELECT login, email, phone FROM $this->table WHERE id='$userId'";
         $user = $this->dataBase->db->query($query)->fetch();
-        // if($user == true){
-        //     throw new Exception("User not found", 404);
-        // }
-        // file_put_contents('logs.txt', PHP_EOL.json_encode($user), FILE_APPEND);
         return $user;
     }
 

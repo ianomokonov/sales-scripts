@@ -7,6 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { InputMaskModule } from 'primeng/inputmask';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
@@ -26,6 +28,7 @@ import { TokenInterceptor } from './_interceptors/token.interceptor';
     ButtonModule,
     ReactiveFormsModule,
     InputMaskModule,
+    ToastModule,
   ],
   providers: [
     {
@@ -33,6 +36,7 @@ import { TokenInterceptor } from './_interceptors/token.interceptor';
       useClass: TokenInterceptor,
       multi: true,
     },
+    MessageService,
   ],
   bootstrap: [AppComponent],
 })
