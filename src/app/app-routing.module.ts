@@ -11,10 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    loadChildren: () =>
-      import('./modules/personal-cabinet/personal-cabinet.module').then(
-        (m) => m.PersonalCabinetModule,
-      ),
+    loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
   },
   {
     path: 'sign-in',

@@ -13,8 +13,8 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PersonalCabinetRoutingModule } from './personal-cabinet-routing.module';
-import { PersonalCabinetComponent } from './personal-cabinet.component';
+import { PersonalCabinetRoutingModule } from './profile-routing.module';
+import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
 import { AddFolderComponent } from './_modals/add-folder/add-folder.component';
@@ -22,7 +22,7 @@ import { AddScriptComponent } from './sale-script/add-script/add-script.componen
 
 @NgModule({
   declarations: [
-    PersonalCabinetComponent,
+    ProfileComponent,
     SaleScriptComponent,
     SaleScriptsComponent,
     AddFolderComponent,
@@ -45,4 +45,4 @@ import { AddScriptComponent } from './sale-script/add-script/add-script.componen
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })
-export class PersonalCabinetModule {}
+export class ProfileModule {}

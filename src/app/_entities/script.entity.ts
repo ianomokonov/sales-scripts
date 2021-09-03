@@ -3,6 +3,7 @@ import { Block } from './block.entity';
 
 export interface Script extends BaseEntity {
   name: string;
+  description: string;
   isFolder: boolean;
   parentFolderId: number | null;
   blocks: Block[];

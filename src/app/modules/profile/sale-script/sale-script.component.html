@@ -55,8 +55,67 @@
               </div>
             </ng-template>
             <ng-template pTemplate="content"
-              ><div class="accordion-body">Body Content</div></ng-template
-            >
+              ><div class="accordion-body block">
+                <div class="block__transitions mb-3">
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Success"
+                    class="p-button-success mr-1 mb-1"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Success"
+                    class="p-button-danger mr-1 mb-1"
+                  ></button>
+                  <div class="inline-block">
+                    <button
+                      pButton
+                      pRipple
+                      icon="pi pi-link"
+                      type="button"
+                      class="p-button-outlined mr-1 mb-1"
+                    ></button>
+                  </div>
+                </div>
+                <div class="block__description mb-3" [innerHTML]="block.description"></div>
+                <div class="block__transitions">
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Success"
+                    class="p-button-success mr-1 mb-1"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Success"
+                    class="p-button-danger mr-1 mb-1"
+                  ></button>
+                  <div class="inline-block">
+                    <button
+                      pButton
+                      pRipple
+                      icon="pi pi-plus"
+                      type="button"
+                      class="p-button-outlined mr-1 mb-1"
+                    ></button>
+                    <button
+                      pButton
+                      pRipple
+                      icon="pi pi-link"
+                      type="button"
+                      class="p-button-outlined mr-1 mb-1"
+                    ></button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
           </p-accordionTab>
         </ng-template>
       </p-orderList>

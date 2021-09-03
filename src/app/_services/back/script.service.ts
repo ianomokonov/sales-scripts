@@ -13,7 +13,7 @@ export class ScriptService {
   constructor(private http: HttpClient) {}
 
   public getScript(id: number): Observable<Script> {
-    return this.http.get<Script>(`${this.baseUrl}/script/${id}`);
+    return this.http.get<Script>(`${this.baseUrl}/scripts/${id}`);
   }
 
   public getScripts(filters?: any): Observable<ScriptShortView[]> {
