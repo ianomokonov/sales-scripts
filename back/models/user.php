@@ -54,12 +54,11 @@ class User
     public function read($userId)
     {
         $query = "SELECT login, email, phone FROM $this->table WHERE id='$userId'";
-        $user = $this->dataBase->decode($this->dataBase->db->query($query)->fetch());
         // if($user == true){
         //     throw new Exception("User not found", 404);
         // }
         // file_put_contents('logs.txt', PHP_EOL.json_encode($user), FILE_APPEND);
-        return $user;
+        // return $user;
     }
 
     // Получение пользовательской информации
@@ -74,7 +73,6 @@ class User
         $stmt = $this->dataBase->db->query($query);
         $users = [];
         while ($user = $stmt->fetch()) {
-            $user = $this->dataBase->decode($user);
             $users[] = $user;
         }
         return $users;
@@ -103,7 +101,7 @@ class User
         if ($login != null) {
             $sth = $this->dataBase->db->prepare("SELECT id, password FROM " . $this->table . " WHERE login = ? LIMIT 1");
             $sth->execute(array(json_encode($login)));
-            $fullUser = $this->dataBase->decode($sth->fetch());
+            $fullUser = $sth->fetch();
             if ($fullUser) {
                 if (!password_verify($password, $fullUser['password'])) {
                     throw new Exception("User not found", 404);

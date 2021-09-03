@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { scriptsMock } from '../../sale-scripts/scripts.mock';
 import { ScriptService } from '../../../../_services/back/script.service';
-import { Script } from '../../../../_entities/script.entity';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
 
 @Component({
@@ -14,8 +13,8 @@ import { isFormInvalid } from '../../../../_utils/formValidCheck';
 export class AddFolderComponent implements OnInit {
   public folderForm: FormGroup;
   public mock = scriptsMock;
-  public folders: Script[] = [];
-  public select: Script | undefined;
+  // TODO: заменить на string[] когда будет отдельный запрос на папки
+  public folders: any = [];
   constructor(
     private scriptService: ScriptService,
     private fb: FormBuilder,
@@ -41,7 +40,7 @@ export class AddFolderComponent implements OnInit {
     if (isFormInvalid(this.folderForm)) return;
     const folder = this.folderForm.getRawValue();
     folder.isFolder = true;
-    this.scriptService.addScript(folder).subscribe((id) => {
+    this.scriptService.addScript({ ...folder, isForlder: true }).subscribe((id) => {
       folder.id = id;
       this.modal.close(folder);
     });

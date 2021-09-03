@@ -51,11 +51,10 @@ CREATE TABLE `Script` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(200) NOT NULL,
   `isFolder` bit(1) NOT NULL DEFAULT 0,
-  `parentFolderId` INTEGER NULL DEFAULT NULL,
+  `parentFolderId` INTEGER NULL,
   `createDate` DATETIME NOT NULL DEFAULT now(),
   `lastModifyDate` DATETIME NULL,
   `lastModifyUserId` INTEGER NULL,
-  `index` INTEGER NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -170,22 +169,6 @@ ALTER TABLE `ScriptParam` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`) 
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptParam` (`id`) ON DELETE CASCADE;
 
--- ---
--- Table Properties
--- ---
-
--- ALTER TABLE `User` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `Script` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `Block` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `UserScript` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `UserScriptFavorite` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `BlockAnswer` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `ScriptParam` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `UserScriptParamValue` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- ---
--- Test Data
--- ---
 
 --
 -- Дамп данных таблицы `User`
@@ -199,7 +182,20 @@ INSERT INTO `User` (`id`, `login`, `password`, `email`, `phone`, `isAdmin`) VALU
 --
 
 INSERT INTO `Script` (`id`, `name`, `isFolder`, `parentFolderId`, `createDate`, `lastModifyDate`, `lastModifyUserId`) VALUES
-(1, 'Скрипт 1', b'0', NULL, '2021-08-31 12:41:31', NULL, 1);
+(1, 'Скрипт 1', b'0', NULL, '2021-08-31 12:41:31', NULL, 1),
+(2, 'Папка 1', b'1', NULL, '2021-08-31 12:41:31', NULL, 1),
+(3, 'Папка 2', b'1', NULL, '2021-08-31 12:41:31', NULL, 1),
+(4, 'Скрипт 1', b'0', 2, '2021-08-31 12:41:31', NULL, 1),
+(5, 'Скрипт 2', b'0', 2, '2021-08-31 12:41:31', NULL, 1),
+(6, 'Папка 3', b'1', 3, '2021-08-31 12:41:31', NULL, 1),
+(7, 'Скрипт 1', b'0', 3, '2021-08-31 12:41:31', NULL, 1),
+(8, 'Скрипт 2', b'0', 3, '2021-08-31 12:41:31', NULL, 1),
+(9, 'Скрипт 3', b'0', 3, '2021-08-31 12:41:31', NULL, 1),
+(10, 'Скрипт 1', b'0', 6, '2021-08-31 12:41:31', NULL, 1),
+(11, 'Скрипт 2', b'0', 6, '2021-08-31 12:41:31', NULL, 1),
+(12, 'Скрипт 3', b'0', 6, '2021-08-31 12:41:31', NULL, 1),
+(13, 'Скрипт 4', b'0', 6, '2021-08-31 12:41:31', NULL, 1),
+(14, 'Скрипт 5', b'0', 6, '2021-08-31 12:41:31', NULL, 1);
 
 
 --

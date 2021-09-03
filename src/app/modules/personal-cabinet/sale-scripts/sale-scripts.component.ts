@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { ScriptShortView } from 'src/app/_models/script-short-view';
 import { ScriptService } from '../../../_services/back/script.service';
 import { scriptToTreeNodeFormatter } from './scriptToTreeNodeFormatter';
-import { Script } from '../../../_entities/script.entity';
 import { scriptsMock } from './scripts.mock';
 import { AddFolderComponent } from '../_modals/add-folder/add-folder.component';
 import { AddScriptComponent } from '../sale-script/add-script/add-script.component';
@@ -15,7 +15,7 @@ import { AddScriptComponent } from '../sale-script/add-script/add-script.compone
 })
 export class SaleScriptsComponent implements OnInit {
   public treeData: TreeNode[] = [];
-  private scripts: Script[] = scriptsMock;
+  private scripts: ScriptShortView[] = scriptsMock;
 
   constructor(private scriptService: ScriptService, private ds: DialogService) {}
 

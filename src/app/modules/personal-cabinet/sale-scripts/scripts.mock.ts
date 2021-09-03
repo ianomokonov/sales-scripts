@@ -1,12 +1,12 @@
-import { Script } from '../../../_entities/script.entity';
+import { ScriptShortView } from 'src/app/_models/script-short-view';
 
-export const scriptsMock: Script[] = [
+export const scriptsMock: ScriptShortView[] = [
   {
     id: 1,
     name: 'Скрипт 1',
     isFolder: false,
     parentFolderId: null,
-    blocks: [],
+
     createDate: new Date(),
   },
   {
@@ -14,7 +14,7 @@ export const scriptsMock: Script[] = [
     name: 'Директория 1',
     isFolder: true,
     parentFolderId: null,
-    blocks: [],
+
     createDate: new Date(),
   },
   {
@@ -22,7 +22,7 @@ export const scriptsMock: Script[] = [
     name: 'Директория 2',
     isFolder: true,
     parentFolderId: 2,
-    blocks: [],
+
     createDate: new Date(),
   },
   {
@@ -30,7 +30,7 @@ export const scriptsMock: Script[] = [
     name: 'Скрипт 2',
     isFolder: false,
     parentFolderId: 2,
-    blocks: [],
+
     createDate: new Date(),
   },
   {
@@ -38,7 +38,7 @@ export const scriptsMock: Script[] = [
     name: 'Скрипт 3',
     isFolder: false,
     parentFolderId: 3,
-    blocks: [],
+
     createDate: new Date(),
   },
   {
@@ -46,7 +46,7 @@ export const scriptsMock: Script[] = [
     name: 'Скрипт 4',
     isFolder: false,
     parentFolderId: 6,
-    blocks: [],
+
     createDate: new Date(),
   },
   {
@@ -54,7 +54,7 @@ export const scriptsMock: Script[] = [
     name: 'Директория 3',
     isFolder: true,
     parentFolderId: 3,
-    blocks: [],
+
     createDate: new Date(),
   },
   {
@@ -62,7 +62,7 @@ export const scriptsMock: Script[] = [
     name: 'Директория 4',
     isFolder: true,
     parentFolderId: 6,
-    blocks: [],
+
     createDate: new Date(),
   },
 ];

@@ -1,5 +1,5 @@
 import { TreeNode } from 'primeng/api';
-import { Script } from '../../../_entities/script.entity';
+import { ScriptShortView } from 'src/app/_models/script-short-view';
 
 function sortItems(a: TreeNode, b: TreeNode) {
   if (a.type && !b.type) {
@@ -8,7 +8,7 @@ function sortItems(a: TreeNode, b: TreeNode) {
   return -1;
 }
 
-function genTree(node: TreeNode, scripts: Script[]): TreeNode {
+function genTree(node: TreeNode, scripts: ScriptShortView[]): TreeNode {
   const parentId = Number(node.key);
   const items = scripts.filter((script) => script.parentFolderId === parentId);
   const children: TreeNode[] = [];
@@ -31,7 +31,7 @@ function genTree(node: TreeNode, scripts: Script[]): TreeNode {
   return node;
 }
 
-export function scriptToTreeNodeFormatter(scripts: Script[]): TreeNode[] {
+export function scriptToTreeNodeFormatter(scripts: ScriptShortView[]): TreeNode[] {
   const node: TreeNode[] = [];
   scripts.forEach((script) => {
     const item: TreeNode = {
