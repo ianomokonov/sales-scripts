@@ -1,0 +1,24 @@
+<form *ngIf="blockForm" class="pt-2 grid" [formGroup]="blockForm" autocomplete="off">
+  <div class="field col-8 mt-1 mb-0">
+    <span class="p-float-label w-12">
+      <input pInputText type="text" id="login_field" class="w-12" formControlName="name"/>
+      <label for="login_field">Название</label>
+    </span>
+  </div>
+  <div class="field col-4 mt-1 mb-0 flex flex-column justify-content-between">
+    <div class="p-field-radiobutton">
+      <p-radioButton formControlName="type" name="type" [value]="blockType.Block" inputId="block"></p-radioButton>
+      <label class="ml-2" for="block">Блок</label>
+    </div>
+    <div class="p-field-radiobutton">
+      <p-radioButton formControlName="type" name="type" [value]="blockType.Group" inputId="group"></p-radioButton>
+      <label class="ml-2" for="group">Группа</label>
+    </div>
+  </div>
+  <div class="field col-12">
+    <span class="p-float-label w-12">
+      <textarea id="float-input" rows="5" class="w-12" pInputTextarea formControlName="description" ></textarea>
+      <label for="float-input">Описание</label>
+    </span>
+  </div>
+</form>

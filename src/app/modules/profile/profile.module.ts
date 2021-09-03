@@ -13,12 +13,16 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
 import { AddFolderComponent } from './_modals/add-folder/add-folder.component';
-import { AddScriptComponent } from './sale-script/add-script/add-script.component';
+import { AddTransitionComponent } from './sale-script/add-transition/add-transition.component';
+import { AddBlockComponent } from './sale-script/add-block/add-block.component';
 
 @NgModule({
   declarations: [
@@ -26,14 +30,17 @@ import { AddScriptComponent } from './sale-script/add-script/add-script.componen
     SaleScriptComponent,
     SaleScriptsComponent,
     AddFolderComponent,
-    AddScriptComponent,
+    AddTransitionComponent,
+    AddBlockComponent,
   ],
   imports: [
     CommonModule,
     PersonalCabinetRoutingModule,
     DividerModule,
     DynamicDialogModule,
+    InputTextareaModule,
     ButtonModule,
+    RadioButtonModule,
     AccordionModule,
     ConfirmDialogModule,
     OrderListModule,
@@ -42,6 +49,7 @@ import { AddScriptComponent } from './sale-script/add-script/add-script.componen
     DropdownModule,
     ReactiveFormsModule,
     FormsModule,
+    SelectButtonModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })

@@ -1,17 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Block } from 'src/app/_entities/block.entity';
 import { Script } from 'src/app/_entities/script.entity';
 import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
+import { AddTransitionComponent } from './add-transition/add-transition.component';
 
 @Component({
   selector: 'app-sale-script',
   templateUrl: './sale-script.component.html',
   styleUrls: ['./sale-script.component.less'],
 })
-export class SaleScriptComponent {
+export class SaleScriptComponent implements OnInit {
   public script: Script | undefined;
 
   /** Список отмеченных блоков */
@@ -24,11 +26,24 @@ export class SaleScriptComponent {
     private activatedRoute: ActivatedRoute,
     private scriptService: ScriptService,
     private blockService: BlockService,
+    private modalService: DialogService,
   ) {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
         this.getScript(id);
       }
+    });
+  }
+
+  public ngOnInit(): void {
+    this.onAddTransitionClick();
+  }
+
+  public onAddTransitionClick(addLink: boolean = false) {
+    this.modalService.open(AddTransitionComponent, {
+      data: { addLink },
+      width: '50%',
+      header: 'Добавление перехода',
     });
   }
 
