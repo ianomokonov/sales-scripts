@@ -154,7 +154,7 @@ CREATE TABLE `UserScriptParamValue` (
 -- Foreign Keys 
 -- ---
 
-ALTER TABLE `RefreshTokens` ADD FOREIGN KEY (userId) REFERENCES `User` (`id`);
+ALTER TABLE `RefreshTokens` ADD FOREIGN KEY (userId) REFERENCES `User` (`id`) ON DELETE CASCADE;
 ALTER TABLE `Script` ADD FOREIGN KEY (parentFolderId) REFERENCES `Script` (`id`);
 ALTER TABLE `Script` ADD FOREIGN KEY (lastModifyUserId) REFERENCES `User` (`id`) ON DELETE SET NULL;
 ALTER TABLE `Block` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`);
@@ -175,7 +175,7 @@ ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptP
 --
 
 INSERT INTO `User` (`id`, `login`, `password`, `email`, `phone`, `isAdmin`) VALUES
-(1, 'inomokonov', '111', 'nomokonov.vana@gmail.com', 'NULL', b'0');
+(1, 'inomokonov', '$2y$10$2KGKgW0BISA4QzlaY6ljNe61sVXHmRpQV8quzjLFr9ZJv3gRWI.la', 'nomokonov.vana@gmail.com', 'NULL', b'0');
 
 --
 -- Дамп данных таблицы `Script`

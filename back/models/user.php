@@ -5,7 +5,7 @@ require_once __DIR__ . '/../utils/filesUpload.php';
 class User
 {
     private $dataBase;
-    private $table = 'user';
+    private $table = 'User';
     private $token;
     private $fileUploader;
     // private $baseUrl = 'http://localhost:4200/back';
@@ -21,16 +21,14 @@ class User
 
     public function create($userData)
     {
-        $password = htmlspecialchars(strip_tags($userData->password));
-        unset($userData->password);
-        unset($userData->passwordConfirm);
-        $userData = $this->dataBase->stripAll((array)$userData);
-        $password = password_hash($password, PASSWORD_BCRYPT);
-        if ($this->LoginExists($userData['login'])) {
+        $userData = (object) $this->dataBase->stripAll((array)$userData);
+
+        // Вставляем запрос
+        $userData->password = password_hash($userData->password, PASSWORD_BCRYPT);
+
+        if ($this->LoginOrEmailExists($userData->login, $userData->email)) {
             throw new Exception('Пользователь уже существует');
         }
-        // Вставляем запрос
-        $userData['password'] = json_encode($password);
         $query = $this->dataBase->genInsertQuery(
             $userData,
             $this->table
@@ -44,7 +42,7 @@ class User
         $userId = $this->dataBase->db->lastInsertId();
         if ($userId) {
             $tokens = $this->token->encode(array("id" => $userId));
-            $this->addRefreshToken($tokens[1], $userId);
+            $this->addRefreshToken($tokens["refreshToken"], $userId);
             return $tokens;
         }
         return null;
@@ -54,11 +52,12 @@ class User
     public function read($userId)
     {
         $query = "SELECT login, email, phone FROM $this->table WHERE id='$userId'";
+        $user = $this->dataBase->db->query($query)->fetch();
         // if($user == true){
         //     throw new Exception("User not found", 404);
         // }
         // file_put_contents('logs.txt', PHP_EOL.json_encode($user), FILE_APPEND);
-        // return $user;
+        return $user;
     }
 
     // Получение пользовательской информации
@@ -69,10 +68,11 @@ class User
 
     public function getUsers()
     {
-        $query = "SELECT id, name, surname FROM " . $this->table;
+        $query = "SELECT login, email, phone FROM " . $this->table;
         $stmt = $this->dataBase->db->query($query);
         $users = [];
         while ($user = $stmt->fetch()) {
+            $user = $user;
             $users[] = $user;
         }
         return $users;
@@ -100,14 +100,14 @@ class User
     {
         if ($login != null) {
             $sth = $this->dataBase->db->prepare("SELECT id, password FROM " . $this->table . " WHERE login = ? LIMIT 1");
-            $sth->execute(array(json_encode($login)));
+            $sth->execute(array($login));
             $fullUser = $sth->fetch();
             if ($fullUser) {
                 if (!password_verify($password, $fullUser['password'])) {
                     throw new Exception("User not found", 404);
                 }
                 $tokens = $this->token->encode(array("id" => $fullUser['id']));
-                $this->addRefreshToken($tokens[1], $fullUser['id']);
+                $this->addRefreshToken($tokens["refreshToken"], $fullUser['id']);
                 return $tokens;
             } else {
                 throw new Exception("User not found", 404);
@@ -119,7 +119,7 @@ class User
 
     public function isRefreshTokenActual($token, $userId)
     {
-        $query = "SELECT id FROM refreshTokens WHERE token = ? AND userId = ?";
+        $query = "SELECT id FROM RefreshTokens WHERE token = ? AND userId = ?";
 
         // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query);
@@ -151,89 +151,70 @@ class User
         }
     }
 
-    // Отправление сообщений
-
-    public function sendMessage($userId, $request)
-    {
-        $request = $this->dataBase->stripAll($request);
-        $request['userId'] = $userId;
-        $query = $this->dataBase->genInsertQuery(
-            $request,
-            'messages'
-        );
-        $stmt = $this->dataBase->db->prepare($query[0]);
-        if ($query[1][0] != null) {
-            $stmt->execute($query[1]);
-        }
-    }
-
     public function addRefreshToken($tokenn, $userId)
     {
-        $query = "INSERT INTO refreshTokens (token, userId) VALUES ('$tokenn', $userId)";
+        $query = "DELETE FROM RefreshTokens WHERE userId=$userId";
+        $this->dataBase->db->query($query);
+        $query = "INSERT INTO RefreshTokens (token, userId) VALUES ('$tokenn', $userId)";
         $this->dataBase->db->query($query);
     }
 
     public function removeRefreshToken($userId)
     {
-        $query = "DELETE FROM refreshTokens WHERE userId = $userId";
+        $query = "DELETE FROM RefreshTokens WHERE userId = $userId";
         $this->dataBase->db->query($query);
     }
 
     public function refreshToken($token)
     {
         $userId = $this->token->decode($token, true)->data->id;
-
         if (!$this->isRefreshTokenActual($token, $userId)) {
             throw new Exception("Unauthorized", 401);
         }
-
-        $this->removeRefreshToken($userId);
-
         $tokens = $this->token->encode(array("id" => $userId));
-        $this->addRefreshToken($tokens[1], $userId);
+        $this->addRefreshToken($tokens["refreshToken"], $userId);
         return $tokens;
     }
 
     public function getUpdateLink($email)
     {
-        $userId = $this->LoginExists($email);
-        $path = 'logs.txt';
+        // $userId = $this->LoginExists($email);
+        // $path = 'logs.txt';
 
-        if (!$userId) {
-            throw new Exception("Bad request", 400);
-        }
+        // if (!$userId) {
+        //     throw new Exception("Bad request", 400);
+        // }
 
-        $tokens = $this->token->encode(array("id" => $userId));
-        $url = $this->baseUrl . "/update?updatePassword=" . urlencode($tokens[0]);
-        $subject = "Изменение пароля для jungliki.com";
+        // $tokens = $this->token->encode(array("id" => $userId));
+        // $url = $this->baseUrl . "/update?updatePassword=" . urlencode($tokens[0]);
+        // $subject = "Изменение пароля для jungliki.com";
 
-        $message = "<h2>Чтобы изменить пароль перейдите по ссылке <a href='$url'>$url</a>!</h2>";
+        // $message = "<h2>Чтобы изменить пароль перейдите по ссылке <a href='$url'>$url</a>!</h2>";
 
-        $headers  = "Content-type: text/html; charset=utf-8 \r\n";
+        // $headers  = "Content-type: text/html; charset=utf-8 \r\n";
 
-        mail($email, $subject, $message, $headers);
-        file_put_contents($path, PHP_EOL . $email . " " . date("m.d.y H:i:s"), FILE_APPEND);
-        return true;
+        // mail($email, $subject, $message, $headers);
+        // file_put_contents($path, PHP_EOL . $email . " " . date("m.d.y H:i:s"), FILE_APPEND);
+        // return true;
     }
 
-    private function LoginExists(string $login)
+    private function LoginOrEmailExists(string $login, string $email)
     {
-        $query = "SELECT id FROM " . $this->table . " WHERE login = ?";
+        $query = "SELECT id FROM " . $this->table . " WHERE login = ? OR email = ?";
+
 
         // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query);
-        // инъекция
-        $email = json_encode(htmlspecialchars(strip_tags($login)));
         // выполняем запрос
-        $stmt->execute(array($email));
+        $stmt->execute(array($login, $email));
 
         // получаем количество строк
         $num = $stmt->rowCount();
 
         if ($num > 0) {
-            return $stmt->fetch()['id'];
+            return true;
         }
 
-        return $num > 0;
+        return false;
     }
 }

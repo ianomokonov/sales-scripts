@@ -15,6 +15,7 @@ class DataBase
 
     public function genInsertQuery($ins, $t)
     {
+        $ins = (array) $ins;
         $res = array('INSERT INTO ' . $t . ' (', array());
         $q = '';
         for ($i = 0; $i < count(array_keys((array)$ins)); $i++) {

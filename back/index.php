@@ -56,6 +56,18 @@ $app->post('/refresh-token', function (Request $request, Response $response) use
         return $response;
     } catch (Exception $e) {
         $response = new ResponseClass();
+        $response->getBody()->write(json_encode(array("error" => $e, "message" => $e->getMessage())));
+        return $response->withStatus(401);
+    }
+});
+
+$app->post('/delete-token', function (Request $request, Response $response) use ($dataBase, $token) {
+    try {
+        $user = new User($dataBase);
+        $response->getBody()->write(json_encode($user->removeRefreshToken($token->decode($request->getParsedBody()['token'], true)->data->id)));
+        return $response;
+    } catch (Exception $e) {
+        $response = new ResponseClass();
         $response->getBody()->write(json_encode(array("message" => $e->getMessage())));
         return $response->withStatus(401);
     }
@@ -163,4 +175,3 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
 });
 
 $app->run();
-
