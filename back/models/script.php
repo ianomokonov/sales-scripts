@@ -22,10 +22,28 @@ class Script
         }
         return $folders;
     }
-    public function getList()
+    public function getFolder($folderId = null)
     {
-        $query = "SELECT * FROM $this->table";
-        $stmt = $this->dataBase->db->query($query);
+        $result = array();
+        if ($folderId) {
+            $query = $this->dataBase->db->prepare("SELECT id, name, parentFolderId FROM $this->table WHERE id=?");
+            $query->execute(array($folderId));
+            $result = $query->fetch();
+        }
+
+        $result['scripts'] = $this->getFolderChildren($folderId);
+
+        return $result;
+    }
+
+    public function getFolderChildren($folderId = null)
+    {
+        $query = "SELECT * FROM $this->table WHERE parentFolderId IS ? ORDER BY isFolder DESC";
+        if ($folderId) {
+            $query = "SELECT * FROM $this->table WHERE parentFolderId = ? ORDER BY isFolder DESC";
+        }
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($folderId));
         $scripts = [];
         while ($script = $stmt->fetch()) {
             $script['id'] =  $script['id'] * 1;
@@ -76,28 +94,6 @@ class Script
             $blocks[] = $block;
         }
         return $blocks;
-    }
-
-    public function deleteBlock($blockId)
-    {
-        $query = "delete from Block where id=?";
-        $stmt = $this->dataBase->db->prepare($query);
-        $stmt->execute(array($blockId));
-        return true;
-    }
-
-    public function markBlock($blockId, $request)
-    {
-        if ($request['isFavorite']) {
-            $query = "insert into UserScriptFavorite (userScriptId, blockId) VALUES (?, ?)";
-            $stmt = $this->dataBase->db->prepare($query);
-            $stmt->execute(array($request['userScriptId'], $blockId));
-            return true;
-        }
-        $query = "delete from UserScriptFavorite where userScriptId=? AND blockId=?";
-        $stmt = $this->dataBase->db->prepare($query);
-        $stmt->execute(array($request['userScriptId'], $blockId));
-        return true;
     }
 
     public function sortBlocks($blocks)
