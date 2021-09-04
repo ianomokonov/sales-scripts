@@ -1,24 +1,46 @@
 <form *ngIf="blockForm" class="pt-2 grid" [formGroup]="blockForm" autocomplete="off">
   <div class="field col-8 mt-1 mb-0">
     <span class="p-float-label w-12">
-      <input pInputText type="text" id="login_field" class="w-12" formControlName="name"/>
+      <input pInputText type="text" id="login_field" class="w-12" formControlName="name" />
       <label for="login_field">Название</label>
     </span>
   </div>
   <div class="field col-4 mt-1 mb-0 flex flex-column justify-content-between">
     <div class="p-field-radiobutton">
-      <p-radioButton formControlName="type" name="type" [value]="blockType.Block" inputId="block"></p-radioButton>
+      <p-radioButton
+        formControlName="type"
+        name="type"
+        [value]="blockType.Block"
+        inputId="block"
+      ></p-radioButton>
       <label class="ml-2" for="block">Блок</label>
     </div>
     <div class="p-field-radiobutton">
-      <p-radioButton formControlName="type" name="type" [value]="blockType.Group" inputId="group"></p-radioButton>
+      <p-radioButton
+        formControlName="type"
+        name="type"
+        [value]="blockType.Group"
+        inputId="group"
+      ></p-radioButton>
       <label class="ml-2" for="group">Группа</label>
     </div>
   </div>
-  <div class="field col-12">
-    <span class="p-float-label w-12">
-      <textarea id="float-input" rows="5" class="w-12" pInputTextarea formControlName="description" ></textarea>
-      <label for="float-input">Описание</label>
-    </span>
+  <div class="field col-12 flex-row justify-content-center mt-1">
+    <p-editor
+      id="description_field"
+      placeholder="Описание"
+      formControlName="description"
+      [style]="{ 'min-height': '150px' }"
+    ></p-editor>
+  </div>
+  <div class="col-12 flex justify-content-end" *ngIf="showBtns">
+    <button
+      pButton
+      type="button"
+      label="Отмена"
+      (click)="modal.destroy()"
+      class="p-button-outlined p-button-secondary"
+    ></button>
+    <button pButton type="button" label="Сохранить" class="ml-1" (click)="save()"></button>
   </div>
 </form>

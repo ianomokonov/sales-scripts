@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { isFormInvalid } from 'src/app/_utils/formValidCheck';
 
 export enum BlockType {
   Block = 1,
@@ -15,8 +18,13 @@ export class AddBlockComponent implements OnInit {
   @Input() public blockForm: FormGroup | undefined;
 
   public blockType = BlockType;
+  public showBtns = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    public modal: DynamicDialogRef,
+    private toastService: MessageService,
+  ) {}
 
   public ngOnInit(): void {
     if (!this.blockForm) {
@@ -25,6 +33,18 @@ export class AddBlockComponent implements OnInit {
         type: [this.blockType.Block, Validators.required],
         description: [null, Validators.required],
       });
+      this.showBtns = true;
     }
+  }
+
+  public save() {
+    if (!this.blockForm || isFormInvalid(this.blockForm)) {
+      this.toastService.add({
+        severity: 'error',
+        detail: 'Заполните обязательные поля',
+      });
+      return;
+    }
+    this.modal.close(this.blockForm?.getRawValue());
   }
 }

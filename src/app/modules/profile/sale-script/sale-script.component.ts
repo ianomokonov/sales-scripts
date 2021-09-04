@@ -6,6 +6,7 @@ import { Block } from 'src/app/_entities/block.entity';
 import { Script } from 'src/app/_entities/script.entity';
 import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
+import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
 
 @Component({
@@ -27,6 +28,7 @@ export class SaleScriptComponent implements OnInit {
     private scriptService: ScriptService,
     private blockService: BlockService,
     private modalService: DialogService,
+    private dialogService: DialogService,
   ) {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
@@ -50,6 +52,18 @@ export class SaleScriptComponent implements OnInit {
   private getScript(id: number) {
     this.scriptService.getScript(id).subscribe((script) => {
       this.script = script;
+    });
+  }
+
+  public createBlock() {
+    const modal = this.dialogService.open(AddBlockComponent, {
+      header: 'Создание нового блока или группы',
+      width: '50%',
+    });
+
+    modal.onClose.subscribe((block) => {
+      // save block
+      console.log(block);
     });
   }
 

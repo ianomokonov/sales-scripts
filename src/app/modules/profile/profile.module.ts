@@ -12,6 +12,7 @@ import { TreeModule } from 'primeng/tree';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
+import { EditorModule } from 'primeng/editor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -32,6 +33,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     AddTransitionComponent,
     AddBlockComponent,
     AddScriptOrFolderComponent,
+    AddBlockComponent,
   ],
   imports: [
     CommonModule,
@@ -50,6 +52,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     ReactiveFormsModule,
     FormsModule,
     SelectButtonModule,
+    EditorModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })
