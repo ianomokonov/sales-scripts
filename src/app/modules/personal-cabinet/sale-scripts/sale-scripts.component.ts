@@ -5,8 +5,7 @@ import { ScriptShortView } from 'src/app/_models/script-short-view';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScriptService } from '../../../_services/back/script.service';
 import { scriptToTreeNodeFormatter } from './scriptToTreeNodeFormatter';
-import { AddFolderComponent } from '../_modals/add-folder/add-folder.component';
-import { AddScriptComponent } from '../_modals/add-script/add-script.component';
+import { AddScriptOrFolderComponent } from '../_modals/add-script-or-folder/add-script-or-folder.component';
 
 @Component({
   selector: 'app-sale-scripts',
@@ -39,25 +38,32 @@ export class SaleScriptsComponent implements OnInit {
   }
 
   public addFolder() {
-    const modal = this.ds.open(AddFolderComponent, {
+    const modal = this.ds.open(AddScriptOrFolderComponent, {
       header: 'Добавить папку',
       width: '70%',
-      data: this.folders,
+      data: {
+        folders: this.folders,
+        isFolder: true,
+      },
     });
 
     modal.onClose.subscribe((newFolder) => {
       if (newFolder) {
         this.scripts.push(newFolder);
+        this.folders.push(newFolder);
         this.treeData = scriptToTreeNodeFormatter(this.scripts);
       }
     });
   }
 
   public addScript() {
-    const modal = this.ds.open(AddScriptComponent, {
+    const modal = this.ds.open(AddScriptOrFolderComponent, {
       header: 'Добавить скрипт',
       width: '70%',
-      data: this.folders,
+      data: {
+        folders: this.folders,
+        isFolder: false,
+      },
     });
 
     modal.onClose.subscribe((newScriptId) => {

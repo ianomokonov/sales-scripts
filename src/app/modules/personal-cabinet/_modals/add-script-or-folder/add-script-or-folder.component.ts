@@ -7,12 +7,13 @@ import { isFormInvalid } from '../../../../_utils/formValidCheck';
 import { CreateScriptRequest } from '../../../../_models/requests/create-script.request';
 
 @Component({
-  selector: 'app-add-script',
-  templateUrl: './add-script.component.html',
-  styleUrls: ['./add-script.component.less'],
+  selector: 'app-add-script-or-folder',
+  templateUrl: './add-script-or-folder.component.html',
+  styleUrls: ['./add-script-or-folder.component.less'],
 })
-export class AddScriptComponent implements OnInit {
-  public scriptForm: FormGroup;
+export class AddScriptOrFolderComponent implements OnInit {
+  public modalForm: FormGroup;
+  private isFolder: boolean = false;
   public folders: IdNameResponse[] = [];
   constructor(
     private scriptService: ScriptService,
@@ -20,23 +21,28 @@ export class AddScriptComponent implements OnInit {
     private modal: DynamicDialogRef,
     private config: DynamicDialogConfig,
   ) {
-    this.scriptForm = fb.group({
+    this.modalForm = fb.group({
       name: ['', [Validators.required]],
       parentFolderId: [null],
     });
   }
 
   ngOnInit(): void {
-    this.folders = this.config.data;
+    this.folders = this.config.data.folders;
+    this.isFolder = this.config.data.isFolder;
   }
 
-  public addScript() {
-    if (isFormInvalid(this.scriptForm)) return;
-    const script: CreateScriptRequest = this.scriptForm.getRawValue();
-    if (!script.parentFolderId) delete script.parentFolderId;
-    script.isFolder = false;
-    this.scriptService.addScript(script).subscribe((id) => {
-      this.modal.close(id);
+  public addItem() {
+    if (isFormInvalid(this.modalForm)) return;
+    const item: CreateScriptRequest = this.modalForm.getRawValue();
+    if (!item.parentFolderId) delete item.parentFolderId;
+    item.isFolder = this.isFolder;
+    this.scriptService.addScript(item).subscribe((id) => {
+      if (this.isFolder) {
+        this.modal.close({ ...item, id });
+      } else {
+        this.modal.close(id);
+      }
     });
   }
 }

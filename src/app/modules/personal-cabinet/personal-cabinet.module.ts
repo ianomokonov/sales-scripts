@@ -17,16 +17,14 @@ import { PersonalCabinetRoutingModule } from './personal-cabinet-routing.module'
 import { PersonalCabinetComponent } from './personal-cabinet.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
-import { AddFolderComponent } from './_modals/add-folder/add-folder.component';
-import { AddScriptComponent } from './_modals/add-script/add-script.component';
+import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-script-or-folder.component';
 
 @NgModule({
   declarations: [
     PersonalCabinetComponent,
     SaleScriptComponent,
     SaleScriptsComponent,
-    AddFolderComponent,
-    AddScriptComponent,
+    AddScriptOrFolderComponent,
   ],
   imports: [
     CommonModule,
