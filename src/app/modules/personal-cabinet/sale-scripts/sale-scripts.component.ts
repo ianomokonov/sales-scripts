@@ -16,6 +16,7 @@ import { AddScriptComponent } from '../_modals/add-script/add-script.component';
 export class SaleScriptsComponent implements OnInit {
   public treeData: TreeNode[] = [];
   private scripts: ScriptShortView[] = [];
+  private folders: ScriptShortView[] = [];
 
   constructor(
     private scriptService: ScriptService,
@@ -27,6 +28,7 @@ export class SaleScriptsComponent implements OnInit {
   ngOnInit(): void {
     this.scriptService.getScripts().subscribe((scripts) => {
       this.scripts = scripts;
+      this.folders = this.scripts.filter((item) => item.isFolder);
       this.treeData = scriptToTreeNodeFormatter(this.scripts);
     });
   }
@@ -40,6 +42,7 @@ export class SaleScriptsComponent implements OnInit {
     const modal = this.ds.open(AddFolderComponent, {
       header: 'Добавить папку',
       width: '70%',
+      data: this.folders,
     });
 
     modal.onClose.subscribe((newFolder) => {
@@ -54,6 +57,7 @@ export class SaleScriptsComponent implements OnInit {
     const modal = this.ds.open(AddScriptComponent, {
       header: 'Добавить скрипт',
       width: '70%',
+      data: this.folders,
     });
 
     modal.onClose.subscribe((newScriptId) => {

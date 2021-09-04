@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IdNameResponse } from '../../../../_models/responses/id-name.response';
 import { ScriptService } from '../../../../_services/back/script.service';
 import { isFormInvalid } from '../../../../_utils/formValidCheck';
@@ -18,6 +18,7 @@ export class AddScriptComponent implements OnInit {
     private scriptService: ScriptService,
     private fb: FormBuilder,
     private modal: DynamicDialogRef,
+    private config: DynamicDialogConfig,
   ) {
     this.scriptForm = fb.group({
       name: ['', [Validators.required]],
@@ -26,9 +27,7 @@ export class AddScriptComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.scriptService.getFolders().subscribe((folders) => {
-      this.folders = folders;
-    });
+    this.folders = this.config.data;
   }
 
   public addScript() {
