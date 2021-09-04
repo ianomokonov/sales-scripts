@@ -12,12 +12,14 @@ import { TreeModule } from 'primeng/tree';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
+import { EditorModule } from 'primeng/editor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PersonalCabinetRoutingModule } from './personal-cabinet-routing.module';
 import { PersonalCabinetComponent } from './personal-cabinet.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
 import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-script-or-folder.component';
+import { AddBlockComponent } from './_modals/add-block/add-block.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     SaleScriptComponent,
     SaleScriptsComponent,
     AddScriptOrFolderComponent,
+    AddBlockComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +43,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     DropdownModule,
     ReactiveFormsModule,
     FormsModule,
+    EditorModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })

@@ -1,0 +1,19 @@
+<div class="grid" [formGroup]="modalForm">
+  <div class="field col-12 flex justify-content-center pt-3">
+    <span class="p-float-label p-input-icon-left w-12">
+      <input pInputText type="text" id="name_field" class="w-12" formControlName="name" />
+      <label for="name_field">Заголовок блока</label>
+    </span>
+  </div>
+  <div class="field col-12 flex-row justify-content-center mt-1">
+    <p-editor
+      id="description_field"
+      placeholder="Описание"
+      formControlName="description"
+      [style]="{ 'min-height': '320px' }"
+    ></p-editor>
+  </div>
+  <div class="col-8">
+    <p-button label="Создать" styleClass="p-button-primary" (onClick)="addBlock()"></p-button>
+  </div>
+</div>

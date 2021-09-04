@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Block } from 'src/app/_entities/block.entity';
 import { Script } from 'src/app/_entities/script.entity';
 import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
+import { AddBlockComponent } from '../_modals/add-block/add-block.component';
 
 @Component({
   selector: 'app-sale-script',
@@ -24,6 +26,7 @@ export class SaleScriptComponent {
     private activatedRoute: ActivatedRoute,
     private scriptService: ScriptService,
     private blockService: BlockService,
+    private dialogService: DialogService,
   ) {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
@@ -35,6 +38,18 @@ export class SaleScriptComponent {
   private getScript(id: number) {
     this.scriptService.getScript(id).subscribe((script) => {
       this.script = script;
+    });
+  }
+
+  public createBlock() {
+    const modal = this.dialogService.open(AddBlockComponent, {
+      header: 'Создание нового блока',
+      width: '40%',
+    });
+
+    modal.onClose.subscribe((block) => {
+      // save block
+      console.log(block);
     });
   }
 
