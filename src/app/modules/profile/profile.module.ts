@@ -20,18 +20,18 @@ import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
-import { AddFolderComponent } from './_modals/add-folder/add-folder.component';
 import { AddTransitionComponent } from './sale-script/add-transition/add-transition.component';
 import { AddBlockComponent } from './sale-script/add-block/add-block.component';
+import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-script-or-folder.component';
 
 @NgModule({
   declarations: [
     ProfileComponent,
     SaleScriptComponent,
     SaleScriptsComponent,
-    AddFolderComponent,
     AddTransitionComponent,
     AddBlockComponent,
+    AddScriptOrFolderComponent,
   ],
   imports: [
     CommonModule,

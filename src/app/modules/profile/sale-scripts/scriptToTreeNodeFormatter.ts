@@ -3,9 +3,9 @@ import { ScriptShortView } from 'src/app/_models/script-short-view';
 
 function sortItems(a: TreeNode, b: TreeNode) {
   if (a.type && !b.type) {
-    return 1;
+    return Number(a.key) - Number(b.key);
   }
-  return -1;
+  return Number(b.key) - Number(a.key);
 }
 
 function genTree(node: TreeNode, scripts: ScriptShortView[]): TreeNode {

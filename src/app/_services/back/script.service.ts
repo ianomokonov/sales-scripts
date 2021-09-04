@@ -5,6 +5,7 @@ import { CreateScriptRequest } from 'src/app/_models/requests/create-script.requ
 import { ScriptShortView } from 'src/app/_models/script-short-view';
 import { environment } from 'src/environments/environment';
 import { Script } from '../../_entities/script.entity';
+import { IdNameResponse } from '../../_models/responses/id-name.response';
 
 @Injectable()
 export class ScriptService {
@@ -16,8 +17,12 @@ export class ScriptService {
     return this.http.get<Script>(`${this.baseUrl}/scripts/${id}`);
   }
 
-  public getScripts(filters?: any): Observable<ScriptShortView[]> {
-    return this.http.get<ScriptShortView[]>(`${this.baseUrl}/scripts`, { params: filters });
+  public getScripts(): Observable<ScriptShortView[]> {
+    return this.http.get<ScriptShortView[]>(`${this.baseUrl}/scripts`);
+  }
+
+  public getFolders(): Observable<IdNameResponse[]> {
+    return this.http.get<IdNameResponse[]>(`${this.baseUrl}/folders`);
   }
 
   public addScript(request: CreateScriptRequest): Observable<number> {
