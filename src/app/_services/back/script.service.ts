@@ -14,7 +14,7 @@ export class ScriptService {
   constructor(private http: HttpClient) {}
 
   public getScript(id: number): Observable<Script> {
-    return this.http.get<Script>(`${this.baseUrl}/scripts/${id}`);
+    return this.http.get<Script>(`${this.baseUrl}/script/${id}`);
   }
 
   public getFolder(folderId?: number): Observable<FolderResponse> {
