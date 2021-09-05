@@ -2,14 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { TransitionType } from 'src/app/_models/transition-type';
 import { markInvalidFields } from 'src/app/_utils/formValidCheck';
 import { BlockType } from '../add-block/add-block.component';
 
-enum TransitionType {
-  Good = 1,
-  Normal,
-  Bad,
-}
 @Component({
   selector: 'app-add-transition',
   templateUrl: './add-transition.component.html',

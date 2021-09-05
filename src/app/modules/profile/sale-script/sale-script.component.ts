@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -14,7 +14,7 @@ import { AddTransitionComponent } from './add-transition/add-transition.componen
   templateUrl: './sale-script.component.html',
   styleUrls: ['./sale-script.component.less'],
 })
-export class SaleScriptComponent implements OnInit {
+export class SaleScriptComponent {
   public script: Script | undefined;
 
   /** Список отмеченных блоков */
@@ -35,10 +35,6 @@ export class SaleScriptComponent implements OnInit {
         this.getScript(id);
       }
     });
-  }
-
-  public ngOnInit(): void {
-    this.onAddTransitionClick();
   }
 
   public onAddTransitionClick(addLink: boolean = false) {

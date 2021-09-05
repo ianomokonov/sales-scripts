@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CreateBlockRequest } from 'src/app/_models/requests/create-block.request';
+import { CreateTransitionRequest } from 'src/app/_models/requests/create-transition.request';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
@@ -15,5 +17,13 @@ export class BlockService {
 
   public delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/block/${id}`);
+  }
+
+  public addBlock(request: CreateBlockRequest): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/block`, request);
+  }
+
+  public addTransition(blockId: number, request: CreateTransitionRequest): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/block/${blockId}/transition`, request);
   }
 }
