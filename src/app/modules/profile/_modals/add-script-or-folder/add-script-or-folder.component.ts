@@ -15,6 +15,7 @@ export class AddScriptOrFolderComponent implements OnInit {
   public modalForm: FormGroup;
   private isFolder: boolean = false;
   public folders: IdNameResponse[] = [];
+  private readonly currentFolder: number;
   constructor(
     private scriptService: ScriptService,
     private fb: FormBuilder,
@@ -25,6 +26,8 @@ export class AddScriptOrFolderComponent implements OnInit {
       name: ['', [Validators.required]],
       parentFolderId: [null],
     });
+    this.currentFolder = Number(this.config.data.currentFolder);
+    if (this.currentFolder) this.modalForm.get('parentFolderId')?.setValue(this.currentFolder);
   }
 
   ngOnInit(): void {
@@ -38,11 +41,7 @@ export class AddScriptOrFolderComponent implements OnInit {
     if (!item.parentFolderId) delete item.parentFolderId;
     item.isFolder = this.isFolder;
     this.scriptService.addScript(item).subscribe((id) => {
-      if (this.isFolder) {
-        this.modal.close({ ...item, id });
-      } else {
-        this.modal.close(id);
-      }
+      this.modal.close(id);
     });
   }
 }

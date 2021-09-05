@@ -8,9 +8,9 @@
       <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-envelope"></i>
           <input pInputText
-                 [class.p-filled]='signUpForm.controls.email.value'
                  type="email"
                  id="email_field"
+                 class='p-filled'
                  formControlName='email'>
           <label for="email_field">Почта</label>
       </span>
@@ -20,7 +20,7 @@
           <i class="pi pi-phone"></i>
           <p-inputMask inputId="phone_field"
                        styleClass='padding-left'
-                       [class.p-inputwrapper-filled]='signUpForm.controls.phone.value'
+                       class='p-inputwrapper-filled'
                        type='tel'
                        mask="+7 (999) 999-99-99"
                        formControlName='phone'></p-inputMask>
@@ -31,9 +31,9 @@
       <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-user"></i>
           <input pInputText
-                 [class.p-filled]='signUpForm.controls.login.value'
                  type="text"
                  id="login_field"
+                 class='p-filled'
                  formControlName='login'>
           <label for="login_field">Логин</label>
       </span>
@@ -44,8 +44,8 @@
             <i class="pi pi-lock"></i>
             <input pInputText
                    [type]="showPassword ? 'text' : 'password'"
-                   [class.p-filled]='signUpForm.controls.password.value'
                    id="password_field"
+                   class='p-filled'
                    formControlName='password'>
             <label for="password_field">Пароль</label>
           </span>
@@ -63,7 +63,6 @@
               <i class="pi pi-clone"></i>
               <input pInputText
                      [type]="showPasswordConfirm ? 'text' : 'password'"
-                     [class.p-filled]='signUpForm.controls.passwordConfirm.value'
                      id="password_confirm"
                      [ngClass]='signUpForm.hasError("notSame") ? "ng-dirty ng-invalid" : ""'
                      formControlName='passwordConfirm'>

@@ -1,6 +1,6 @@
-<div class='m-0 grid px-3'>
-  <div class='col mt-2'>
-    <div class='flex align-items-center mx-3'>
+<div class='grid'>
+  <div class='col-8 m-auto'>
+    <div class='flex align-items-center mt-3'>
       <button pButton
               (click)='addFolder()'
               type="button"
@@ -15,15 +15,43 @@
               iconPos="left"
               label='Добавить скрипт'></button>
     </div>
-    <div class='mx-3 my-2'>
-      <p-tree [value]="treeData">
-        <ng-template let-item pTemplate="default">
-          <b class='cursor-pointer' (click)='toggle(item)'>{{item.label}}</b>
-        </ng-template>
-        <ng-template let-item pTemplate="script">
-          <div class='cursor-pointer hover-underline' [routerLink]='[item.key]'>{{item.label}}</div>
-        </ng-template>
-      </p-tree>
+    <div class='my-2' *ngIf='items'>
+      <div class='flex align-items-center h-4rem'>
+        <div *ngIf='items.parentFolderId || items.id && !items.parentFolderId'
+             class='navigate-buttons'>
+        <span (click)='previousFolder(items.parentFolderId)'
+              class='pi pi-arrow-left cursor-pointer mr-2'></span>
+          <span (click)='previousFolder()' class='pi pi-arrow-up cursor-pointer'></span>
+        </div>
+        <div class='breadcrumb'>
+          Здесь будет БредКрамб
+        </div>
+      </div>
+      <p-card>
+        <p-table [value]="items.scripts" responsiveLayout="scroll" class='table'>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Наименование</th>
+              <th>Тип</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr (click)='navigate(item)' class='cursor-pointer'>
+              <td>
+                <b *ngIf='item.isFolder'>{{item.name}}</b>
+                <span *ngIf='!item.isFolder' class='text-underline'>{{item.name}}</span>
+              </td>
+              <td style='width: 30%'>{{item.isFolder ? 'Папка со скриптами' : 'Скрипт'}}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td>Здесь пока ничего нет</td>
+              <td></td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
     </div>
   </div>
 </div>

@@ -17,6 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -53,6 +55,8 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     FormsModule,
     SelectButtonModule,
     EditorModule,
+    TableModule,
+    CardModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })
