@@ -57,11 +57,14 @@ class Script
         return $scripts;
     }
 
-    public function read($userScriptId)
+    public function read($userScriptId, $block)
     {
-        $query = "SELECT * FROM $this->table s JOIN UserScript us ON s.id=us.scriptId WHERE us.id='$userScriptId'";
+        $query = "SELECT s.id, s.name, createDate, lastModifyDate, lastModifyUserId FROM $this->table s JOIN UserScript us ON s.id=us.scriptId WHERE us.id='$userScriptId'";
         $script = $this->dataBase->db->query($query)->fetch();
-        $script['blocks'] = $this->readBlocks($userScriptId, $script['id']);
+        $script['id'] =  $script['id'] * 1;
+        $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:00:00", strtotime($script['lastModifyDate'])) : null;
+        $script['createDate'] = $script['createDate'] ? date("Y/m/d H:00:00", strtotime($script['createDate'])) : null;
+        $script['blocks'] = $this->readBlocks($userScriptId, $script['id'], $block);
         return $script;
     }
 
@@ -81,7 +84,7 @@ class Script
         return $this->dataBase->db->lastInsertId();
     }
 
-    public function readBlocks($scriptId, $userScriptId)
+    public function readBlocks($scriptId, $userScriptId, Block $blockModel)
     {
         $query = "SELECT b.id, b.name, b.description, b.createDate, b.lastModifyDate, b.createDate, b.lastModifyUserId, b.blockIndex, (SELECT count(*) FROM UserScriptFavorite usf WHERE usf.userScriptId=? AND usf.blockId=b.id) as isFavorite FROM Block b WHERE b.scriptId=? ORDER BY b.blockIndex";
         $stmt = $this->dataBase->db->prepare($query);
@@ -91,6 +94,8 @@ class Script
             $block['isFavorite'] = $block['isFavorite'] == '1';
             $block['blockIndex'] = $block['blockIndex'] * 1;
             $block['id'] = $block['id'] * 1;
+            $block['incommingTransitions'] = $blockModel->getTransitions($block['id']);
+            $block['outgoingTransitions'] = $blockModel->getTransitions($block['id'], false);
             $blocks[] = $block;
         }
         return $blocks;

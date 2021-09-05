@@ -109,17 +109,17 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
     });
 
 
-    $group->group('script',  function (RouteCollectorProxy $scriptGroup) use ($script) {
+    $group->group('script',  function (RouteCollectorProxy $scriptGroup) use ($script, $block) {
         $scriptGroup->post('', function (Request $request, Response $response) use ($script) {
             $response->getBody()->write(json_encode($script->create($request->getParsedBody())));
             return $response;
         });
 
-        $scriptGroup->get('/{scriptId}', function (Request $request, Response $response) use ($script) {
+        $scriptGroup->get('/{scriptId}', function (Request $request, Response $response) use ($script, $block) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
             $scriptId = $route->getArgument('scriptId');
-            $response->getBody()->write(json_encode($script->read($scriptId)));
+            $response->getBody()->write(json_encode($script->read($scriptId, $block)));
             return $response;
         });
 

@@ -49,6 +49,28 @@ class Block
         return $this->dataBase->db->lastInsertId();
     }
 
+    public function getTransitions($blockId, $incomming = true)
+    {
+        $query = "SELECT * FROM Transition WHERE blockId = ?";
+        if ($incomming) {
+            $query = "SELECT * FROM Transition WHERE nextBlockId = ?";
+        }
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($blockId));
+        $transitions = [];
+        while ($transition = $stmt->fetch()) {
+            $transition['id'] =  $transition['id'] * 1;
+            $transition['blockId'] =  $transition['blockId'] * 1;
+            $transition['nextBlockId'] =  $transition['nextBlockId'] * 1;
+            $transition['status'] = $transition['status'] ? $transition['status'] * 1 : null;
+            $transition['lastModifyDate'] = $transition['lastModifyDate'] ? date("Y/m/d H:00:00", strtotime($transition['lastModifyDate'])) : null;
+            $script['createDate'] = $transition['createDate'] ? date("Y/m/d H:00:00", strtotime($transition['createDate'])) : null;
+
+            $transitions[] = $transition;
+        }
+        return $transitions;
+    }
+
     public function delete($blockId)
     {
         $query = "delete from Block where id=?";
