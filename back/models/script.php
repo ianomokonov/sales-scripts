@@ -65,7 +65,22 @@ class Script
         $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:00:00", strtotime($script['lastModifyDate'])) : null;
         $script['createDate'] = $script['createDate'] ? date("Y/m/d H:00:00", strtotime($script['createDate'])) : null;
         $script['blocks'] = $this->readBlocks($userScriptId, $script['id'], $block);
+        $script['breadCrumbs'] = $this->getBreadCrumbs($script['id']);
         return $script;
+    }
+
+    public function getBreadCrumbs($scriptId, $result = array())
+    {
+        $query = "SELECT id, name, parentFolderId FROM $this->table WHERE id='$scriptId'";
+        $script = $this->dataBase->db->query($query)->fetch();
+        $script['id'] =  $script['id'] * 1;
+        array_unshift($result, $script);
+        if(!$script['parentFolderId']){
+            return $result;
+        }
+
+        return $this->getBreadCrumbs($script['parentFolderId'], $result);
+
     }
 
     public function create($request)
