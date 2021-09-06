@@ -73,7 +73,7 @@ export class SaleScriptsComponent implements OnInit {
 
     modal.onClose.subscribe((folderId: number) => {
       if (folderId) {
-        this.getFolder(folderId);
+        this.router.navigate(['scripts', folderId], { relativeTo: this.route.parent });
       }
     });
   }
