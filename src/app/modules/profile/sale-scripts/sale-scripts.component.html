@@ -1,7 +1,12 @@
 <div class="grid">
   <div class="col-8 m-auto">
     <div class="flex align-items-center mt-3">
-      <p-splitButton label="Добавить" icon="pi pi-plus" [model]="buttonItems"></p-splitButton>
+      <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
+      <button pButton
+              type="button"
+              icon="pi pi-plus"
+              label="Добавить"
+              (click)="menu.toggle($event)"></button>
     </div>
     <div class="my-2" *ngIf="items">
       <div class="flex align-items-center h-4rem">
