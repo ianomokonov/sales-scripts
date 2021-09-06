@@ -19,6 +19,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
+import { SplitButtonModule } from 'primeng/splitbutton';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -57,6 +58,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     EditorModule,
     TableModule,
     CardModule,
+    SplitButtonModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })

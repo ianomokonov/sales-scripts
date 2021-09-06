@@ -19,6 +19,10 @@ const routes: Routes = [
         component: SaleScriptsComponent,
       },
       {
+        path: 'scripts/:id',
+        component: SaleScriptsComponent,
+      },
+      {
         path: 'script/:id',
         component: SaleScriptComponent,
       },

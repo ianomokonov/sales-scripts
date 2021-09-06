@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ScriptShortView } from 'src/app/_models/script-short-view';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { MenuItem } from 'primeng/api';
 import { ScriptService } from '../../../_services/back/script.service';
 import { AddScriptOrFolderComponent } from '../_modals/add-script-or-folder/add-script-or-folder.component';
 import { FolderResponse } from '../../../_models/responses/folder.response';
@@ -17,6 +18,7 @@ export class SaleScriptsComponent implements OnInit {
   public items: FolderResponse | undefined;
   private folders: IdNameResponse[] = [];
   private lastFolderId: number | null = null;
+  public buttonItems: MenuItem[];
 
   constructor(
     private scriptService: ScriptService,
@@ -24,11 +26,35 @@ export class SaleScriptsComponent implements OnInit {
     private route: ActivatedRoute,
     private ds: DialogService,
     private titleService: Title,
-  ) {}
+  ) {
+    this.buttonItems = [
+      {
+        label: 'Папку',
+        icon: 'pi pi-folder',
+        command: () => {
+          this.addFolder();
+        },
+      },
+      {
+        label: 'Скрипт',
+        icon: 'pi pi-file',
+        command: () => {
+          this.addScript();
+        },
+      },
+    ];
+  }
 
   ngOnInit(): void {
-    this.lastFolderId = Number(sessionStorage.getItem('lastFolderId'));
-    this.getFolder();
+    this.route.params.subscribe((params: Params) => {
+      const { id } = params;
+      if (id) {
+        this.lastFolderId = id;
+        this.getFolder(id);
+      } else {
+        this.getFolder();
+      }
+    });
     this.scriptService.getFolders().subscribe((folders) => {
       this.folders = folders;
     });
@@ -37,7 +63,7 @@ export class SaleScriptsComponent implements OnInit {
   public addFolder() {
     const modal = this.ds.open(AddScriptOrFolderComponent, {
       header: 'Добавить папку',
-      width: '70%',
+      width: '50%',
       data: {
         folders: this.folders,
         isFolder: true,
@@ -55,7 +81,7 @@ export class SaleScriptsComponent implements OnInit {
   public addScript() {
     const modal = this.ds.open(AddScriptOrFolderComponent, {
       header: 'Добавить скрипт',
-      width: '70%',
+      width: '50%',
       data: {
         folders: this.folders,
         isFolder: false,
@@ -70,35 +96,24 @@ export class SaleScriptsComponent implements OnInit {
     });
   }
 
-  public navigate(item: ScriptShortView) {
-    if (item.isFolder) {
-      this.getFolder(item.id);
-      this.lastFolderId = item.id;
+  public navigate(item?: ScriptShortView, id?: number) {
+    if (item) {
+      if (item.isFolder) {
+        this.router.navigate(['scripts', item.id], { relativeTo: this.route.parent });
+      } else {
+        this.router.navigate(['script', item.id], { relativeTo: this.route.parent });
+      }
+    } else if (id) {
+      this.router.navigate(['scripts', id], { relativeTo: this.route.parent });
     } else {
-      this.router.navigate(['script', item.id], { relativeTo: this.route.parent });
-      if (item.parentFolderId)
-        sessionStorage.setItem('lastFolderId', item.parentFolderId.toString());
+      this.router.navigate(['scripts'], { relativeTo: this.route.parent });
     }
   }
 
   public getFolder(id?: number) {
-    if (!id && this.lastFolderId) {
-      // eslint-disable-next-line no-param-reassign
-      id = this.lastFolderId;
-      sessionStorage.removeItem('lastFolderId');
-    }
     this.scriptService.getFolder(id).subscribe((response) => {
       this.items = response;
       this.titleService.setTitle(this.items.name ? this.items.name : 'Скрипты продаж');
     });
-  }
-
-  public previousFolder(id?: number) {
-    if (id) {
-      this.lastFolderId = id;
-    } else {
-      this.lastFolderId = null;
-    }
-    this.getFolder(id);
   }
 }

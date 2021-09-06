@@ -1,5 +1,5 @@
-<div class='grid' [formGroup]='modalForm'>
-  <div class="field col-8 flex justify-content-center mt-1">
+<div class='grid flex-column' [formGroup]='modalForm'>
+  <div class="field col flex justify-content-center mt-1">
       <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-folder"></i>
           <input pInputText
@@ -10,7 +10,7 @@
           <label for="login_field">Название</label>
       </span>
   </div>
-  <div class="field col-8 flex justify-content-center dropdown-i">
+  <div class="field col flex justify-content-center dropdown-i">
       <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-folder-open"></i>
           <p-dropdown [options]="folders"
@@ -22,7 +22,7 @@
           <label for="folders">Создать в папке (необязательно)</label>
       </span>
   </div>
-  <div class='col-8'>
+  <div class='col'>
     <p-button label="Создать" styleClass="p-button-success" (onClick)='addItem()'></p-button>
   </div>
 </div>

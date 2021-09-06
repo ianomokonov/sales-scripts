@@ -1,23 +1,7 @@
 <div class="grid">
   <div class="col-8 m-auto">
     <div class="flex align-items-center mt-3">
-      <button
-        pButton
-        (click)="addFolder()"
-        type="button"
-        icon="pi pi-plus"
-        iconPos="left"
-        label="Добавить папку"
-        class="mr-2"
-      ></button>
-      <button
-        pButton
-        (click)="addScript()"
-        type="button"
-        icon="pi pi-plus"
-        iconPos="left"
-        label="Добавить скрипт"
-      ></button>
+      <p-splitButton label="Добавить" icon="pi pi-plus" [model]="buttonItems"></p-splitButton>
     </div>
     <div class="my-2" *ngIf="items">
       <div class="flex align-items-center h-4rem">
@@ -26,12 +10,14 @@
           class="navigate-buttons"
         >
           <span
-            (click)="previousFolder(items.parentFolderId)"
+            (click)="navigate(undefined, items.parentFolderId)"
             class="pi pi-arrow-left cursor-pointer mr-2"
           ></span>
-          <span (click)="previousFolder()" class="pi pi-arrow-up cursor-pointer"></span>
+          <span (click)="navigate()" class="pi pi-arrow-up cursor-pointer"></span>
         </div>
-        <div class="breadcrumb">Здесь будет БредКрамб</div>
+        <div class="breadcrumb">
+          <h3>{{items.name ? items.name : 'Главная'}}</h3>
+        </div>
       </div>
       <p-card>
         <p-table [value]="items.scripts" responsiveLayout="scroll" class="table">
@@ -52,7 +38,6 @@
                 <button
                   *ngIf="item.isFolder"
                   pButton
-                  pRipple
                   type="button"
                   icon="pi pi-folder-open"
                   [label]="item.name"
