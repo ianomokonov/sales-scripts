@@ -73,3 +73,13 @@ app-sale-script {
   align-items: center;
   min-height: 2.5rem;
 }
+
+.validation-highlight {
+  &.ng-touched.ng-dirty.ng-invalid {
+    .p-editor-container {
+      .p-editor-toolbar, .p-editor-content {
+        border-color: #B00020 !important;
+      }
+    }
+  }
+}
