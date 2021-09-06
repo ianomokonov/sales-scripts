@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
-import { ScriptShortView } from 'src/app/_models/script-short-view';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MenuItem } from 'primeng/api';
@@ -96,19 +95,19 @@ export class SaleScriptsComponent implements OnInit {
     });
   }
 
-  public navigate(item?: ScriptShortView, id?: number) {
-    if (item) {
-      if (item.isFolder) {
-        this.router.navigate(['scripts', item.id], { relativeTo: this.route.parent });
-      } else {
-        this.router.navigate(['script', item.id], { relativeTo: this.route.parent });
-      }
-    } else if (id) {
-      this.router.navigate(['scripts', id], { relativeTo: this.route.parent });
-    } else {
-      this.router.navigate(['scripts'], { relativeTo: this.route.parent });
-    }
-  }
+  // public navigate(item?: ScriptShortView, id?: number) {
+  //   if (item) {
+  //     if (item.isFolder) {
+  //       this.router.navigate(['scripts', item.id], { relativeTo: this.route.parent });
+  //     } else {
+  //       this.router.navigate(['script', item.id], { relativeTo: this.route.parent });
+  //     }
+  //   } else if (id) {
+  //     this.router.navigate(['scripts', id], { relativeTo: this.route.parent });
+  //   } else {
+  //     this.router.navigate(['scripts'], { relativeTo: this.route.parent });
+  //   }
+  // }
 
   public getFolder(id?: number) {
     this.scriptService.getFolder(id).subscribe((response) => {

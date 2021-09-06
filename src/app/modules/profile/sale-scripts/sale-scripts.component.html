@@ -10,10 +10,10 @@
           class="navigate-buttons"
         >
           <span
-            (click)="navigate(undefined, items.parentFolderId)"
+            [routerLink]='["/profile", "scripts", items.parentFolderId ? items.parentFolderId : ""]'
             class="pi pi-arrow-left cursor-pointer mr-2"
           ></span>
-          <span (click)="navigate()" class="pi pi-arrow-up cursor-pointer"></span>
+          <span [routerLink]='["/profile", "scripts"]' class="pi pi-arrow-up cursor-pointer"></span>
         </div>
         <div class="breadcrumb">
           <h3>{{items.name ? items.name : 'Главная'}}</h3>
@@ -28,7 +28,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item>
-            <tr (click)="navigate(item)" class="cursor-pointer">
+            <tr [routerLink]='["/profile", item.isFolder ? "scripts" : "script", item.id]' class="cursor-pointer">
               <td>
                 <p-button
                   *ngIf="!item.isFolder"
