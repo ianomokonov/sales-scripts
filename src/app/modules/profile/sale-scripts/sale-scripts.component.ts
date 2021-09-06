@@ -59,6 +59,13 @@ export class SaleScriptsComponent implements OnInit {
     });
   }
 
+  public getFolder(id?: number) {
+    this.scriptService.getFolder(id).subscribe((response) => {
+      this.items = response;
+      this.titleService.setTitle(this.items.name ? this.items.name : 'Скрипты продаж');
+    });
+  }
+
   public addFolder() {
     const modal = this.ds.open(AddScriptOrFolderComponent, {
       header: 'Добавить папку',
@@ -92,27 +99,6 @@ export class SaleScriptsComponent implements OnInit {
       if (newScriptId) {
         this.router.navigate(['script', newScriptId], { relativeTo: this.route.parent });
       }
-    });
-  }
-
-  // public navigate(item?: ScriptShortView, id?: number) {
-  //   if (item) {
-  //     if (item.isFolder) {
-  //       this.router.navigate(['scripts', item.id], { relativeTo: this.route.parent });
-  //     } else {
-  //       this.router.navigate(['script', item.id], { relativeTo: this.route.parent });
-  //     }
-  //   } else if (id) {
-  //     this.router.navigate(['scripts', id], { relativeTo: this.route.parent });
-  //   } else {
-  //     this.router.navigate(['scripts'], { relativeTo: this.route.parent });
-  //   }
-  // }
-
-  public getFolder(id?: number) {
-    this.scriptService.getFolder(id).subscribe((response) => {
-      this.items = response;
-      this.titleService.setTitle(this.items.name ? this.items.name : 'Скрипты продаж');
     });
   }
 }
