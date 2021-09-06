@@ -29,6 +29,7 @@
           <ng-template pTemplate="header">
             <tr>
               <th>Наименование</th>
+              <th>Дата изменения</th>
               <th>Тип</th>
             </tr>
           </ng-template>
@@ -49,12 +50,14 @@
                   class="p-button-text"
                 ></button>
               </td>
-              <td style="width: 30%">{{ item.isFolder ? 'Папка' : 'Скрипт' }}</td>
+              <td>{{(item.lastModifyDate ? item.lastModifyDate : item.createDate) | date:'dd.MM.yyyy HH:mm'}} </td>
+              <td style="width: 20%">{{ item.isFolder ? 'Папка' : 'Скрипт' }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
               <td>Здесь пока ничего нет</td>
+              <td></td>
               <td></td>
             </tr>
           </ng-template>
