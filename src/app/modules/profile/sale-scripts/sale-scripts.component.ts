@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
+import { OverlayPanel } from 'primeng/overlaypanel';
 import { ScriptService } from '../../../_services/back/script.service';
 import { AddScriptOrFolderComponent } from '../_modals/add-script-or-folder/add-script-or-folder.component';
 import { FolderResponse } from '../../../_models/responses/folder.response';
@@ -15,6 +16,9 @@ import { convertToBreadCrumb } from './breadCrumb.converter';
   styleUrls: ['./sale-scripts.component.less'],
 })
 export class SaleScriptsComponent implements OnInit {
+  @ViewChild('subMenu')
+  public subMenu: OverlayPanel | undefined;
+  public subMenuItems: IdNameResponse[] | undefined;
   public items: FolderResponse = { scripts: [] };
   private folders: IdNameResponse[] = [];
   private lastFolderId: number | null = null;
@@ -57,9 +61,9 @@ export class SaleScriptsComponent implements OnInit {
       } else {
         this.getFolder();
       }
-    });
-    this.scriptService.getFolders().subscribe((folders) => {
-      this.folders = folders;
+      this.scriptService.getFolders().subscribe((folders) => {
+        this.folders = folders;
+      });
     });
   }
 
@@ -67,7 +71,9 @@ export class SaleScriptsComponent implements OnInit {
     const sub = this.scriptService.getFolder(id).subscribe(
       (response) => {
         this.items = response;
-        this.breadCrumb = convertToBreadCrumb(this.items.breadCrumbs);
+        const crumb = convertToBreadCrumb(this.items.breadCrumbs);
+        this.breadCrumb = crumb.data;
+        this.subMenuItems = crumb.crumbs;
         this.loadingService.removeSubscription(sub);
       },
       ({ error }) => {
@@ -116,5 +122,12 @@ export class SaleScriptsComponent implements OnInit {
         this.router.navigate(['script', newScriptId], { relativeTo: this.route.parent });
       }
     });
+  }
+
+  public breadCrumbToggle(action: any) {
+    const { originalEvent, item } = action;
+    if (item.id === 'toggle') {
+      this.subMenu?.toggle(originalEvent);
+    }
   }
 }

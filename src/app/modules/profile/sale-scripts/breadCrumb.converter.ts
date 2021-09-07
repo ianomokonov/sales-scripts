@@ -1,7 +1,17 @@
 import { MenuItem } from 'primeng/api';
 import { IdNameResponse } from '../../../_models/responses/id-name.response';
 
-export function convertToBreadCrumb(items?: IdNameResponse[]): MenuItem[] {
+function genBreadCrumb(data: MenuItem[], items: IdNameResponse[]) {
+  items.forEach((item) => {
+    data.push({
+      label: item.name,
+      routerLink: ['/profile', 'scripts', item.id],
+    });
+  });
+}
+
+export function convertToBreadCrumb(items?: IdNameResponse[]) {
+  let crumbs;
   const data: MenuItem[] = [
     {
       icon: 'pi pi-home',
@@ -9,12 +19,20 @@ export function convertToBreadCrumb(items?: IdNameResponse[]): MenuItem[] {
     },
   ];
   if (items) {
-    items.forEach((item) => {
+    if (items.length > 6) {
+      const start = items.slice(0, 3);
+      crumbs = items.slice(3, items.length - 3);
+      const end = items.slice(items.length - 3, items.length);
+      genBreadCrumb(data, start);
       data.push({
-        label: item.name,
-        routerLink: ['/profile', 'scripts', item.id],
+        id: 'toggle',
+        label: '...',
+        styleClass: 'cursor-pointer',
       });
-    });
+      genBreadCrumb(data, end);
+    } else {
+      genBreadCrumb(data, items);
+    }
   }
-  return data;
+  return { data, crumbs };
 }

@@ -23,6 +23,8 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { MenuModule } from 'primeng/menu';
 import { RippleModule } from 'primeng/ripple';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -65,6 +67,8 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     MenuModule,
     RippleModule,
     BreadcrumbModule,
+    OverlayPanelModule,
+    ScrollPanelModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })

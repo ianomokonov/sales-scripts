@@ -1,5 +1,5 @@
 <div class="grid m-0">
-  <div class="col-8 m-auto">
+  <div class="col-10 m-auto">
     <div class="flex align-items-center mt-3">
       <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
       <button pButton
@@ -11,7 +11,7 @@
     </div>
     <div class="my-2">
       <div class="mb-2">
-        <p-breadcrumb [model]="breadCrumb"></p-breadcrumb>
+        <p-breadcrumb [model]="breadCrumb" (onItemClick)='breadCrumbToggle($event)'></p-breadcrumb>
       </div>
       <p-card>
         <p-table [value]="items.scripts" responsiveLayout="scroll" class="table">
@@ -52,3 +52,21 @@
     </div>
   </div>
 </div>
+
+<p-overlayPanel #subMenu>
+  <ng-template pTemplate>
+    <p-scrollPanel [style]="{height: '150px'}">
+      <div *ngFor='let item of subMenuItems'>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-folder-open"
+          [label]="item.name"
+          [routerLink]='["/profile", "scripts", item.id]'
+          (click)='subMenu.hide()'
+          class="p-button-text"
+        ></button>
+      </div>
+    </p-scrollPanel>
+  </ng-template>
+</p-overlayPanel>
