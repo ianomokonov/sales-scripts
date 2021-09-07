@@ -62,8 +62,8 @@ class Script
             $script['id'] =  $script['id'] * 1;
             $script['isFolder'] =  $script['isFolder'] == '1';
             $script['parentFolderId'] = $script['parentFolderId'] ? $script['parentFolderId'] * 1 : null;
-            $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:00:00", strtotime($script['lastModifyDate'])) : null;
-            $script['createDate'] = $script['createDate'] ? date("Y/m/d H:00:00", strtotime($script['createDate'])) : null;
+            $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:i:s", strtotime($script['lastModifyDate'])) : null;
+            $script['createDate'] = $script['createDate'] ? date("Y/m/d H:i:s", strtotime($script['createDate'])) : null;
 
             $scripts[] = $script;
         }
@@ -75,8 +75,8 @@ class Script
         $query = "SELECT s.id, s.name, createDate, lastModifyDate, lastModifyUserId FROM $this->table s JOIN UserScript us ON s.id=us.scriptId WHERE us.id='$userScriptId'";
         $script = $this->dataBase->db->query($query)->fetch();
         $script['id'] =  $script['id'] * 1;
-        $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:00:00", strtotime($script['lastModifyDate'])) : null;
-        $script['createDate'] = $script['createDate'] ? date("Y/m/d H:00:00", strtotime($script['createDate'])) : null;
+        $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:i:s", strtotime($script['lastModifyDate'])) : null;
+        $script['createDate'] = $script['createDate'] ? date("Y/m/d H:i:s", strtotime($script['createDate'])) : null;
         $script['blocks'] = $this->readBlocks($userScriptId, $script['id'], $block);
         $script['breadCrumbs'] = $this->getBreadCrumbs($script['id']);
         return $script;
