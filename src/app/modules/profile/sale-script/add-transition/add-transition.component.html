@@ -13,7 +13,35 @@
     </p-selectButton>
   </div>
   <div class="col-12">
-    <ng-container *ngIf="addLink; else newBlock"></ng-container>
+    <ng-container *ngIf="addLink; else newBlock">
+      <div class="p-float-label pb-2">
+        <p-dropdown
+          [options]="blocks"
+          optionLabel="name"
+          optionValue="id"
+          id="dropdown"
+          [filter]="true"
+          formControlName="nextBlockId"
+          filterBy="name"
+          placeholder='&nbsp;'
+          [showClear]="true"
+        >
+          <!-- <ng-template pTemplate="selectedItem">
+            <div class="country-item country-item-value" *ngIf="selectedCountry">
+              <img
+                src="assets/showcase/images/demo/flag/flag_placeholder.png"
+                [class]="'flag flag-' + selectedCountry.code.toLowerCase()"
+              />
+              <div>{{ selectedCountry.name }}</div>
+            </div>
+          </ng-template> -->
+          <ng-template let-country pTemplate="item">
+            {{ country.name }}
+          </ng-template>
+        </p-dropdown>
+        <label for="dropdown">Целевой блок</label>
+      </div>
+    </ng-container>
   </div>
   <div class="col-12 flex justify-content-end">
     <button

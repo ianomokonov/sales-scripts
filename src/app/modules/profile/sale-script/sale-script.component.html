@@ -62,16 +62,11 @@
                   <button
                     pButton
                     pRipple
+                    *ngFor="let transition of block.incommingTransitions"
                     type="button"
-                    label="Success"
-                    class="p-button-success mr-1 mb-1"
-                  ></button>
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    label="Success"
-                    class="p-button-danger mr-1 mb-1"
+                    (click)="onMarkedBlockClick(transition.blockId)"
+                    [label]="transition.name"
+                    class="{{getTransitionButtonClass(transition.status)}} mr-1 mb-1"
                   ></button>
                   <div class="inline-block">
                     <button
@@ -79,7 +74,7 @@
                       pRipple
                       icon="pi pi-link"
                       type="button"
-                      (click)="onAddTransitionClick(true)"
+                      (click)="onAddTransitionClick(block.id, true, true)"
                       class="p-button-outlined mr-1 mb-1"
                     ></button>
                   </div>
@@ -90,21 +85,16 @@
                     pButton
                     pRipple
                     type="button"
-                    label="Success"
-                    class="p-button-success mr-1 mb-1"
-                  ></button>
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    label="Success"
-                    class="p-button-danger mr-1 mb-1"
+                    [label]="transition.name"
+                    *ngFor="let transition of block.outgoingTransitions"
+                    class="{{getTransitionButtonClass(transition.status)}} mr-1 mb-1"
+                    (click)="onMarkedBlockClick(transition.nextBlockId)"
                   ></button>
                   <div class="inline-block">
                     <button
                       pButton
                       pRipple
-                      (click)="onAddTransitionClick()"
+                      (click)="onAddTransitionClick(block.id)"
                       icon="pi pi-plus"
                       type="button"
                       class="p-button-outlined mr-1 mb-1"
@@ -112,7 +102,7 @@
                     <button
                       pButton
                       pRipple
-                      (click)="onAddTransitionClick(true)"
+                      (click)="onAddTransitionClick(block.id, true)"
                       icon="pi pi-link"
                       type="button"
                       class="p-button-outlined mr-1 mb-1"

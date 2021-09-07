@@ -45,6 +45,9 @@ export class AddBlockComponent implements OnInit {
       });
       return;
     }
-    this.modal.close(this.blockForm?.getRawValue());
+    const block = this.blockForm?.getRawValue();
+    block.isGroup = block.type === BlockType.Group;
+    delete block.type;
+    this.modal.close(block);
   }
 }

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
 import { TransitionType } from 'src/app/_models/transition-type';
 import { markInvalidFields } from 'src/app/_utils/formValidCheck';
 import { BlockType } from '../add-block/add-block.component';
@@ -13,6 +14,7 @@ import { BlockType } from '../add-block/add-block.component';
 })
 export class AddTransitionComponent {
   public addLink = false;
+  public blocks: IdNameResponse[] = [];
   public transitionForm: FormGroup;
   public statusOptions = [
     { name: 'Хороший', class: 'success', value: TransitionType.Good },
@@ -30,29 +32,48 @@ export class AddTransitionComponent {
     private toastService: MessageService,
   ) {
     this.addLink = this.config.data.addLink;
+    this.blocks = this.config.data.blocks;
     this.transitionForm = this.fb.group({
       name: [null, Validators.required],
 
       status: [TransitionType.Good, Validators.required],
-      block: this.fb.group({
+    });
+
+    if (this.addLink) {
+      this.transitionForm.addControl('nextBlockId', new FormControl(null, Validators.required));
+      return;
+    }
+
+    this.transitionForm.addControl(
+      'block',
+      this.fb.group({
         name: [null, Validators.required],
         type: [BlockType.Block, Validators.required],
         description: [null, Validators.required],
       }),
-    });
+    );
   }
 
   public saveTransition() {
     if (this.transitionForm.invalid) {
       markInvalidFields(this.transitionForm);
-      markInvalidFields(this.blockForm);
+      if (this.blockForm) {
+        markInvalidFields(this.blockForm);
+      }
+
       this.toastService.add({
         severity: 'error',
         detail: 'Заполните обязательные поля',
       });
+      return;
     }
 
     const formValue = this.transitionForm.getRawValue();
-    console.log(formValue);
+    if (formValue.block) {
+      formValue.block.isGroup = formValue.block.type === BlockType.Group;
+      delete formValue.block.type;
+    }
+
+    this.modal.close(formValue);
   }
 }

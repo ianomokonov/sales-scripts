@@ -95,7 +95,8 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
     });
     $group->group('scripts',  function (RouteCollectorProxy $scriptGroup) use ($script) {
         $scriptGroup->get('', function (Request $request, Response $response) use ($script) {
-            $response->getBody()->write(json_encode($script->getFolder()));
+            $query = $request->getQueryParams();
+            $response->getBody()->write(json_encode($script->getFolder(null, isset($query['searchString']) ? $query['searchString'] : '')));
             return $response;
         });
 
@@ -103,7 +104,8 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
             $folderId = $route->getArgument('folderId');
-            $response->getBody()->write(json_encode($script->getFolder($folderId)));
+            $query = $request->getQueryParams();
+            $response->getBody()->write(json_encode($script->getFolder($folderId, isset($query['searchString']) ? $query['searchString'] : '')));
             return $response;
         });
     });
@@ -120,6 +122,14 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $route = $routeContext->getRoute();
             $scriptId = $route->getArgument('scriptId');
             $response->getBody()->write(json_encode($script->read($scriptId, $block)));
+            return $response;
+        });
+
+        $scriptGroup->get('/{scriptId}/blocks', function (Request $request, Response $response) use ($script) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $scriptId = $route->getArgument('scriptId');
+            $response->getBody()->write(json_encode($script->getBlocks($scriptId)));
             return $response;
         });
 
