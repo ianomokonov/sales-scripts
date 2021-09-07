@@ -24,7 +24,7 @@ export class SaleScriptsComponent implements OnInit {
   private lastFolderId: number | null = null;
   public isError: boolean = false;
   public buttonItems: MenuItem[];
-  public breadCrumb: MenuItem[] = [];
+  public breadCrumb: MenuItem[];
 
   constructor(
     private scriptService: ScriptService,
@@ -48,6 +48,12 @@ export class SaleScriptsComponent implements OnInit {
         command: () => {
           this.addScript();
         },
+      },
+    ];
+    this.breadCrumb = [
+      {
+        icon: 'pi pi-home',
+        routerLink: ['/profile', 'scripts'],
       },
     ];
   }
