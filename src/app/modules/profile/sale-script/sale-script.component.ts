@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Block } from 'src/app/_entities/block.entity';
 import { Script } from 'src/app/_entities/script.entity';
@@ -15,8 +15,9 @@ import { LoadingService } from '../../../_services/front/loading.service';
   templateUrl: './sale-script.component.html',
   styleUrls: ['./sale-script.component.less'],
 })
-export class SaleScriptComponent {
+export class SaleScriptComponent implements OnInit {
   public script: Script | undefined;
+  public isError: boolean = false;
 
   /** Список отмеченных блоков */
   public get favoriteBlocks(): Block[] {
@@ -31,7 +32,10 @@ export class SaleScriptComponent {
     private modalService: DialogService,
     private dialogService: DialogService,
     private loadingService: LoadingService,
-  ) {
+    private messageService: MessageService,
+  ) {}
+
+  public ngOnInit() {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
         this.getScript(id);
@@ -54,8 +58,12 @@ export class SaleScriptComponent {
         this.loadingService.removeSubscription(sub);
       },
       ({ error }) => {
-        console.log(error.message);
+        this.isError = true;
         this.loadingService.removeSubscription(sub);
+        this.messageService.add({
+          severity: 'error',
+          detail: error.message || 'Ошибка загрузки данных',
+        });
       },
     );
     this.loadingService.addSubscription(sub);

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ScriptService } from '../../../_services/back/script.service';
 import { AddScriptOrFolderComponent } from '../_modals/add-script-or-folder/add-script-or-folder.component';
 import { FolderResponse } from '../../../_models/responses/folder.response';
 import { IdNameResponse } from '../../../_models/responses/id-name.response';
 import { LoadingService } from '../../../_services/front/loading.service';
+import { convertToBreadCrumb } from './breadCrumb.converter';
 
 @Component({
   selector: 'app-sale-scripts',
@@ -20,13 +20,13 @@ export class SaleScriptsComponent implements OnInit {
   private lastFolderId: number | null = null;
   public isError: boolean = false;
   public buttonItems: MenuItem[];
+  public breadCrumb: MenuItem[] = [];
 
   constructor(
     private scriptService: ScriptService,
     private router: Router,
     private route: ActivatedRoute,
     private ds: DialogService,
-    private titleService: Title,
     private messageService: MessageService,
     private loadingService: LoadingService,
   ) {
@@ -67,7 +67,7 @@ export class SaleScriptsComponent implements OnInit {
     const sub = this.scriptService.getFolder(id).subscribe(
       (response) => {
         this.items = response;
-        this.titleService.setTitle(this.items.name ? this.items.name : 'Скрипты продаж');
+        this.breadCrumb = convertToBreadCrumb(this.items.breadCrumbs);
         this.loadingService.removeSubscription(sub);
       },
       ({ error }) => {
@@ -75,8 +75,7 @@ export class SaleScriptsComponent implements OnInit {
         this.loadingService.removeSubscription(sub);
         this.messageService.add({
           severity: 'error',
-          summary: 'Что-то пошло не так',
-          detail: error.message,
+          detail: error.message || 'Ошибка загрузки данных',
         });
       },
     );
