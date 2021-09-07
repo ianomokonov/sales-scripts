@@ -68,6 +68,7 @@ DROP TABLE IF EXISTS `Block`;
 CREATE TABLE `Block` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(200) NOT NULL,
+  `isGroup` bit(1) NOT NULL DEFAULT 0,
   `description` MEDIUMTEXT NOT NULL,
   `scriptId` INTEGER NOT NULL,
   `createDate` DATETIME NOT NULL DEFAULT now(),
@@ -106,17 +107,22 @@ CREATE TABLE `UserScriptFavorite` (
 );
 
 -- ---
--- Table 'BlockAnswer'
+-- Table 'Transition'
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `BlockAnswer`;
+DROP TABLE IF EXISTS `Transition`;
 		
-CREATE TABLE `BlockAnswer` (
+CREATE TABLE `Transition` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `blockId` INTEGER NOT NULL,
   `nextBlockId` INTEGER NULL,
-  `answer` VARCHAR(200) NOT NULL,
+  `name` VARCHAR(200) NOT NULL,
+  `status` INTEGER(2) NOT NULL,
+  `createDate` DATETIME NOT NULL DEFAULT now(),
+  `lastModifyDate` DATETIME NULL DEFAULT NULL,
+  `lastModifyUserId` INTEGER NULL,
+
   PRIMARY KEY (`id`)
 );
 
@@ -163,8 +169,8 @@ ALTER TABLE `UserScript` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`) O
 ALTER TABLE `UserScript` ADD FOREIGN KEY (userId) REFERENCES `User` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptFavorite` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptFavorite` ADD FOREIGN KEY (blockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
-ALTER TABLE `BlockAnswer` ADD FOREIGN KEY (blockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
-ALTER TABLE `BlockAnswer` ADD FOREIGN KEY (nextBlockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
+ALTER TABLE `Transition` ADD FOREIGN KEY (blockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
+ALTER TABLE `Transition` ADD FOREIGN KEY (nextBlockId) REFERENCES `Block` (`id`) ON DELETE CASCADE;
 ALTER TABLE `ScriptParam` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptParam` (`id`) ON DELETE CASCADE;
@@ -213,7 +219,7 @@ INSERT INTO `Block` (`id`, `name`, `description`, `scriptId`, `createDate`, `las
 
 -- UserScript
 
-INSERT INTO `UserScript` (`id`, `scriptId`, `userId`) VALUES (1, '1', '1');
+INSERT INTO `UserScript` (`id`, `scriptId`, `userId`) VALUES (1, '1', '1'), (2, '2', '1'), (3, '4', '1'), (4, '5', '1');
 
 
 -- UserScriptFavorite

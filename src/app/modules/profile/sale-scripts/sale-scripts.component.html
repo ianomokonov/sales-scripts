@@ -1,0 +1,65 @@
+<div class="grid m-0">
+  <div class="col-8 m-auto">
+    <div class="flex align-items-center mt-3">
+      <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
+      <button pButton
+              type="button"
+              icon="pi pi-plus"
+              label="Добавить"
+              (click)="menu.toggle($event)"></button>
+    </div>
+    <div class="my-2" *ngIf="items">
+      <div class="flex align-items-center h-4rem">
+        <div
+          *ngIf="items.parentFolderId || (items.id && !items.parentFolderId)"
+          class="navigate-buttons"
+        >
+          <span
+            [routerLink]='["/profile", "scripts", items.parentFolderId ? items.parentFolderId : ""]'
+            class="pi pi-arrow-left cursor-pointer mr-2"
+          ></span>
+          <span [routerLink]='["/profile", "scripts"]' class="pi pi-home cursor-pointer"></span>
+        </div>
+        <div class="breadcrumb">
+          <h3>{{items.name ? items.name : 'Главная'}}</h3>
+        </div>
+      </div>
+      <p-card>
+        <p-table [value]="items.scripts" responsiveLayout="scroll" class="table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Наименование</th>
+              <th>Дата изменения</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr [routerLink]='["/profile", item.isFolder ? "scripts" : "script", item.id]' class="cursor-pointer">
+              <td>
+                <p-button
+                  *ngIf="!item.isFolder"
+                  [label]="item.name"
+                  styleClass="p-button-link"
+                ></p-button>
+                <button
+                  *ngIf="item.isFolder"
+                  pButton
+                  type="button"
+                  icon="pi pi-folder-open"
+                  [label]="item.name"
+                  class="p-button-text"
+                ></button>
+              </td>
+              <td>{{(item.lastModifyDate ? item.lastModifyDate : item.createDate) | date:'dd.MM.yyyy HH:mm'}} </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td>Здесь пока ничего нет</td>
+              <td></td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    </div>
+  </div>
+</div>

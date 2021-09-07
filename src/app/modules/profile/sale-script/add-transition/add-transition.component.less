@@ -1,0 +1,44 @@
+:host ::ng-deep {
+  .p-dropdown {
+    display: flex;
+  }
+  .p-selectbutton {
+    display: flex;
+    .p-button {
+      padding: 0;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      &.p-highlight {
+        color: white;
+        &:nth-child(1) {
+          background-color: var(--green-600);
+        }
+        &:nth-child(2) {
+          background-color: var(--gray-600);
+        }
+        &:nth-child(3) {
+          background-color: var(--pink-600);
+        }
+      }
+      &:not(.p-highlight) {
+        .status-option {
+          &.success {
+            color: var(--green-600);
+          }
+          &.secondary {
+            color: var(--gray-600);
+          }
+          &.danger {
+            color: var(--pink-600);
+          }
+        }
+      }
+    }
+  }
+}
+
+.add-block-title {
+  font-weight: 500;
+  font-size: 1.25rem;
+}

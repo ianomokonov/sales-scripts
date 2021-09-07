@@ -27,7 +27,7 @@ export class SignInComponent {
 
   public signIn() {
     if (isFormInvalid(this.logInForm)) return;
-    const logData = this.logInForm?.getRawValue();
+    const logData = this.logInForm.getRawValue();
     this.userService.signIn(logData).subscribe(
       (user) => {
         if (user) {

@@ -1,0 +1,67 @@
+<form class="pt-2 grid" [formGroup]="transitionForm" autocomplete="off">
+  <div class="field col-12 mb-0 pb-0">
+    <span class="p-float-label w-12">
+      <input pInputText type="text" id="login_field" class="w-12" formControlName="name" />
+      <label for="login_field">Название перехода</label>
+    </span>
+  </div>
+  <div class="field col-12">
+    <p-selectButton [options]="statusOptions" optionValue="value" formControlName="status">
+      <ng-template let-item>
+        <span class="status-option {{ item.class }}">{{ item.name }}</span>
+      </ng-template>
+    </p-selectButton>
+  </div>
+  <div class="col-12">
+    <ng-container *ngIf="addLink; else newBlock">
+      <div class="p-float-label pb-2">
+        <p-dropdown
+          [options]="blocks"
+          optionLabel="name"
+          optionValue="id"
+          id="dropdown"
+          [filter]="true"
+          formControlName="nextBlockId"
+          filterBy="name"
+          placeholder='&nbsp;'
+          [showClear]="true"
+        >
+          <!-- <ng-template pTemplate="selectedItem">
+            <div class="country-item country-item-value" *ngIf="selectedCountry">
+              <img
+                src="assets/showcase/images/demo/flag/flag_placeholder.png"
+                [class]="'flag flag-' + selectedCountry.code.toLowerCase()"
+              />
+              <div>{{ selectedCountry.name }}</div>
+            </div>
+          </ng-template> -->
+          <ng-template let-country pTemplate="item">
+            {{ country.name }}
+          </ng-template>
+        </p-dropdown>
+        <label for="dropdown">Целевой блок</label>
+      </div>
+    </ng-container>
+  </div>
+  <div class="col-12 flex justify-content-end">
+    <button
+      pButton
+      type="button"
+      label="Отмена"
+      (click)="modal.destroy()"
+      class="p-button-outlined p-button-secondary"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Сохранить"
+      class="ml-1"
+      (click)="saveTransition()"
+    ></button>
+  </div>
+</form>
+
+<ng-template #newBlock>
+  <p class="add-block-title mb-0">Создание блока или группы</p>
+  <app-add-block [blockForm]="blockForm"></app-add-block>
+</ng-template>

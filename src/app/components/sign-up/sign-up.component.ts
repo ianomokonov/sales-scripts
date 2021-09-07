@@ -42,7 +42,7 @@ export class SignUpComponent {
 
   public signUp() {
     if (isFormInvalid(this.signUpForm)) return;
-    const signUpData = this.signUpForm?.getRawValue();
+    const signUpData = this.signUpForm.getRawValue();
     delete signUpData.passwordConfirm;
     this.userService.signUp(signUpData).subscribe(
       (user) => {

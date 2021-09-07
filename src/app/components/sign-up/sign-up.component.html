@@ -1,4 +1,4 @@
-<div class='grid mt-6'>
+<div class='grid m-0 pt-6'>
   <p-card class='col-8 m-auto'>
     <div class='grid'>
       <h3 class='col-6 m-auto text-center'>Регистрация</h3>
@@ -10,6 +10,7 @@
           <input pInputText
                  type="email"
                  id="email_field"
+                 class='p-filled'
                  formControlName='email'>
           <label for="email_field">Почта</label>
       </span>
@@ -19,6 +20,7 @@
           <i class="pi pi-phone"></i>
           <p-inputMask inputId="phone_field"
                        styleClass='padding-left'
+                       class='p-inputwrapper-filled'
                        type='tel'
                        mask="+7 (999) 999-99-99"
                        formControlName='phone'></p-inputMask>
@@ -31,6 +33,7 @@
           <input pInputText
                  type="text"
                  id="login_field"
+                 class='p-filled'
                  formControlName='login'>
           <label for="login_field">Логин</label>
       </span>
@@ -42,6 +45,7 @@
             <input pInputText
                    [type]="showPassword ? 'text' : 'password'"
                    id="password_field"
+                   class='p-filled'
                    formControlName='password'>
             <label for="password_field">Пароль</label>
           </span>

@@ -1,0 +1,89 @@
+<form *ngIf="blockForm" class="pt-2 grid" [formGroup]="blockForm" autocomplete="off">
+  <div class="field col-8 mt-1 mb-0">
+    <span class="p-float-label w-12">
+      <input pInputText type="text" id="login_field" class="w-12" formControlName="name" />
+      <label for="login_field">Название</label>
+    </span>
+  </div>
+  <div class="field col-4 mt-1 mb-0 flex flex-column justify-content-between">
+    <div class="p-field-radiobutton">
+      <p-radioButton
+        formControlName="type"
+        name="type"
+        [value]="blockType.Block"
+        inputId="block"
+      ></p-radioButton>
+      <label class="ml-2" for="block">Блок</label>
+    </div>
+    <div class="p-field-radiobutton">
+      <p-radioButton
+        formControlName="type"
+        name="type"
+        [value]="blockType.Group"
+        inputId="group"
+      ></p-radioButton>
+      <label class="ml-2" for="group">Группа</label>
+    </div>
+  </div>
+  <div class="field col-12 flex-row justify-content-center mt-1">
+    <p-editor
+      id="description_field"
+      placeholder="Описание"
+      class="validation-highlight"
+      formControlName="description"
+      [style]="{ 'min-height': '150px' }"
+    >
+      <ng-template pTemplate="header">
+        <span class="ql-formats">
+          <select class="ql-header">
+            <option value="1">Heading</option>
+            <option value="2">Subheading</option>
+            <option selected>Normal</option>
+          </select>
+          <select class="ql-font">
+            <option selected>Sans Serif</option>
+            <option value="serif">Serif</option>
+            <option value="monospace">Monospace</option>
+          </select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-bold" aria-label="Bold"></button>
+          <button class="ql-italic" aria-label="Italic"></button>
+          <button class="ql-underline" aria-label="Underline"></button>
+        </span>
+        <span class="ql-formats">
+          <select class="ql-color"></select>
+          <select class="ql-background"></select>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
+          <button class="ql-list" value="bullet" aria-label="Unordered List"></button>
+          <select class="ql-align">
+            <option selected></option>
+            <option value="center"></option>
+            <option value="right"></option>
+            <option value="justify"></option>
+          </select>
+        </span>
+        <span class="ql-formats">
+          <!-- <button class="ql-link" aria-label="Insert Link"></button>
+          <button class="ql-image" aria-label="Insert Image"></button> -->
+          <button class="ql-code-block" aria-label="Insert Code Block"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-clean" aria-label="Remove Styles"></button>
+        </span>
+      </ng-template>
+    </p-editor>
+  </div>
+  <div class="col-12 flex justify-content-end" *ngIf="showBtns">
+    <button
+      pButton
+      type="button"
+      label="Отмена"
+      (click)="modal.destroy()"
+      class="p-button-outlined p-button-secondary"
+    ></button>
+    <button pButton type="button" label="Сохранить" class="ml-1" (click)="save()"></button>
+  </div>
+</form>

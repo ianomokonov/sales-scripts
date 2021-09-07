@@ -66,3 +66,20 @@ app-sale-script {
     }
   }
 }
+
+.p-button, .p-button.p-button-icon-only {
+  padding-top: 0;
+  padding-bottom: 0;
+  align-items: center;
+  min-height: 2.5rem;
+}
+
+.validation-highlight {
+  &.ng-touched.ng-dirty.ng-invalid {
+    .p-editor-container {
+      .p-editor-toolbar, .p-editor-content {
+        border-color: #B00020 !important;
+      }
+    }
+  }
+}

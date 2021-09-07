@@ -7,6 +7,7 @@ require_once 'vendor/autoload.php';
 require_once './utils/database.php';
 require_once './utils/token.php';
 require_once './models/user.php';
+require_once './models/block.php';
 require_once './models/script.php';
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -19,6 +20,8 @@ use Slim\Routing\RouteContext;
 
 $dataBase = new DataBase();
 $token = new Token();
+$block = new Block($dataBase);
+$script = new Script($dataBase);
 $app = AppFactory::create();
 $app->setBasePath(rtrim($_SERVER['PHP_SELF'], '/index.php'));
 
@@ -85,58 +88,85 @@ $app->post('/update-password', function (Request $request, Response $response) u
     }
 });
 
-$app->group('/', function (RouteCollectorProxy $group) use ($dataBase) {
-    $group->get('folders', function (Request $request, Response $response) use ($dataBase) {
-        $script = new Script($dataBase);
+$app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $script) {
+    $group->get('folders', function (Request $request, Response $response) use ($script) {
         $response->getBody()->write(json_encode($script->getFolders()));
         return $response;
     });
-    $group->group('scripts',  function (RouteCollectorProxy $scriptGroup) use ($dataBase) {
-        $scriptGroup->get('', function (Request $request, Response $response) use ($dataBase) {
-            $script = new Script($dataBase);
-            $response->getBody()->write(json_encode($script->getList()));
+    $group->group('scripts',  function (RouteCollectorProxy $scriptGroup) use ($script) {
+        $scriptGroup->get('', function (Request $request, Response $response) use ($script) {
+            $query = $request->getQueryParams();
+            $response->getBody()->write(json_encode($script->getFolder(null, isset($query['searchString']) ? $query['searchString'] : '')));
             return $response;
         });
 
-        $scriptGroup->get('/{scriptId}', function (Request $request, Response $response) use ($dataBase) {
+        $scriptGroup->get('/{folderId}', function (Request $request, Response $response) use ($script) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
-            $scriptId = $route->getArgument('scriptId');
-            $script = new Script($dataBase);
-            $response->getBody()->write(json_encode($script->read($scriptId)));
-            return $response;
-        });
-
-        $scriptGroup->put('/{scriptId}/reorder-blocks', function (Request $request, Response $response) use ($dataBase) {
-            $script = new Script($dataBase);
-            $response->getBody()->write(json_encode($script->sortBlocks($request->getParsedBody()['blocks'])));
-            return $response;
-        });
-
-        $scriptGroup->post('', function (Request $request, Response $response) use ($dataBase) {
-            $script = new Script($dataBase);
-            $response->getBody()->write(json_encode($script->create($request->getParsedBody())));
+            $folderId = $route->getArgument('folderId');
+            $query = $request->getQueryParams();
+            $response->getBody()->write(json_encode($script->getFolder($folderId, isset($query['searchString']) ? $query['searchString'] : '')));
             return $response;
         });
     });
 
-    $group->group('block',  function (RouteCollectorProxy $scriptGroup) use ($dataBase) {
 
-        $scriptGroup->delete('/{blockId}', function (Request $request, Response $response) use ($dataBase) {
-            $routeContext = RouteContext::fromRequest($request);
-            $route = $routeContext->getRoute();
-            $blockId = $route->getArgument('blockId');
-            $script = new Script($dataBase);
-            $response->getBody()->write(json_encode($script->deleteBlock($blockId)));
+    $group->group('script',  function (RouteCollectorProxy $scriptGroup) use ($script, $block) {
+        $scriptGroup->post('', function (Request $request, Response $response) use ($script) {
+            $response->getBody()->write(json_encode($script->create($request->getParsedBody())));
             return $response;
         });
 
-        $scriptGroup->put('/{blockId}/mark', function (Request $request, Response $response) use ($dataBase) {
+        $scriptGroup->get('/{scriptId}', function (Request $request, Response $response) use ($script, $block) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $scriptId = $route->getArgument('scriptId');
+            $response->getBody()->write(json_encode($script->read($scriptId, $block)));
+            return $response;
+        });
+
+        $scriptGroup->get('/{scriptId}/blocks', function (Request $request, Response $response) use ($script) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $scriptId = $route->getArgument('scriptId');
+            $response->getBody()->write(json_encode($script->getBlocks($scriptId)));
+            return $response;
+        });
+
+        $scriptGroup->put('/{scriptId}/reorder-blocks', function (Request $request, Response $response) use ($script) {
+            $response->getBody()->write(json_encode($script->sortBlocks($request->getParsedBody()['blocks'])));
+            return $response;
+        });
+    });
+
+    $group->group('block',  function (RouteCollectorProxy $scriptGroup) use ($block) {
+
+        $scriptGroup->delete('/{blockId}', function (Request $request, Response $response) use ($block) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
             $blockId = $route->getArgument('blockId');
-            $script = new Script($dataBase);
-            $response->getBody()->write(json_encode($script->markBlock($blockId, $request->getParsedBody())));
+            $response->getBody()->write(json_encode($block->delete($blockId)));
+            return $response;
+        });
+
+        $scriptGroup->put('/{blockId}/mark', function (Request $request, Response $response) use ($block) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $blockId = $route->getArgument('blockId');
+            $response->getBody()->write(json_encode($block->markBlock($blockId, $request->getParsedBody())));
+            return $response;
+        });
+
+        $scriptGroup->post('/{blockId}/transition', function (Request $request, Response $response) use ($block) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $blockId = $route->getArgument('blockId');
+            $response->getBody()->write(json_encode($block->createTransition($blockId, $request->getParsedBody())));
+            return $response;
+        });
+
+        $scriptGroup->post('', function (Request $request, Response $response) use ($block) {
+            $response->getBody()->write(json_encode($block->create($request->getParsedBody())));
             return $response;
         });
     });
