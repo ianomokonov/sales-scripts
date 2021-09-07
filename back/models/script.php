@@ -22,25 +22,26 @@ class Script
         }
         return $folders;
     }
-    public function getFolder($folderId = null)
+    public function getFolder($folderId = null, $searchString = '')
     {
         $result = array();
         if ($folderId) {
             $query = $this->dataBase->db->prepare("SELECT id, name, parentFolderId FROM $this->table WHERE id=?");
             $query->execute(array($folderId));
             $result = $query->fetch();
+            $result['breadCrumbs'] = $this->getBreadCrumbs($folderId);
         }
 
-        $result['scripts'] = $this->getFolderChildren($folderId);
+        $result['scripts'] = $this->getFolderChildren($folderId, $searchString);
 
         return $result;
     }
 
-    public function getFolderChildren($folderId = null)
+    public function getFolderChildren($folderId = null, $searchString = '')
     {
-        $query = "SELECT * FROM $this->table WHERE parentFolderId IS ? ORDER BY isFolder DESC";
+        $query = "SELECT * FROM $this->table WHERE parentFolderId IS ? AND name LIKE '%$searchString%' ORDER BY isFolder DESC";
         if ($folderId) {
-            $query = "SELECT * FROM $this->table WHERE parentFolderId = ? ORDER BY isFolder DESC";
+            $query = "SELECT * FROM $this->table WHERE parentFolderId = ? AND name LIKE '%$searchString%' ORDER BY isFolder DESC";
         }
         $stmt = $this->dataBase->db->prepare($query);
         $stmt->execute(array($folderId));
@@ -75,12 +76,11 @@ class Script
         $script = $this->dataBase->db->query($query)->fetch();
         $script['id'] =  $script['id'] * 1;
         array_unshift($result, $script);
-        if(!$script['parentFolderId']){
+        if (!$script['parentFolderId']) {
             return $result;
         }
 
         return $this->getBreadCrumbs($script['parentFolderId'], $result);
-
     }
 
     public function create($request)
