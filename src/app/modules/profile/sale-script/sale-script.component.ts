@@ -8,6 +8,7 @@ import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
+import { LoadingService } from '../../../_services/front/loading.service';
 
 @Component({
   selector: 'app-sale-script',
@@ -29,6 +30,7 @@ export class SaleScriptComponent {
     private blockService: BlockService,
     private modalService: DialogService,
     private dialogService: DialogService,
+    private loadingService: LoadingService,
   ) {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
@@ -46,9 +48,17 @@ export class SaleScriptComponent {
   }
 
   private getScript(id: number) {
-    this.scriptService.getScript(id).subscribe((script) => {
-      this.script = script;
-    });
+    const sub = this.scriptService.getScript(id).subscribe(
+      (script) => {
+        this.script = script;
+        this.loadingService.removeSubscription(sub);
+      },
+      ({ error }) => {
+        console.log(error.message);
+        this.loadingService.removeSubscription(sub);
+      },
+    );
+    this.loadingService.addSubscription(sub);
   }
 
   public createBlock() {

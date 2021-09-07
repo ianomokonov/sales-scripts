@@ -21,6 +21,7 @@ import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { MenuModule } from 'primeng/menu';
+import { RippleModule } from 'primeng/ripple';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -61,6 +62,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     CardModule,
     SplitButtonModule,
     MenuModule,
+    RippleModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })

@@ -3,12 +3,13 @@
     <div class="flex align-items-center mt-3">
       <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
       <button pButton
+              [disabled]='isError'
               type="button"
               icon="pi pi-plus"
               label="Добавить"
               (click)="menu.toggle($event)"></button>
     </div>
-    <div class="my-2" *ngIf="items">
+    <div class="my-2">
       <div class="flex align-items-center h-4rem">
         <div
           *ngIf="items.parentFolderId || (items.id && !items.parentFolderId)"
