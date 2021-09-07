@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Block } from 'src/app/_entities/block.entity';
 import { Script } from 'src/app/_entities/script.entity';
@@ -19,6 +19,7 @@ import { AddTransitionComponent } from './add-transition/add-transition.componen
 })
 export class SaleScriptComponent {
   public script: Script | undefined;
+  public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
 
   /** Список отмеченных блоков */
@@ -97,6 +98,10 @@ export class SaleScriptComponent {
   private getScript(id: number) {
     this.scriptService.getScript(id).subscribe((script) => {
       this.script = script;
+      this.breadCrumbs = this.script.breadCrumbs.map((breadCrumb) => ({
+        label: breadCrumb.name,
+        routerLink: script.id !== breadCrumb.id ? `/profile/scripts/${breadCrumb.id}` : '',
+      }));
     });
   }
 
