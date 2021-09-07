@@ -12,6 +12,7 @@
         (click)="createBlock()"
       ></button>
     </div>
+    <p-breadcrumb class="mb-3" *ngIf="breadCrumbs.length > 1" [model]="breadCrumbs"></p-breadcrumb>
     <p-accordion>
       <p-orderList [value]="script?.blocks || []" [dragdrop]="true" (onReorder)="onReorder($event)">
         <ng-template let-block pTemplate="item">
