@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
+import { OverlayPanel } from 'primeng/overlaypanel';
 import { ScriptService } from '../../../_services/back/script.service';
 import { AddScriptOrFolderComponent } from '../_modals/add-script-or-folder/add-script-or-folder.component';
 import { FolderResponse } from '../../../_models/responses/folder.response';
 import { IdNameResponse } from '../../../_models/responses/id-name.response';
+import { LoadingService } from '../../../_services/front/loading.service';
+import { convertToBreadCrumb } from './breadCrumb.converter';
 
 @Component({
   selector: 'app-sale-scripts',
@@ -14,17 +16,23 @@ import { IdNameResponse } from '../../../_models/responses/id-name.response';
   styleUrls: ['./sale-scripts.component.less'],
 })
 export class SaleScriptsComponent implements OnInit {
-  public items: FolderResponse | undefined;
+  @ViewChild('subMenu')
+  public subMenu: OverlayPanel | undefined;
+  public subMenuItems: IdNameResponse[] | undefined;
+  public items: FolderResponse = { scripts: [] };
   private folders: IdNameResponse[] = [];
   private lastFolderId: number | null = null;
+  public isError: boolean = false;
   public buttonItems: MenuItem[];
+  public breadCrumb: MenuItem[];
 
   constructor(
     private scriptService: ScriptService,
     private router: Router,
     private route: ActivatedRoute,
     private ds: DialogService,
-    private titleService: Title,
+    private messageService: MessageService,
+    private loadingService: LoadingService,
   ) {
     this.buttonItems = [
       {
@@ -42,6 +50,12 @@ export class SaleScriptsComponent implements OnInit {
         },
       },
     ];
+    this.breadCrumb = [
+      {
+        icon: 'pi pi-home',
+        routerLink: ['/profile', 'scripts'],
+      },
+    ];
   }
 
   ngOnInit(): void {
@@ -53,17 +67,31 @@ export class SaleScriptsComponent implements OnInit {
       } else {
         this.getFolder();
       }
-    });
-    this.scriptService.getFolders().subscribe((folders) => {
-      this.folders = folders;
+      this.scriptService.getFolders().subscribe((folders) => {
+        this.folders = folders;
+      });
     });
   }
 
   public getFolder(id?: number) {
-    this.scriptService.getFolder(id).subscribe((response) => {
-      this.items = response;
-      this.titleService.setTitle(this.items.name ? this.items.name : 'Скрипты продаж');
-    });
+    const sub = this.scriptService.getFolder(id).subscribe(
+      (response) => {
+        this.items = response;
+        const crumb = convertToBreadCrumb(this.items.breadCrumbs);
+        this.breadCrumb = crumb.data;
+        this.subMenuItems = crumb.crumbs;
+        this.loadingService.removeSubscription(sub);
+      },
+      ({ error }) => {
+        this.isError = true;
+        this.loadingService.removeSubscription(sub);
+        this.messageService.add({
+          severity: 'error',
+          detail: error.message || 'Ошибка загрузки данных',
+        });
+      },
+    );
+    this.loadingService.addSubscription(sub);
   }
 
   public addFolder() {
@@ -100,5 +128,12 @@ export class SaleScriptsComponent implements OnInit {
         this.router.navigate(['script', newScriptId], { relativeTo: this.route.parent });
       }
     });
+  }
+
+  public breadCrumbToggle(action: any) {
+    const { originalEvent, item } = action;
+    if (item.id === 'toggle') {
+      this.subMenu?.toggle(originalEvent);
+    }
   }
 }

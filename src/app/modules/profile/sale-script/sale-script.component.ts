@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Block } from 'src/app/_entities/block.entity';
 import { Script } from 'src/app/_entities/script.entity';
@@ -11,14 +11,17 @@ import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
+import { LoadingService } from '../../../_services/front/loading.service';
 
 @Component({
   selector: 'app-sale-script',
   templateUrl: './sale-script.component.html',
   styleUrls: ['./sale-script.component.less'],
 })
-export class SaleScriptComponent {
+export class SaleScriptComponent implements OnInit {
   public script: Script | undefined;
+  public isError: boolean = false;
+  public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
 
   /** Список отмеченных блоков */
@@ -33,7 +36,11 @@ export class SaleScriptComponent {
     private blockService: BlockService,
     private modalService: DialogService,
     private dialogService: DialogService,
-  ) {
+    private loadingService: LoadingService,
+    private messageService: MessageService,
+  ) {}
+
+  public ngOnInit() {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
         this.getScript(id);
@@ -95,9 +102,25 @@ export class SaleScriptComponent {
   }
 
   private getScript(id: number) {
-    this.scriptService.getScript(id).subscribe((script) => {
-      this.script = script;
-    });
+    const sub = this.scriptService.getScript(id).subscribe(
+      (script) => {
+        this.script = script;
+        this.breadCrumbs = this.script.breadCrumbs.map((breadCrumb) => ({
+          label: breadCrumb.name,
+          routerLink: script.id !== breadCrumb.id ? `/profile/scripts/${breadCrumb.id}` : '',
+        }));
+        this.loadingService.removeSubscription(sub);
+      },
+      ({ error }) => {
+        this.isError = true;
+        this.loadingService.removeSubscription(sub);
+        this.messageService.add({
+          severity: 'error',
+          detail: error.message || 'Ошибка загрузки данных',
+        });
+      },
+    );
+    this.loadingService.addSubscription(sub);
   }
 
   public createBlock() {

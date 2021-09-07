@@ -14,6 +14,8 @@
       <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-folder-open"></i>
           <p-dropdown [options]="folders"
+                      [filter]='true'
+                      emptyFilterMessage='Совпадений не найдено'
                       formControlName='parentFolderId'
                       optionLabel='name'
                       optionValue='id'
