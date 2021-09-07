@@ -27,6 +27,10 @@ export class ScriptService {
     return this.http.get<IdNameResponse[]>(`${this.baseUrl}/folders`);
   }
 
+  public getBlocks(scriptId: number): Observable<IdNameResponse[]> {
+    return this.http.get<IdNameResponse[]>(`${this.baseUrl}/script/${scriptId}/blocks`);
+  }
+
   public addScript(request: CreateScriptRequest): Observable<number> {
     return this.http.post<number>(`${this.baseUrl}/script`, request);
   }

@@ -125,6 +125,14 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             return $response;
         });
 
+        $scriptGroup->get('/{scriptId}/blocks', function (Request $request, Response $response) use ($script) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $scriptId = $route->getArgument('scriptId');
+            $response->getBody()->write(json_encode($script->getBlocks($scriptId)));
+            return $response;
+        });
+
         $scriptGroup->put('/{scriptId}/reorder-blocks', function (Request $request, Response $response) use ($script) {
             $response->getBody()->write(json_encode($script->sortBlocks($request->getParsedBody()['blocks'])));
             return $response;
