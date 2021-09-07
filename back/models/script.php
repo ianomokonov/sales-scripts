@@ -22,6 +22,18 @@ class Script
         }
         return $folders;
     }
+    public function getBlocks($scriptId)
+    {
+        $query = "SELECT id, name FROM Block WHERE scriptId=?";
+        $query = $this->dataBase->db->prepare($query);
+        $query->execute(array($scriptId));
+        $blocks = [];
+        while ($block = $query->fetch()) {
+            $block['id'] =  $block['id'] * 1;
+            $blocks[] = $block;
+        }
+        return $blocks;
+    }
     public function getFolder($folderId = null, $searchString = '')
     {
         $result = array();

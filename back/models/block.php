@@ -14,7 +14,9 @@ class Block
 
     public function create($request)
     {
+        $scriptModel = new Script($this->dataBase);
         $request = $this->dataBase->stripAll((array)$request);
+        $request['blockIndex'] = count($scriptModel->getBlocks($request['scriptId']));
         $query = $this->dataBase->genInsertQuery(
             $request,
             $this->table
