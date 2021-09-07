@@ -29,6 +29,7 @@ class Script
             $query = $this->dataBase->db->prepare("SELECT id, name, parentFolderId FROM $this->table WHERE id=?");
             $query->execute(array($folderId));
             $result = $query->fetch();
+            $result['breadCrumbs']=$this->getBreadCrumbs($folderId);
         }
 
         $result['scripts'] = $this->getFolderChildren($folderId);
