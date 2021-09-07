@@ -55,7 +55,7 @@
 
 <p-overlayPanel #subMenu>
   <ng-template pTemplate>
-    <p-scrollPanel [style]="{height: '150px'}">
+    <p-scrollPanel [style]="{'max-height': '150px'}">
       <div *ngFor='let item of subMenuItems'>
         <button
           pButton
