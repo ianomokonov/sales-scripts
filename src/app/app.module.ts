@@ -15,9 +15,16 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { TokenInterceptor } from './_interceptors/token.interceptor';
 import { LoaderComponent } from './components/loader/loader.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
-  declarations: [AppComponent, SignInComponent, SignUpComponent, LoaderComponent],
+  declarations: [
+    AppComponent,
+    SignInComponent,
+    SignUpComponent,
+    LoaderComponent,
+    NotFoundComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
