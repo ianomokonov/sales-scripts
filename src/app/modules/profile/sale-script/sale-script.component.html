@@ -5,7 +5,7 @@
       <button
         pButton
         pRipple
-        [disabled]='isError'
+        [disabled]="isError"
         type="button"
         label="Создать блок без переходов"
         class="p-button-raised p-button-text"
@@ -67,7 +67,7 @@
                     type="button"
                     (click)="onMarkedBlockClick(transition.blockId)"
                     [label]="transition.name"
-                    class="{{getTransitionButtonClass(transition.status)}} mr-1 mb-1"
+                    class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
                   ></button>
                   <div class="inline-block">
                     <button
@@ -88,7 +88,7 @@
                     type="button"
                     [label]="transition.name"
                     *ngFor="let transition of block.outgoingTransitions"
-                    class="{{getTransitionButtonClass(transition.status)}} mr-1 mb-1"
+                    class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
                     (click)="onMarkedBlockClick(transition.nextBlockId)"
                   ></button>
                   <div class="inline-block">
