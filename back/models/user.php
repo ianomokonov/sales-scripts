@@ -95,14 +95,14 @@ class User
     public function login($login, $password)
     {
         if ($login != null) {
-            $sth = $this->dataBase->db->prepare("SELECT id, password FROM " . $this->table . " WHERE login = ? LIMIT 1");
+            $sth = $this->dataBase->db->prepare("SELECT id, password, isAdmin FROM " . $this->table . " WHERE login = ? LIMIT 1");
             $sth->execute(array($login));
             $fullUser = $sth->fetch();
             if ($fullUser) {
                 if (!password_verify($password, $fullUser['password'])) {
                     throw new Exception("User not found", 404);
                 }
-                $tokens = $this->token->encode(array("id" => $fullUser['id']));
+                $tokens = $this->token->encode(array("id" => $fullUser['id'], "isAdmin" => $fullUser['isAdmin'] == '1'));
                 $this->addRefreshToken($tokens["refreshToken"], $fullUser['id']);
                 return $tokens;
             } else {
@@ -163,12 +163,13 @@ class User
 
     public function refreshToken($token)
     {
-        $userId = $this->token->decode($token, true)->data->id;
-        if (!$this->isRefreshTokenActual($token, $userId)) {
+        $data = $this->token->decode($token, true)->data;
+
+        if (!$this->isRefreshTokenActual($token, $data->id)) {
             throw new Exception("Unauthorized", 401);
         }
-        $tokens = $this->token->encode(array("id" => $userId));
-        $this->addRefreshToken($tokens["refreshToken"], $userId);
+        $tokens = $this->token->encode((array)$data);
+        $this->addRefreshToken($tokens["refreshToken"], $data->id);
         return $tokens;
     }
 
