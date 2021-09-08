@@ -1,86 +1,101 @@
-<div class='grid m-0 pt-6'>
-  <p-card class='col-8 m-auto'>
-    <div class='grid'>
-      <h3 class='col-6 m-auto text-center'>Регистрация</h3>
+<div class="grid m-0 pt-6">
+  <p-card class="col-8 m-auto">
+    <div class="grid">
+      <h3 class="col-6 m-auto text-center">Регистрация</h3>
     </div>
-    <div class='col-6 m-auto' [formGroup]='signUpForm'>
+    <div class="col-6 m-auto" [formGroup]="signUpForm">
       <div class="field col-12 flex justify-content-center">
-      <span class="p-float-label p-input-icon-left w-12">
+        <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-envelope"></i>
-          <input pInputText
-                 type="email"
-                 id="email_field"
-                 class='p-filled'
-                 formControlName='email'>
+          <input
+            pInputText
+            type="email"
+            id="email_field"
+            class="p-filled"
+            formControlName="email"
+          />
           <label for="email_field">Почта</label>
-      </span>
+        </span>
       </div>
       <div class="field col-12 flex justify-content-center">
-      <span class="p-float-label p-input-icon-left w-12">
+        <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-phone"></i>
-          <p-inputMask inputId="phone_field"
-                       styleClass='padding-left'
-                       class='p-inputwrapper-filled'
-                       type='tel'
-                       mask="+7 (999) 999-99-99"
-                       formControlName='phone'></p-inputMask>
+          <p-inputMask
+            inputId="phone_field"
+            styleClass="padding-left"
+            class="p-inputwrapper-filled"
+            type="tel"
+            mask="+7 (999) 999-99-99"
+            formControlName="phone"
+          ></p-inputMask>
           <label for="phone_field">Телефон</label>
-      </span>
+        </span>
       </div>
       <div class="field col-12 flex justify-content-center">
-      <span class="p-float-label p-input-icon-left w-12">
+        <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-user"></i>
-          <input pInputText
-                 type="text"
-                 id="login_field"
-                 class='p-filled'
-                 formControlName='login'>
+          <input pInputText type="text" id="login_field" class="p-filled" formControlName="login" />
           <label for="login_field">Логин</label>
-      </span>
+        </span>
       </div>
       <div class="field col-12 flex justify-content-center">
         <div class="p-inputgroup">
           <span class="p-float-label p-input-icon-left w-12">
             <i class="pi pi-lock"></i>
-            <input pInputText
-                   [type]="showPassword ? 'text' : 'password'"
-                   id="password_field"
-                   class='p-filled'
-                   formControlName='password'>
+            <input
+              pInputText
+              [type]="showPassword ? 'text' : 'password'"
+              id="password_field"
+              class="p-filled"
+              formControlName="password"
+            />
             <label for="password_field">Пароль</label>
           </span>
-          <span class="p-inputgroup-addon pointer"
-                (mousedown)='showPassword = true'
-                (mouseup)='showPassword = false'>
-                <i class="pi"
-                   [ngClass]='showPassword ? "pi-eye" : "pi-eye-slash"'></i>
-            </span>
+          <span
+            class="p-inputgroup-addon pointer"
+            (mousedown)="showPassword = true"
+            (mouseup)="showPassword = false"
+          >
+            <i class="pi" [ngClass]="showPassword ? 'pi-eye' : 'pi-eye-slash'"></i>
+          </span>
         </div>
       </div>
       <div class="field col-12 flex flex-column justify-content-center">
         <div class="p-inputgroup">
           <span class="p-float-label p-input-icon-left">
-              <i class="pi pi-clone"></i>
-              <input pInputText
-                     [type]="showPasswordConfirm ? 'text' : 'password'"
-                     id="password_confirm"
-                     [ngClass]='signUpForm.hasError("notSame") ? "ng-dirty ng-invalid" : ""'
-                     formControlName='passwordConfirm'>
-              <label for="password_confirm">Повторите пароль</label>
+            <i class="pi pi-clone"></i>
+            <input
+              pInputText
+              [type]="showPasswordConfirm ? 'text' : 'password'"
+              id="password_confirm"
+              [ngClass]="signUpForm.hasError('notSame') ? 'ng-dirty ng-invalid' : ''"
+              formControlName="passwordConfirm"
+            />
+            <label for="password_confirm">Повторите пароль</label>
           </span>
-          <span class="p-inputgroup-addon pointer"
-                (mousedown)='showPasswordConfirm = true'
-                (mouseup)='showPasswordConfirm = false'>
-                <i class="pi"
-                   [ngClass]='showPasswordConfirm ? "pi-eye" : "pi-eye-slash"'></i>
-            </span>
+          <span
+            class="p-inputgroup-addon pointer"
+            (mousedown)="showPasswordConfirm = true"
+            (mouseup)="showPasswordConfirm = false"
+          >
+            <i class="pi" [ngClass]="showPasswordConfirm ? 'pi-eye' : 'pi-eye-slash'"></i>
+          </span>
         </div>
-        <span *ngIf='signUpForm.hasError("notSame")' class='p-error mt-2'>Пароли не совпадают</span>
+        <span *ngIf="signUpForm.hasError('notSame')" class="p-error mt-2">Пароли не совпадают</span>
       </div>
     </div>
-    <div class='flex justify-content-center'>
-      <p-button label="Авторизация" styleClass="p-button-primary" [routerLink]='["/sign-in"]'></p-button>
-      <p-button type='submit' label="Подтвердить" styleClass="p-button-success ml-2" (onClick)='signUp()'></p-button>
+    <div class="flex justify-content-center">
+      <p-button
+        label="Авторизация"
+        styleClass="p-button-primary"
+        [routerLink]="['/sign-in']"
+      ></p-button>
+      <p-button
+        type="submit"
+        label="Подтвердить"
+        styleClass="p-button-success ml-2"
+        (onClick)="signUp()"
+      ></p-button>
     </div>
   </p-card>
 </div>
