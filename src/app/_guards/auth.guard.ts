@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivateChild, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivateChild } from '@angular/router';
 import { TokenService } from '../_services/front/token.service';
 
 @Injectable({
@@ -9,12 +8,7 @@ import { TokenService } from '../_services/front/token.service';
 export class AuthGuard implements CanActivateChild {
   constructor(private tokenService: TokenService) {}
 
-  public canActivateChild():
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
-    const token = this.tokenService.getToken();
-    return !!token;
+  public canActivateChild(): boolean {
+    return !!this.tokenService.getToken();
   }
 }
