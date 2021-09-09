@@ -11,9 +11,12 @@ class Script
     {
         $this->dataBase = $dataBase;
     }
-    public function getFolders($userId)
+    public function getFolders($userId, $isAdmin)
     {
         $query = "SELECT s.id, s.name FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND s.isFolder=1";
+        if ($isAdmin) {
+            $query = "SELECT s.id, s.name FROM Script s WHERE s.isFolder=1";
+        }
         $stmt = $this->dataBase->db->query($query);
         $folders = [];
         while ($folder = $stmt->fetch()) {
@@ -34,11 +37,15 @@ class Script
         }
         return $blocks;
     }
-    public function getFolder($userId, $folderId = null, $searchString = '')
+    public function getFolder($isAdmin, $userId, $folderId = null, $searchString = '')
     {
         $result = array();
         if ($folderId) {
-            $query = $this->dataBase->db->prepare("SELECT s.id, s.name FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND s.id=?");
+            $query = "SELECT s.id, s.name FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND s.id=?";
+            if ($isAdmin) {
+                $query = "SELECT s.id, s.name FROM Script s WHERE s.id=?";
+            }
+            $query = $this->dataBase->db->prepare($query);
             $query->execute(array($folderId));
             $result = $query->fetch();
             if (!$result) {
@@ -47,16 +54,23 @@ class Script
             $result['breadCrumbs'] = $this->getBreadCrumbs($folderId);
         }
 
-        $result['scripts'] = $this->getFolderChildren($userId, $folderId, $searchString);
+        $result['scripts'] = $this->getFolderChildren($isAdmin, $userId, $folderId, $searchString);
 
         return $result;
     }
 
-    private function getFolderChildren($userId, $folderId = null, $searchString = '')
+    private function getFolderChildren($isAdmin, $userId, $folderId = null, $searchString = '')
     {
         $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId, s.lastModifyDate, s.createDate FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND parentFolderId IS ? AND name LIKE '%$searchString%' ORDER BY isFolder DESC";
+        if ($isAdmin) {
+            $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId, s.lastModifyDate, s.createDate FROM Script s WHERE parentFolderId IS ? AND name LIKE '%$searchString%' ORDER BY isFolder DESC";
+        }
         if ($folderId) {
-            $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId, s.lastModifyDate, s.createDate FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND parentFolderId = ? AND name LIKE '%$searchString%' ORDER BY isFolder DESC";
+            if ($isAdmin) {
+                $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId, s.lastModifyDate, s.createDate FROM Script s WHERE parentFolderId = ? AND name LIKE '%$searchString%' ORDER BY isFolder DESC";
+            } else {
+                $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId, s.lastModifyDate, s.createDate FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND parentFolderId = ? AND name LIKE '%$searchString%' ORDER BY isFolder DESC";
+            }
         }
         $stmt = $this->dataBase->db->prepare($query);
         $stmt->execute(array($folderId));
@@ -73,9 +87,12 @@ class Script
         return $scripts;
     }
 
-    public function read($userId, $scriptId, $block)
+    public function read($isAdmin, $userId, $scriptId, $block)
     {
         $query = "SELECT s.id, s.name, createDate, lastModifyDate, lastModifyUserId FROM UserScript us JOIN Script s ON s.id=us.scriptId WHERE us.userId=$userId AND s.id=$scriptId";
+        if($isAdmin){
+            $query = "SELECT s.id, s.name, createDate, lastModifyDate, lastModifyUserId FROM Script s WHERE s.id=$scriptId";
+        }
         $script = $this->dataBase->db->query($query)->fetch();
         if (!$script) {
             throw new Exception('Скрипт не найден', 404);
