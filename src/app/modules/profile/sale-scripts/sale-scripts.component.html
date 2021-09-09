@@ -26,7 +26,7 @@
             <tr>
               <th>Наименование</th>
               <th>Дата изменения</th>
-              <th>Действия</th>
+              <th class="text-right">Действия</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item let-row="rowIndex">
@@ -34,7 +34,7 @@
               [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }"
               class="cursor-pointer"
             >
-              <td>
+              <td class="col-8 py-1 pl-0">
                 <p-button
                   [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
                   *ngIf="!item.isFolder"
@@ -51,21 +51,21 @@
                   class="p-button-text"
                 ></button>
               </td>
-              <td>
+              <td class="py-1">
                 {{
                   (item.lastModifyDate ? item.lastModifyDate : item.createDate)
                     | date: 'dd.MM.yyyy HH:mm'
                 }}
               </td>
-              <td>
+              <td class="text-right py-1 pr-0">
                 <p-button
                   icon="pi pi-pencil"
-                  styleClass="p-button-success p-button-text mr-2"
+                  styleClass="p-button-text"
                   (onClick)="onEditClick(item)"
                 ></p-button>
                 <p-button
                   icon="pi pi-trash"
-                  styleClass="p-button-danger p-button-outlined"
+                  styleClass="p-button-text"
                   (onClick)="onDeleteClick(item)"
                 ></p-button>
               </td>
