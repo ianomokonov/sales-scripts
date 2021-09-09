@@ -118,11 +118,6 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
 
 
     $group->group('script',  function (RouteCollectorProxy $scriptGroup) use ($script, $block) {
-        $scriptGroup->post('', function (Request $request, Response $response) use ($script) {
-            $response->getBody()->write(json_encode($script->create($request->getParsedBody())));
-            return $response;
-        });
-
         $scriptGroup->get('/{scriptId}', function (Request $request, Response $response) use ($script, $block) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
@@ -140,23 +135,9 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $response->getBody()->write(json_encode($script->getBlocks($scriptId)));
             return $response;
         });
-
-        $scriptGroup->put('/{scriptId}/reorder-blocks', function (Request $request, Response $response) use ($script) {
-            $response->getBody()->write(json_encode($script->sortBlocks($request->getParsedBody()['blocks'])));
-            return $response;
-        });
     });
 
     $group->group('block',  function (RouteCollectorProxy $scriptGroup) use ($block) {
-
-        $scriptGroup->delete('/{blockId}', function (Request $request, Response $response) use ($block) {
-            $routeContext = RouteContext::fromRequest($request);
-            $route = $routeContext->getRoute();
-            $blockId = $route->getArgument('blockId');
-            $response->getBody()->write(json_encode($block->delete($blockId)));
-            return $response;
-        });
-
         $scriptGroup->put('/{blockId}/mark', function (Request $request, Response $response) use ($block) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
@@ -164,32 +145,75 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $response->getBody()->write(json_encode($block->markBlock($blockId, $request->getParsedBody())));
             return $response;
         });
-
-        $scriptGroup->post('/{blockId}/transition', function (Request $request, Response $response) use ($block) {
-            $routeContext = RouteContext::fromRequest($request);
-            $route = $routeContext->getRoute();
-            $blockId = $route->getArgument('blockId');
-            $response->getBody()->write(json_encode($block->createTransition($blockId, $request->getParsedBody())));
-            return $response;
-        });
-
-        $scriptGroup->post('', function (Request $request, Response $response) use ($block) {
-            $response->getBody()->write(json_encode($block->create($request->getParsedBody())));
-            return $response;
-        });
     });
 
     $group->group('user',  function (RouteCollectorProxy $userGroup) use ($dataBase) {
-
         $userGroup->get('', function (Request $request, Response $response) use ($dataBase) {
             $userId = $request->getAttribute('userId');
             $user = new User($dataBase);
             $response->getBody()->write(json_encode($user->read($userId)));
             return $response;
         });
+
+        $userGroup->get('/check-admin', function (Request $request, Response $response) use ($dataBase) {
+            $userId = $request->getAttribute('userId');
+            $user = new User($dataBase);
+            $response->getBody()->write(json_encode($user->checkAdmin($userId)));
+            return $response;
+        });
     });
 
-    $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($dataBase) {
+    $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($script, $block) {
+        $adminGroup->group('/script',  function (RouteCollectorProxy $scriptGroup) use ($script) {
+            $scriptGroup->post('', function (Request $request, Response $response) use ($script) {
+                $response->getBody()->write(json_encode($script->create($request->getAttribute('userId'), $request->getParsedBody())));
+                return $response;
+            });
+
+            $scriptGroup->put('/{scriptId}', function (Request $request, Response $response) use ($script) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $scriptId = $route->getArgument('scriptId');
+                $response->getBody()->write(json_encode($script->update($request->getAttribute('userId'), $scriptId, $request->getParsedBody())));
+                return $response;
+            });
+
+            $scriptGroup->delete('/{scriptId}', function (Request $request, Response $response) use ($script) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $scriptId = $route->getArgument('scriptId');
+                $response->getBody()->write(json_encode($script->delete($scriptId)));
+                return $response;
+            });
+
+            $scriptGroup->put('/{scriptId}/reorder-blocks', function (Request $request, Response $response) use ($script) {
+                $response->getBody()->write(json_encode($script->sortBlocks($request->getParsedBody()['blocks'])));
+                return $response;
+            });
+        });
+
+        $adminGroup->group('/block',  function (RouteCollectorProxy $scriptGroup) use ($block) {
+            $scriptGroup->delete('/{blockId}', function (Request $request, Response $response) use ($block) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $blockId = $route->getArgument('blockId');
+                $response->getBody()->write(json_encode($block->delete($blockId)));
+                return $response;
+            });
+
+            $scriptGroup->post('/{blockId}/transition', function (Request $request, Response $response) use ($block) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $blockId = $route->getArgument('blockId');
+                $response->getBody()->write(json_encode($block->createTransition($request->getAttribute('userId'), $blockId, $request->getParsedBody())));
+                return $response;
+            });
+
+            $scriptGroup->post('', function (Request $request, Response $response) use ($block) {
+                $response->getBody()->write(json_encode($block->create($request->getAttribute('userId'), $request->getParsedBody())));
+                return $response;
+            });
+        });
     })->add(function (Request $request, RequestHandler $handler) use ($dataBase) {
         $userId = $request->getAttribute('userId');
 
@@ -206,7 +230,7 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
 })->add(function (Request $request, RequestHandler $handler) use ($token) {
     try {
         $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
-        $data =$token->decode($jwt)->data;
+        $data = $token->decode($jwt)->data;
         $userId = $data->id;
         $isAdmin = isset($data->isAdmin) ? $data->isAdmin : false;
         $request = $request->withAttribute('userId', $userId);

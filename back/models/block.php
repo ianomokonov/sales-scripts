@@ -12,10 +12,11 @@ class Block
         $this->dataBase = $dataBase;
     }
 
-    public function create($request)
+    public function create($userId, $request)
     {
         $scriptModel = new Script($this->dataBase);
         $request = $this->dataBase->stripAll((array)$request);
+        $request['lastModifyUserId'] = $userId;
         $request['blockIndex'] = count($scriptModel->getBlocks($request['scriptId']));
         $query = $this->dataBase->genInsertQuery(
             $request,
@@ -30,12 +31,13 @@ class Block
         return $this->dataBase->db->lastInsertId();
     }
 
-    public function createTransition($blockId, $request)
+    public function createTransition($userId, $blockId, $request)
     {
         if ($request['block']) {
-            $request['nextBlockId'] = $this->create($request['block']);
+            $request['nextBlockId'] = $this->create($userId, $request['block']);
             unset($request['block']);
         }
+        $request['lastModifyUserId'] = $userId;
         $request['blockId'] = $blockId;
         $request = $this->dataBase->stripAll((array)$request);
         $query = $this->dataBase->genInsertQuery(
@@ -66,7 +68,6 @@ class Block
             $transition['nextBlockId'] =  $transition['nextBlockId'] * 1;
             $transition['status'] = $transition['status'] ? $transition['status'] * 1 : null;
             $transition['lastModifyDate'] = $transition['lastModifyDate'] ? date("Y/m/d H:00:00", strtotime($transition['lastModifyDate'])) : null;
-            $script['createDate'] = $transition['createDate'] ? date("Y/m/d H:00:00", strtotime($transition['createDate'])) : null;
 
             $transitions[] = $transition;
         }

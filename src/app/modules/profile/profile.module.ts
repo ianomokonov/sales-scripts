@@ -25,13 +25,14 @@ import { RippleModule } from 'primeng/ripple';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { MenubarModule } from 'primeng/menubar';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
 import { AddTransitionComponent } from './sale-script/add-transition/add-transition.component';
 import { AddBlockComponent } from './sale-script/add-block/add-block.component';
-import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-script-or-folder.component';
+import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-folder.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     SaleScriptsComponent,
     AddTransitionComponent,
     AddBlockComponent,
-    AddScriptOrFolderComponent,
+    ScriptOrFolderComponent,
     AddBlockComponent,
   ],
   imports: [
@@ -69,6 +70,7 @@ import { AddScriptOrFolderComponent } from './_modals/add-script-or-folder/add-s
     BreadcrumbModule,
     OverlayPanelModule,
     ScrollPanelModule,
+    MenubarModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })

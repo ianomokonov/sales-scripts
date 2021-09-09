@@ -32,12 +32,12 @@ export class UserService {
     );
   }
 
-  public signOut() {
+  public logOut(): Observable<any> {
     const token = this.authService.getRefreshToken();
     return (
       token
-        ? this.http.post<string>(`${this.baseUrl}/user/delete-token`, {
-            token: this.authService.getRefreshToken(),
+        ? this.http.post<string>(`${this.baseUrl}/delete-token`, {
+            token,
           })
         : of(null)
     ).pipe(

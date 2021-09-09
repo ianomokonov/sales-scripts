@@ -1,5 +1,5 @@
-export interface CreateScriptRequest {
-  name: string;
+import { SaveScriptRequest } from './save-script.request';
+
+export interface CreateScriptRequest extends SaveScriptRequest {
   isFolder: boolean;
-  parentFolderId?: number;
 }

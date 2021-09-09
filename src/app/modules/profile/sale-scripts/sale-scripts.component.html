@@ -26,21 +26,23 @@
             <tr>
               <th>Наименование</th>
               <th>Дата изменения</th>
+              <th class="text-right">Действия</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item let-row="rowIndex">
             <tr
-              [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
               [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }"
               class="cursor-pointer"
             >
-              <td>
+              <td class="col-8 py-1 pl-0">
                 <p-button
+                  [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
                   *ngIf="!item.isFolder"
                   [label]="item.name"
                   styleClass="p-button-link"
                 ></p-button>
                 <button
+                  [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
                   *ngIf="item.isFolder"
                   pButton
                   type="button"
@@ -49,11 +51,23 @@
                   class="p-button-text"
                 ></button>
               </td>
-              <td>
+              <td class="py-1">
                 {{
                   (item.lastModifyDate ? item.lastModifyDate : item.createDate)
                     | date: 'dd.MM.yyyy HH:mm'
                 }}
+              </td>
+              <td class="text-right py-1 pr-0">
+                <p-button
+                  icon="pi pi-pencil"
+                  styleClass="p-button-text"
+                  (onClick)="onEditClick(item)"
+                ></p-button>
+                <p-button
+                  icon="pi pi-trash"
+                  styleClass="p-button-text"
+                  (onClick)="onDeleteClick(item)"
+                ></p-button>
               </td>
             </tr>
           </ng-template>
@@ -82,7 +96,10 @@
 </p-overlayPanel>
 
 <ng-template #emptyFolder>
-  <div class="flex flex-column justify-content-center align-items-center">
+  <div
+    *ngIf="!loadingService.isLoading"
+    class="flex flex-column justify-content-center align-items-center"
+  >
     <div class="mb-2">Папки и скрипты отсутствуют в текущей директории.</div>
     <div class="flex justify-content-center align-items-center">
       <span>Создайте</span>

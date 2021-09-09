@@ -36,8 +36,12 @@ class DataBase
         $values = array_values($data);
         $res = array('UPDATE ' . $t . ' SET ', array());
         for ($i = 0; $i < count($keys); $i++) {
-            $res[0] = $res[0] . $keys[$i] . '=?, ';
-            $res[1][] = $values[$i];
+            if ($values[$i] == 'now()') {
+                $res[0] = $res[0] . $keys[$i] . '=now(), ';
+            } else {
+                $res[0] = $res[0] . $keys[$i] . '=?, ';
+                $res[1][] = $values[$i] ? $values[$i] : null;
+            }
         }
         $res[0] = rtrim($res[0], ', ');
         $res[0] = $res[0] . ' WHERE Id = ' . $id;
@@ -47,7 +51,7 @@ class DataBase
 
     public function stripAll($object)
     {
-        foreach(array_keys((array)$object) as $key){
+        foreach (array_keys((array)$object) as $key) {
             $object[$key] = htmlspecialchars(strip_tags($object[$key]));
         }
         return $object;

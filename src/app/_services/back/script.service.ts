@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreateScriptRequest } from 'src/app/_models/requests/create-script.request';
+import { SaveScriptRequest } from 'src/app/_models/requests/save-script.request';
 import { FolderResponse } from 'src/app/_models/responses/folder.response';
 import { environment } from 'src/environments/environment';
 import { Script } from '../../_entities/script.entity';
@@ -32,10 +33,18 @@ export class ScriptService {
   }
 
   public addScript(request: CreateScriptRequest): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/script`, request);
+    return this.http.post<number>(`${this.baseUrl}/admin/script`, request);
+  }
+
+  public updateScript(request: SaveScriptRequest, id: number): Observable<boolean> {
+    return this.http.put<boolean>(`${this.baseUrl}/admin/script/${id}`, request);
+  }
+
+  public deleteScript(scriptId: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.baseUrl}/admin/script/${scriptId}`);
   }
 
   public reorderBlocks(id: number, blocks: { id: number; index: number }[]): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/script/${id}/reorder-blocks`, { blocks });
+    return this.http.put<any>(`${this.baseUrl}/admin/script/${id}/reorder-blocks`, { blocks });
   }
 }

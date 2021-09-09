@@ -1,14 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { ScriptService } from '../../../_services/back/script.service';
-import { AddScriptOrFolderComponent } from '../_modals/add-script-or-folder/add-script-or-folder.component';
 import { FolderResponse } from '../../../_models/responses/folder.response';
 import { IdNameResponse } from '../../../_models/responses/id-name.response';
 import { LoadingService } from '../../../_services/front/loading.service';
 import { convertToBreadCrumb } from './breadCrumb.converter';
+import { ScriptShortView } from '../../../_models/script-short-view';
+import { ScriptOrFolderComponent } from '../_modals/script-or-folder/script-or-folder.component';
 
 @Component({
   selector: 'app-sale-scripts',
@@ -31,8 +32,9 @@ export class SaleScriptsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private ds: DialogService,
+    private cs: ConfirmationService,
     private messageService: MessageService,
-    private loadingService: LoadingService,
+    public loadingService: LoadingService,
   ) {
     this.buttonItems = [
       {
@@ -95,7 +97,7 @@ export class SaleScriptsComponent implements OnInit {
   }
 
   public addFolder() {
-    const modal = this.ds.open(AddScriptOrFolderComponent, {
+    const modal = this.ds.open(ScriptOrFolderComponent, {
       header: 'Добавить папку',
       width: '50%',
       data: {
@@ -113,7 +115,7 @@ export class SaleScriptsComponent implements OnInit {
   }
 
   public addScript() {
-    const modal = this.ds.open(AddScriptOrFolderComponent, {
+    const modal = this.ds.open(ScriptOrFolderComponent, {
       header: 'Добавить скрипт',
       width: '50%',
       data: {
@@ -127,6 +129,69 @@ export class SaleScriptsComponent implements OnInit {
       if (newScriptId) {
         this.router.navigate(['script', newScriptId], { relativeTo: this.route.parent });
       }
+    });
+  }
+
+  public onEditClick(item: ScriptShortView) {
+    const modal = this.ds.open(ScriptOrFolderComponent, {
+      header: `Редактировать ${item.isFolder ? 'папку' : 'скрипт'}`,
+      width: '50%',
+      data: {
+        folders: this.folders,
+        edit: item,
+      },
+    });
+    modal.onClose.subscribe((changedItem: ScriptShortView) => {
+      if (changedItem) {
+        if (item.parentFolderId !== changedItem.parentFolderId) {
+          const index = this.items.scripts.findIndex(
+            (scriptsItem) => scriptsItem.id === changedItem.id,
+          );
+          this.items.scripts.splice(index, 1);
+          this.messageService.add({
+            severity: 'success',
+            detail: 'Успешно перемещено',
+          });
+        } else {
+          const changedScriptItem = this.items.scripts.find(
+            (scriptsItem) => scriptsItem.id === changedItem.id,
+          );
+          if (changedScriptItem) changedScriptItem.name = changedItem.name;
+          this.messageService.add({
+            severity: 'success',
+            detail: 'Успешно изменено',
+          });
+        }
+      }
+    });
+  }
+
+  public onDeleteClick(item: ScriptShortView) {
+    this.cs.confirm({
+      header: 'Подтвердите действие',
+      message: `Вы уверены, что хотите удалить ${
+        item.isFolder ? 'папку и все вложенные в неё папки и скрипты' : 'скрипт'
+      }?`,
+      acceptLabel: 'Удалить',
+      acceptButtonStyleClass: 'p-button-success',
+      rejectLabel: 'Отмена',
+      rejectButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.scriptService.deleteScript(item.id).subscribe(
+          (success) => {
+            if (success) {
+              const index = this.items.scripts.findIndex((folder) => folder.id === item.id);
+              this.items.scripts.splice(index, 1);
+            }
+          },
+          ({ error }) => {
+            this.messageService.add({
+              severity: 'error',
+              detail: error.message,
+            });
+          },
+        );
+      },
     });
   }
 

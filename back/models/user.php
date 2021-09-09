@@ -51,8 +51,9 @@ class User
     // Получение пользовательской информации
     public function read($userId)
     {
-        $query = "SELECT login, email, phone FROM $this->table WHERE id='$userId'";
+        $query = "SELECT login, email, phone, isAdmin FROM $this->table WHERE id=$userId";
         $user = $this->dataBase->db->query($query)->fetch();
+        $user['isAdmin'] = $user['isAdmin'] == '1';
         return $user;
     }
 
@@ -78,7 +79,7 @@ class User
     {
         $query = "SELECT isAdmin FROM $this->table WHERE id = $userId";
         $stmt = $this->dataBase->db->query($query);
-        if ($stmt->fetch()['isAdmin']) {
+        if ($stmt->fetch()['isAdmin'] == '1') {
             return true;
         }
         return false;

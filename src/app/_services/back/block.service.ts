@@ -16,14 +16,14 @@ export class BlockService {
   }
 
   public delete(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/block/${id}`);
+    return this.http.delete<any>(`${this.baseUrl}/admin/block/${id}`);
   }
 
   public addBlock(request: CreateBlockRequest): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/block`, request);
+    return this.http.post<number>(`${this.baseUrl}/admin/block`, request);
   }
 
   public addTransition(blockId: number, request: CreateTransitionRequest): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/block/${blockId}/transition`, request);
+    return this.http.post<number>(`${this.baseUrl}/admin/block/${blockId}/transition`, request);
   }
 }

@@ -16,11 +16,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/dialog-panel/dialog-panel.module').then((m) => m.DialogPanelModule),
     canActivateChild: [AuthGuard],
+    runGuardsAndResolvers: 'paramsChange',
   },
   {
     path: 'profile',
     loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
     canActivateChild: [AuthGuard],
+    runGuardsAndResolvers: 'paramsChange',
   },
   {
     path: 'sign-in',
@@ -31,8 +33,12 @@ const routes: Routes = [
     component: SignUpComponent,
   },
   {
-    path: '**',
+    path: '404',
     component: NotFoundComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '404',
   },
 ];
 
