@@ -90,7 +90,7 @@ class Script
     public function read($isAdmin, $userId, $scriptId, $block)
     {
         $query = "SELECT s.id, s.name, createDate, lastModifyDate, lastModifyUserId FROM UserScript us JOIN Script s ON s.id=us.scriptId WHERE us.userId=$userId AND s.id=$scriptId";
-        if($isAdmin){
+        if ($isAdmin) {
             $query = "SELECT s.id, s.name, createDate, lastModifyDate, lastModifyUserId FROM Script s WHERE s.id=$scriptId";
         }
         $script = $this->dataBase->db->query($query)->fetch();
@@ -132,6 +132,28 @@ class Script
             $stmt->execute($query[1]);
         }
         return $this->dataBase->db->lastInsertId();
+    }
+
+    public function update($scriptId, $request)
+    {
+        $request = $this->dataBase->stripAll((array)$request);
+        $query = $this->dataBase->genUpdateQuery(
+            $request,
+            $this->table,
+            $scriptId
+        );
+
+        $stmt = $this->dataBase->db->prepare($query[0]);
+        $stmt->execute($query[1]);
+        return true;
+    }
+
+    public function delete($scriptId)
+    {
+        $query = "delete from Script where id=?";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($scriptId));
+        return true;
     }
 
     private function readBlocks($scriptId, $userId, Block $blockModel)

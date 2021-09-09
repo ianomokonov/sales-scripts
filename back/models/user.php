@@ -53,6 +53,7 @@ class User
     {
         $query = "SELECT login, email, phone, isAdmin FROM $this->table WHERE id=$userId";
         $user = $this->dataBase->db->query($query)->fetch();
+        $user['isAdmin'] = $user['isAdmin'] == '1';
         return $user;
     }
 

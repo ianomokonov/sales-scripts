@@ -164,9 +164,25 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
     });
 
     $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($script, $block) {
-        $adminGroup->group('script',  function (RouteCollectorProxy $scriptGroup) use ($script) {
+        $adminGroup->group('/script',  function (RouteCollectorProxy $scriptGroup) use ($script) {
             $scriptGroup->post('', function (Request $request, Response $response) use ($script) {
                 $response->getBody()->write(json_encode($script->create($request->getParsedBody())));
+                return $response;
+            });
+
+            $scriptGroup->put('/{scriptId}', function (Request $request, Response $response) use ($script) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $scriptId = $route->getArgument('scriptId');
+                $response->getBody()->write(json_encode($script->update($scriptId, $request->getParsedBody())));
+                return $response;
+            });
+
+            $scriptGroup->delete('/{scriptId}', function (Request $request, Response $response) use ($script) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $scriptId = $route->getArgument('scriptId');
+                $response->getBody()->write(json_encode($script->delete($scriptId)));
                 return $response;
             });
 
@@ -176,7 +192,7 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             });
         });
 
-        $adminGroup->group('block',  function (RouteCollectorProxy $scriptGroup) use ($block) {
+        $adminGroup->group('/block',  function (RouteCollectorProxy $scriptGroup) use ($block) {
             $scriptGroup->delete('/{blockId}', function (Request $request, Response $response) use ($block) {
                 $routeContext = RouteContext::fromRequest($request);
                 $route = $routeContext->getRoute();
