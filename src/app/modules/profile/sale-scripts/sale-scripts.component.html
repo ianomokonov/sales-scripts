@@ -12,11 +12,16 @@
       ></button>
     </div>
     <div class="my-2">
-      <div class="mb-2">
+      <div class="mb-2" [ngClass]="{ 'no-opacity': !items.id }">
         <p-breadcrumb [model]="breadCrumb" (onItemClick)="breadCrumbToggle($event)"></p-breadcrumb>
       </div>
       <p-card>
-        <p-table *ngIf='items.scripts.length; else emptyFolder' [value]="items.scripts" responsiveLayout="scroll" class="table">
+        <p-table
+          *ngIf="items.scripts.length; else emptyFolder"
+          [value]="items.scripts"
+          responsiveLayout="scroll"
+          class="table"
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>Наименование</th>
@@ -77,21 +82,13 @@
 </p-overlayPanel>
 
 <ng-template #emptyFolder>
-  <div class='flex flex-column justify-content-center align-items-center'>
-    <div class='mb-2'>Папки и скрипты отсутствуют в текущей директории.</div>
-    <div class='flex justify-content-center align-items-center'>
+  <div class="flex flex-column justify-content-center align-items-center">
+    <div class="mb-2">Папки и скрипты отсутствуют в текущей директории.</div>
+    <div class="flex justify-content-center align-items-center">
       <span>Создайте</span>
-      <p-button
-        (onClick)='addScript()'
-        label='скрипт'
-        styleClass="p-button-link"
-      ></p-button>
+      <p-button (onClick)="addScript()" label="скрипт" styleClass="p-button-link"></p-button>
       <span>или</span>
-      <p-button
-        (onClick)='addFolder()'
-        label='папку'
-        styleClass="p-button-link"
-      ></p-button>
+      <p-button (onClick)="addFolder()" label="папку" styleClass="p-button-link"></p-button>
     </div>
   </div>
 </ng-template>
