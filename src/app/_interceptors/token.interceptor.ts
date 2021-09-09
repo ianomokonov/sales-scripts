@@ -11,11 +11,11 @@ export class TokenInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private authService: TokenService) {}
+  constructor(private tokenService: TokenService) {}
 
   public intercept(req: HttpRequest<{}>, next: HttpHandler): Observable<HttpEvent<{}>> {
     let params = req;
-    const token = this.authService.getToken();
+    const token = this.tokenService.getToken();
     if (token) {
       params = this.addToken(req, token);
     }
@@ -28,7 +28,7 @@ export class TokenInterceptor implements HttpInterceptor {
     //     if (
     //       error instanceof HttpErrorResponse &&
     //       error.status === 401 &&
-    //       this.authService.getRefreshToken()
+    //       this.tokenService.getRefreshToken()
     //     ) {
     //       return this.handle401Error(params, next);
     //     }
@@ -38,12 +38,12 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
-    const refreshToken = this.authService.getRefreshToken();
+    const refreshToken = this.tokenService.getRefreshToken();
     if (!this.isRefreshing && refreshToken) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      return this.authService.refreshToken(refreshToken).pipe(
+      return this.tokenService.refreshToken(refreshToken).pipe(
         switchMap((token: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.jwt);
