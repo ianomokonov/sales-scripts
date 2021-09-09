@@ -25,6 +25,7 @@ import { RippleModule } from 'primeng/ripple';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { MenubarModule } from 'primeng/menubar';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -69,6 +70,7 @@ import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-fo
     BreadcrumbModule,
     OverlayPanelModule,
     ScrollPanelModule,
+    MenubarModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService],
 })
