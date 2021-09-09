@@ -12,6 +12,7 @@
       <p-dropdown
         [options]="folders"
         [filter]="true"
+        [showClear]="true"
         emptyFilterMessage="Совпадений не найдено"
         formControlName="parentFolderId"
         optionLabel="name"
@@ -19,10 +20,14 @@
         placeholder="&nbsp;"
         id="folders"
       ></p-dropdown>
-      <label for="folders">Создать в папке (необязательно)</label>
+      <label for="folders">Расположить в папке (необязательно)</label>
     </span>
   </div>
   <div class="col">
-    <p-button label="Создать" styleClass="p-button-success" (onClick)="addItem()"></p-button>
+    <p-button
+      [label]="editData ? 'Сохранить' : 'Создать'"
+      styleClass="p-button-success"
+      (onClick)="itemAction()"
+    ></p-button>
   </div>
 </div>

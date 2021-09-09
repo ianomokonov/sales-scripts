@@ -36,8 +36,8 @@ export class ScriptService {
     return this.http.post<number>(`${this.baseUrl}/admin/script`, request);
   }
 
-  public updateScript(request: SaveScriptRequest): Observable<boolean> {
-    return this.http.put<boolean>(`${this.baseUrl}/admin/script`, request);
+  public updateScript(request: SaveScriptRequest, id: number): Observable<boolean> {
+    return this.http.put<boolean>(`${this.baseUrl}/admin/script/${id}`, request);
   }
 
   public deleteScript(scriptId: number): Observable<boolean> {

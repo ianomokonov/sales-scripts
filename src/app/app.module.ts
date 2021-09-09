@@ -9,6 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { MenubarModule } from 'primeng/menubar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
@@ -37,6 +38,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     ReactiveFormsModule,
     InputMaskModule,
     ToastModule,
+    MenubarModule,
   ],
   providers: [
     {

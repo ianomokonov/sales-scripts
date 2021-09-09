@@ -26,21 +26,23 @@
             <tr>
               <th>Наименование</th>
               <th>Дата изменения</th>
+              <th>Действия</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item let-row="rowIndex">
             <tr
-              [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
               [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }"
               class="cursor-pointer"
             >
               <td>
                 <p-button
+                  [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
                   *ngIf="!item.isFolder"
                   [label]="item.name"
                   styleClass="p-button-link"
                 ></p-button>
                 <button
+                  [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
                   *ngIf="item.isFolder"
                   pButton
                   type="button"
@@ -50,7 +52,22 @@
                 ></button>
               </td>
               <td>
-                {{ item.lastModifyDate | date: 'dd.MM.yyyy HH:mm' }}
+                {{
+                  (item.lastModifyDate ? item.lastModifyDate : item.createDate)
+                    | date: 'dd.MM.yyyy HH:mm'
+                }}
+              </td>
+              <td>
+                <p-button
+                  icon="pi pi-pencil"
+                  styleClass="p-button-success p-button-text mr-2"
+                  (onClick)="onEditClick(item)"
+                ></p-button>
+                <p-button
+                  icon="pi pi-trash"
+                  styleClass="p-button-danger p-button-outlined"
+                  (onClick)="onDeleteClick(item)"
+                ></p-button>
               </td>
             </tr>
           </ng-template>
@@ -79,7 +96,10 @@
 </p-overlayPanel>
 
 <ng-template #emptyFolder>
-  <div class="flex flex-column justify-content-center align-items-center">
+  <div
+    *ngIf="!loadingService.isLoading"
+    class="flex flex-column justify-content-center align-items-center"
+  >
     <div class="mb-2">Папки и скрипты отсутствуют в текущей директории.</div>
     <div class="flex justify-content-center align-items-center">
       <span>Создайте</span>
