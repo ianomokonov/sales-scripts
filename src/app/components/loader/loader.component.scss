@@ -1,3 +1,4 @@
+@use "sass:math";
 $spinkit-size: 4em !default;
 $spinkit-spinner-color: #337ab7 !default;
 
@@ -17,7 +18,7 @@ section {
 .sk-folding-cube {
   $cubeCount: 4;
   $animationDuration: 2.4s;
-  $delayRange: ($animationDuration / 2);
+  $delayRange: math.div($animationDuration, 2);
 
   width: $spinkit-size;
   height: $spinkit-size;
@@ -54,7 +55,7 @@ section {
 
 @for $i from 2 through $cubeCount {
   .sk-cube-#{$i}:before {
-    animation-delay: ($delayRange / $cubeCount * ($i - 1));
+    animation-delay: (math.div($delayRange, $cubeCount) * ($i - 1));
   }
 }
 }
