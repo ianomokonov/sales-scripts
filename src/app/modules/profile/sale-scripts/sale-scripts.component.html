@@ -50,10 +50,7 @@
                 ></button>
               </td>
               <td>
-                {{
-                  (item.lastModifyDate ? item.lastModifyDate : item.createDate)
-                    | date: 'dd.MM.yyyy HH:mm'
-                }}
+                {{ item.lastModifyDate | date: 'dd.MM.yyyy HH:mm' }}
               </td>
             </tr>
           </ng-template>

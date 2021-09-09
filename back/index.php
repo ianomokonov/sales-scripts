@@ -166,7 +166,7 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
     $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($script, $block) {
         $adminGroup->group('/script',  function (RouteCollectorProxy $scriptGroup) use ($script) {
             $scriptGroup->post('', function (Request $request, Response $response) use ($script) {
-                $response->getBody()->write(json_encode($script->create($request->getParsedBody())));
+                $response->getBody()->write(json_encode($script->create($request->getAttribute('userId'), $request->getParsedBody())));
                 return $response;
             });
 
@@ -174,7 +174,7 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
                 $routeContext = RouteContext::fromRequest($request);
                 $route = $routeContext->getRoute();
                 $scriptId = $route->getArgument('scriptId');
-                $response->getBody()->write(json_encode($script->update($scriptId, $request->getParsedBody())));
+                $response->getBody()->write(json_encode($script->update($request->getAttribute('userId'), $scriptId, $request->getParsedBody())));
                 return $response;
             });
 
@@ -205,12 +205,12 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
                 $routeContext = RouteContext::fromRequest($request);
                 $route = $routeContext->getRoute();
                 $blockId = $route->getArgument('blockId');
-                $response->getBody()->write(json_encode($block->createTransition($blockId, $request->getParsedBody())));
+                $response->getBody()->write(json_encode($block->createTransition($request->getAttribute('userId'), $blockId, $request->getParsedBody())));
                 return $response;
             });
 
             $scriptGroup->post('', function (Request $request, Response $response) use ($block) {
-                $response->getBody()->write(json_encode($block->create($request->getParsedBody())));
+                $response->getBody()->write(json_encode($block->create($request->getAttribute('userId'), $request->getParsedBody())));
                 return $response;
             });
         });
