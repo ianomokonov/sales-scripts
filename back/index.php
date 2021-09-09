@@ -90,13 +90,17 @@ $app->post('/update-password', function (Request $request, Response $response) u
 
 $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $script) {
     $group->get('folders', function (Request $request, Response $response) use ($script) {
-        $response->getBody()->write(json_encode($script->getFolders()));
+        $userId = $request->getAttribute('userId');
+        $isAdmin = $request->getAttribute('isAdmin');
+        $response->getBody()->write(json_encode($script->getFolders($userId, $isAdmin)));
         return $response;
     });
     $group->group('scripts',  function (RouteCollectorProxy $scriptGroup) use ($script) {
         $scriptGroup->get('', function (Request $request, Response $response) use ($script) {
             $query = $request->getQueryParams();
-            $response->getBody()->write(json_encode($script->getFolder(null, isset($query['searchString']) ? $query['searchString'] : '')));
+            $userId = $request->getAttribute('userId');
+            $isAdmin = $request->getAttribute('isAdmin');
+            $response->getBody()->write(json_encode($script->getFolder($isAdmin, $userId, null, isset($query['searchString']) ? $query['searchString'] : '')));
             return $response;
         });
 
@@ -105,7 +109,9 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $route = $routeContext->getRoute();
             $folderId = $route->getArgument('folderId');
             $query = $request->getQueryParams();
-            $response->getBody()->write(json_encode($script->getFolder($folderId, isset($query['searchString']) ? $query['searchString'] : '')));
+            $userId = $request->getAttribute('userId');
+            $isAdmin = $request->getAttribute('isAdmin');
+            $response->getBody()->write(json_encode($script->getFolder($isAdmin, $userId, $folderId, isset($query['searchString']) ? $query['searchString'] : '')));
             return $response;
         });
     });
@@ -121,7 +127,9 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
             $scriptId = $route->getArgument('scriptId');
-            $response->getBody()->write(json_encode($script->read($scriptId, $block)));
+            $userId = $request->getAttribute('userId');
+            $isAdmin = $request->getAttribute('isAdmin');
+            $response->getBody()->write(json_encode($script->read($isAdmin, $userId, $scriptId, $block)));
             return $response;
         });
 
@@ -198,8 +206,11 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
 })->add(function (Request $request, RequestHandler $handler) use ($token) {
     try {
         $jwt = explode(' ', $request->getHeader('Authorization')[0])[1];
-        $userId = $token->decode($jwt)->data->id;
+        $data =$token->decode($jwt)->data;
+        $userId = $data->id;
+        $isAdmin = isset($data->isAdmin) ? $data->isAdmin : false;
         $request = $request->withAttribute('userId', $userId);
+        $request = $request->withAttribute('isAdmin', $isAdmin);
         $response = $handler->handle($request);
 
         return $response;

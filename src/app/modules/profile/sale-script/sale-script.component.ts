@@ -174,6 +174,7 @@ export class SaleScriptComponent implements OnInit {
 
   public onMarkBlock(id: number, event: MouseEvent) {
     const block = this.script?.blocks.find((b) => b.id === id);
+
     if (!block || !this.script) {
       return;
     }
