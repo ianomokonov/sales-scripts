@@ -77,6 +77,10 @@ export class SaleScriptsComponent implements OnInit {
         this.folders = folders;
       });
     });
+    this.router.events.subscribe((event) => {
+      this.searchControl.setValue('', { emitEvent: false });
+      this.searchString = '';
+    });
     this.searchControl.valueChanges.pipe(debounceTime(1000)).subscribe((change: string) => {
       this.searchString = change;
       if (this.lastFolderId) {

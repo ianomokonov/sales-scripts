@@ -27,7 +27,8 @@
             <tr [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }" class="cursor-pointer">
               <td class="col-8 py-1 pl-0">
                 <p-button [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
-                  *ngIf="!item.isFolder" [label]="item.name" styleClass="p-button-link"></p-button>
+                  *ngIf="!item.isFolder" [label]="item.name" styleClass="p-button-link">
+                </p-button>
                 <button [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]" *ngIf="item.isFolder"
                   pButton type="button" icon="pi pi-folder-open" [label]="item.name" class="p-button-text"></button>
               </td>
