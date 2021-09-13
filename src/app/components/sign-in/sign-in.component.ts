@@ -20,7 +20,7 @@ export class SignInComponent {
     private messageService: MessageService,
   ) {
     this.logInForm = this.fb.group({
-      login: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
   }
