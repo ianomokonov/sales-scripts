@@ -3,7 +3,8 @@
     <div class="flex align-items-center mt-3">
       <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
       <div class="scripts-actions flex justify-content-between">
-        <input class="search-input" type="text" placeholder="Поиск..." pInputText [formControl]="searchControl" />
+        <input class="search-input flex-grow-1 mr-3" type="text" placeholder="Поиск..." pInputText
+          [formControl]="searchControl" />
         <button pButton [disabled]="isError" type="button" icon="pi pi-plus" label="Добавить"
           (click)="menu.toggle($event)">
         </button>
@@ -65,10 +66,8 @@
   <div *ngIf="!loadingService.isLoading" class="flex flex-column justify-content-center align-items-center">
     <div class="mb-2">{{getEmptyMessage()}}</div>
     <div class="flex justify-content-center align-items-center">
-      <span>Создайте</span>
-      <p-button (onClick)="addScript()" label="скрипт" styleClass="p-button-link"></p-button>
-      <span>или</span>
-      <p-button (onClick)="addFolder()" label="папку" styleClass="p-button-link"></p-button>
+      <span>Создайте <span class="clickable-elem" (click)="addScript()">скрипт</span> или <span class="clickable-elem"
+          (click)="addFolder()">папку</span></span>
     </div>
   </div>
 </ng-template>
