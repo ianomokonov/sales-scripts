@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { debounceTime } from 'rxjs/operators';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { FormControl } from '@angular/forms';
 import { ScriptService } from '../../../_services/back/script.service';
 import { FolderResponse } from '../../../_models/responses/folder.response';
 import { IdNameResponse } from '../../../_models/responses/id-name.response';
@@ -26,6 +28,8 @@ export class SaleScriptsComponent implements OnInit {
   public isError: boolean = false;
   public buttonItems: MenuItem[];
   public breadCrumb: MenuItem[];
+  public searchString: string = '';
+  public searchControl = new FormControl();
 
   constructor(
     private scriptService: ScriptService,
@@ -73,10 +77,22 @@ export class SaleScriptsComponent implements OnInit {
         this.folders = folders;
       });
     });
+    this.router.events.subscribe((event) => {
+      this.searchControl.setValue('', { emitEvent: false });
+      this.searchString = '';
+    });
+    this.searchControl.valueChanges.pipe(debounceTime(1000)).subscribe((change: string) => {
+      this.searchString = change;
+      if (this.lastFolderId) {
+        this.getFolder(this.lastFolderId, change);
+      } else {
+        this.getFolder(undefined, change);
+      }
+    });
   }
 
-  public getFolder(id?: number) {
-    const sub = this.scriptService.getFolder(id).subscribe(
+  public getFolder(id?: number, searchString?: string) {
+    const sub = this.scriptService.getFolder(id, searchString).subscribe(
       (response) => {
         this.items = response;
         const crumb = convertToBreadCrumb(this.items.breadCrumbs);
@@ -112,6 +128,12 @@ export class SaleScriptsComponent implements OnInit {
         this.router.navigate(['scripts', folderId], { relativeTo: this.route.parent });
       }
     });
+  }
+
+  public getEmptyMessage(): string {
+    return this.searchString
+      ? `В текущей директории по поисковому запросу "${this.searchString}" папки и скрипты не найдены.`
+      : 'Папки и скрипты отсутствуют в текущей директории.';
   }
 
   public addScript() {

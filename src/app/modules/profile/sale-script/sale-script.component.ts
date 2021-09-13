@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -9,9 +9,11 @@ import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
 import { TransitionType } from 'src/app/_models/transition-type';
 import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
+import { OverlayPanel } from 'primeng/overlaypanel';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
 import { LoadingService } from '../../../_services/front/loading.service';
+import { convertToBreadCrumb } from '../sale-scripts/breadCrumb.converter';
 
 @Component({
   selector: 'app-sale-script',
@@ -19,6 +21,9 @@ import { LoadingService } from '../../../_services/front/loading.service';
   styleUrls: ['./sale-script.component.less'],
 })
 export class SaleScriptComponent implements OnInit {
+  @ViewChild('subMenu')
+  public subMenu: OverlayPanel | undefined;
+  public subMenuItems: IdNameResponse[] | undefined;
   public script: Script | undefined;
   public isError: boolean = false;
   public breadCrumbs: MenuItem[] = [];
@@ -36,7 +41,7 @@ export class SaleScriptComponent implements OnInit {
     private blockService: BlockService,
     private modalService: DialogService,
     private dialogService: DialogService,
-    private loadingService: LoadingService,
+    public loadingService: LoadingService,
     private messageService: MessageService,
   ) {}
 
@@ -105,10 +110,9 @@ export class SaleScriptComponent implements OnInit {
     const sub = this.scriptService.getScript(id).subscribe(
       (script) => {
         this.script = script;
-        this.breadCrumbs = this.script.breadCrumbs.map((breadCrumb) => ({
-          label: breadCrumb.name,
-          routerLink: script.id !== breadCrumb.id ? `/profile/scripts/${breadCrumb.id}` : '',
-        }));
+        const crumbs = convertToBreadCrumb(this.script.breadCrumbs, true);
+        this.breadCrumbs = crumbs.data;
+        this.subMenuItems = crumbs.crumbs;
         this.loadingService.removeSubscription(sub);
       },
       ({ error }) => {
@@ -221,5 +225,12 @@ export class SaleScriptComponent implements OnInit {
     }
 
     this.scriptService.reorderBlocks(this.script.id, result).subscribe();
+  }
+
+  public breadCrumbToggle(action: any) {
+    const { originalEvent, item } = action;
+    if (item.id === 'toggle') {
+      this.subMenu?.toggle(originalEvent);
+    }
   }
 }

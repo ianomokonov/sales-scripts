@@ -2,112 +2,64 @@
   <div class="col">
     <div class="flex justify-content-between align-items-center mb-3">
       <h2 class="my-0">Блоки</h2>
-      <button
-        pButton
-        pRipple
-        [disabled]="isError"
-        type="button"
-        label="Создать блок без переходов"
-        class="p-button-raised p-button-text"
-        (click)="createBlock()"
-      ></button>
+      <button pButton pRipple [disabled]="isError" type="button" label="Создать блок без переходов"
+        class="p-button-raised p-button-text" (click)="createBlock()"></button>
     </div>
-    <p-breadcrumb class="mb-3" *ngIf="breadCrumbs.length > 1" [model]="breadCrumbs"></p-breadcrumb>
+    <div class="mb-2">
+      <p-breadcrumb class="mb-3" *ngIf="breadCrumbs.length > 1" [model]="breadCrumbs"
+        (onItemClick)="breadCrumbToggle($event)"></p-breadcrumb>
+    </div>
     <p-accordion>
+      <div *ngIf="!loadingService.isLoading && !script?.blocks?.length"
+        class="flex flex-column justify-content-center align-items-center mt-5">
+        <div class="mb-2">Блоки разговора отсутствуют.</div>
+        <div class="flex justify-content-center align-items-center">
+          <span>Создайте первый <span class="clickable-elem" (click)="createBlock()">блок</span></span>
+        </div>
+      </div>
       <p-orderList [value]="script?.blocks || []" [dragdrop]="true" (onReorder)="onReorder($event)">
         <ng-template let-block pTemplate="item">
           <p-accordionTab [(selected)]="block.isOpened" class="tab-{{ block.id }}" tabindex="1">
             <ng-template pTemplate="header">
-              <div class="flex justify-content-between align-items-center accordion-header">
+              <div class="flex  align-items-center accordion-header">
                 <div class="flex align-items-center flex-grow-1 edit-action">
                   <h4 class="m-0 pl-2 pr-1 p-0">{{ block.name }}</h4>
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    icon="pi pi-pencil"
-                    class="p-button-rounded p-button-text"
-                  ></button>
+                  <button pButton pRipple type="button" icon="pi pi-pencil"
+                    class="p-button-rounded p-button-text"></button>
                 </div>
 
                 <div class="block__actions">
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    icon="pi pi-trash"
-                    class="p-button-rounded p-button-text"
-                    (click)="onRemoveBlock(block.id, $event, block.blockIndex)"
-                  ></button>
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    [icon]="'pi ' + (block.isFavorite ? 'pi-star' : 'pi-star-o')"
-                    class="p-button-rounded p-button-text"
-                    (click)="onMarkBlock(block.id, $event)"
-                  ></button>
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    icon="pi pi-bars"
-                    class="p-button-rounded p-button-text"
-                  ></button>
+                  <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-rounded p-button-text"
+                    (click)="onRemoveBlock(block.id, $event, block.blockIndex)"></button>
+                  <button pButton pRipple type="button" [icon]="'pi ' + (block.isFavorite ? 'pi-star' : 'pi-star-o')"
+                    class="p-button-rounded p-button-text" (click)="onMarkBlock(block.id, $event)"></button>
+                  <button pButton pRipple type="button" icon="pi pi-bars"
+                    class="p-button-rounded p-button-text"></button>
                 </div>
               </div>
             </ng-template>
-            <ng-template pTemplate="content"
-              ><div class="accordion-body block">
+            <ng-template pTemplate="content">
+              <div class="accordion-body block">
                 <div class="block__transitions mb-3 block__actions">
-                  <button
-                    pButton
-                    pRipple
-                    *ngFor="let transition of block.incommingTransitions"
-                    type="button"
-                    (click)="onMarkedBlockClick(transition.blockId)"
-                    [label]="transition.name"
-                    class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
-                  ></button>
+                  <button pButton pRipple *ngFor="let transition of block.incommingTransitions" type="button"
+                    (click)="onMarkedBlockClick(transition.blockId)" [label]="transition.name"
+                    class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"></button>
                   <div class="inline-block">
-                    <button
-                      pButton
-                      pRipple
-                      icon="pi pi-link"
-                      type="button"
-                      (click)="onAddTransitionClick(block.id, true, true)"
-                      class="p-button-outlined mr-1 mb-1"
-                    ></button>
+                    <button pButton pRipple icon="pi pi-link" type="button"
+                      (click)="onAddTransitionClick(block.id, true, true)" class="p-button-outlined mr-1 mb-1"></button>
                   </div>
                 </div>
                 <div class="block__description mb-3" [innerHTML]="block.description"></div>
                 <div class="block__transitions block__actions">
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    [label]="transition.name"
+                  <button pButton pRipple type="button" [label]="transition.name"
                     *ngFor="let transition of block.outgoingTransitions"
                     class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
-                    (click)="onMarkedBlockClick(transition.nextBlockId)"
-                  ></button>
+                    (click)="onMarkedBlockClick(transition.nextBlockId)"></button>
                   <div class="inline-block">
-                    <button
-                      pButton
-                      pRipple
-                      (click)="onAddTransitionClick(block.id)"
-                      icon="pi pi-plus"
-                      type="button"
-                      class="p-button-outlined mr-1 mb-1"
-                    ></button>
-                    <button
-                      pButton
-                      pRipple
-                      (click)="onAddTransitionClick(block.id, true)"
-                      icon="pi pi-link"
-                      type="button"
-                      class="p-button-outlined mr-1 mb-1"
-                    ></button>
+                    <button pButton pRipple (click)="onAddTransitionClick(block.id)" icon="pi pi-plus" type="button"
+                      class="p-button-outlined mr-1 mb-1"></button>
+                    <button pButton pRipple (click)="onAddTransitionClick(block.id, true)" icon="pi pi-link"
+                      type="button" class="p-button-outlined mr-1 mb-1"></button>
                   </div>
                 </div>
               </div>
@@ -122,16 +74,30 @@
     <div class="col-fixed px-0">
       <h2 class="mt-0">Быстрые переходы</h2>
       <div class="marked-blocks">
-        <button
-          pButton
-          pRipple
-          type="button"
-          [label]="block.name"
-          class="p-button-outlined mr-2 mb-2"
-          *ngFor="let block of favoriteBlocks"
-          (click)="onMarkedBlockClick(block.id)"
-        ></button>
+        <button pButton pRipple type="button" [label]="block.name" class="p-button-outlined mr-2 mb-2"
+          *ngFor="let block of favoriteBlocks" (click)="onMarkedBlockClick(block.id)"></button>
       </div>
     </div>
   </ng-container>
 </div>
+
+<p-overlayPanel #subMenu>
+  <ng-template pTemplate>
+    <p-scrollPanel [style]="{ 'max-height': '150px' }">
+      <div *ngFor="let item of subMenuItems">
+        <button pButton type="button" icon="pi pi-folder-open" [label]="item.name"
+          [routerLink]="['/profile', 'scripts', item.id]" (click)="subMenu.hide()" class="p-button-text"></button>
+      </div>
+    </p-scrollPanel>
+  </ng-template>
+</p-overlayPanel>
+
+<!-- <ng-template #emptyFolder>
+  <div *ngIf="!loadingService.isLoading" class="flex flex-column justify-content-center align-items-center">
+    <div class="mb-2">Блоки разговора отсутствуют.</div>
+    <div class="flex justify-content-center align-items-center">
+      <span>Создайте первый</span>
+      <p-button (onClick)="createBlock()" label="блок" styleClass="p-button-link"></p-button>
+    </div>
+  </div>
+</ng-template> -->

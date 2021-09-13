@@ -18,9 +18,11 @@ export class ScriptService {
     return this.http.get<Script>(`${this.baseUrl}/script/${id}`);
   }
 
-  public getFolder(folderId?: number): Observable<FolderResponse> {
+  public getFolder(folderId?: number, searchString?: string): Observable<FolderResponse> {
     return this.http.get<FolderResponse>(
-      `${this.baseUrl}/scripts${folderId ? `/${folderId}` : ''}`,
+      `${this.baseUrl}/scripts${folderId ? `/${folderId}` : ``}${
+        searchString ? `?searchString=${encodeURIComponent(searchString)}` : ``
+      }`,
     );
   }
 
