@@ -176,10 +176,10 @@ ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptP
 -- Дамп данных таблицы `User`
 --
 
-INSERT INTO `User` (`id`, `login`, `password`, `email`, `phone`, `isAdmin`) VALUES
-(1, 'inomokonov', '$2y$10$2KGKgW0BISA4QzlaY6ljNe61sVXHmRpQV8quzjLFr9ZJv3gRWI.la', 'nomokonov.vana@gmail.com', 'NULL', b'1'),
-(2, 'volik25', '$2y$10$JAIkLQvfbwEJ7KTwgcbDC.U20YdyJQ59Sb71FiVY8zIAyRCQCmgqC', 'i.a.volik@gmail.com', '', b'1'),
-(3, 'lasfire', '$2y$10$TIrglIa3gLD18VTzN41LruYoK1VIex5zwUVN1Dk.I2ksT19fw9PQ2', 'ledashev.andrew@yandex.ru', '+7 (916) 936-26-76', b'1');
+INSERT INTO `User` (`id`, `password`, `email`, `phone`, `isAdmin`) VALUES
+(1, '$2y$10$2KGKgW0BISA4QzlaY6ljNe61sVXHmRpQV8quzjLFr9ZJv3gRWI.la', 'nomokonov.vana@gmail.com', 'NULL', b'1'),
+(2, '$2y$10$JAIkLQvfbwEJ7KTwgcbDC.U20YdyJQ59Sb71FiVY8zIAyRCQCmgqC', 'i.a.volik@gmail.com', '', b'1'),
+(3, '$2y$10$TIrglIa3gLD18VTzN41LruYoK1VIex5zwUVN1Dk.I2ksT19fw9PQ2', 'ledashev.andrew@yandex.ru', '+7 (916) 936-26-76', b'1');
 
 --
 -- Дамп данных таблицы `Script`
