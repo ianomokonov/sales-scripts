@@ -26,7 +26,7 @@ class User
         // Вставляем запрос
         $userData->password = password_hash($userData->password, PASSWORD_BCRYPT);
 
-        if ($this->LoginOrEmailExists($userData->login, $userData->email)) {
+        if ($this->EmailExists($userData->email)) {
             throw new Exception('Пользователь уже существует');
         }
         $query = $this->dataBase->genInsertQuery(
@@ -51,7 +51,7 @@ class User
     // Получение пользовательской информации
     public function read($userId)
     {
-        $query = "SELECT login, email, phone, isAdmin FROM $this->table WHERE id=$userId";
+        $query = "SELECT email, phone, isAdmin FROM $this->table WHERE id=$userId";
         $user = $this->dataBase->db->query($query)->fetch();
         $user['isAdmin'] = $user['isAdmin'] == '1';
         return $user;
@@ -65,7 +65,7 @@ class User
 
     public function getUsers()
     {
-        $query = "SELECT login, email, phone FROM " . $this->table;
+        $query = "SELECT email, phone FROM " . $this->table;
         $stmt = $this->dataBase->db->query($query);
         $users = [];
         while ($user = $stmt->fetch()) {
@@ -93,11 +93,11 @@ class User
         return $stmt->fetch()['image'];
     }
 
-    public function login($login, $password)
+    public function login($email, $password)
     {
-        if ($login != null) {
-            $sth = $this->dataBase->db->prepare("SELECT id, password, isAdmin FROM " . $this->table . " WHERE login = ? LIMIT 1");
-            $sth->execute(array($login));
+        if ($email != null) {
+            $sth = $this->dataBase->db->prepare("SELECT id, password, isAdmin FROM " . $this->table . " WHERE email = ? LIMIT 1");
+            $sth->execute(array($email));
             $fullUser = $sth->fetch();
             if ($fullUser) {
                 if (!password_verify($password, $fullUser['password'])) {
@@ -196,15 +196,15 @@ class User
         // return true;
     }
 
-    private function LoginOrEmailExists(string $login, string $email)
+    private function EmailExists(string $email)
     {
-        $query = "SELECT id FROM " . $this->table . " WHERE login = ? OR email = ?";
+        $query = "SELECT id FROM " . $this->table . " WHERE email = ?";
 
 
         // подготовка запроса
         $stmt = $this->dataBase->db->prepare($query);
         // выполняем запрос
-        $stmt->execute(array($login, $email));
+        $stmt->execute(array($email));
 
         // получаем количество строк
         $num = $stmt->rowCount();
