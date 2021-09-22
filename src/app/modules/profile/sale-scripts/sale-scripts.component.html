@@ -25,7 +25,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item let-row="rowIndex">
-            <tr [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }" class="cursor-pointer">
+            <tr [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }">
               <td class="col-8 py-1 pl-0">
                 <p-button [routerLink]="['/profile', item.isFolder ? 'scripts' : 'script', item.id]"
                   *ngIf="!item.isFolder" [label]="item.name" styleClass="p-button-link">
