@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreateBlockRequest } from 'src/app/_models/requests/create-block.request';
-import { CreateTransitionRequest } from 'src/app/_models/requests/create-transition.request';
+import { SaveBlockRequest } from 'src/app/_models/requests/save-block.request';
+import { SaveTransitionRequest } from 'src/app/_models/requests/save-transition.request';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
@@ -23,7 +24,19 @@ export class BlockService {
     return this.http.post<number>(`${this.baseUrl}/admin/block`, request);
   }
 
-  public addTransition(blockId: number, request: CreateTransitionRequest): Observable<number> {
+  public addTransition(blockId: number, request: SaveTransitionRequest): Observable<number> {
     return this.http.post<number>(`${this.baseUrl}/admin/block/${blockId}/transition`, request);
+  }
+
+  public deleteTransition(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/admin/transition/${id}`);
+  }
+
+  public updateBlock(id: number, request: SaveBlockRequest): Observable<number> {
+    return this.http.put<number>(`${this.baseUrl}/admin/block/${id}`, request);
+  }
+
+  public updateTransition(id: number, request: SaveTransitionRequest): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/admin/transition/${id}`, request);
   }
 }

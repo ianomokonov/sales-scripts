@@ -209,8 +209,34 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
                 return $response;
             });
 
+            $scriptGroup->put('/{blockId}', function (Request $request, Response $response) use ($block) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $blockId = $route->getArgument('blockId');
+                $response->getBody()->write(json_encode($block->update($request->getAttribute('userId'), $blockId, $request->getParsedBody())));
+                return $response;
+            });
+
             $scriptGroup->post('', function (Request $request, Response $response) use ($block) {
                 $response->getBody()->write(json_encode($block->create($request->getAttribute('userId'), $request->getParsedBody())));
+                return $response;
+            });
+        });
+
+        $adminGroup->group('/transition',  function (RouteCollectorProxy $transitionGroup) use ($block) {
+            $transitionGroup->delete('/{transitionId}', function (Request $request, Response $response) use ($block) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $transitionId = $route->getArgument('transitionId');
+                $response->getBody()->write(json_encode($block->deleteTransition($transitionId)));
+                return $response;
+            });
+
+            $transitionGroup->put('/{transitionId}', function (Request $request, Response $response) use ($block) {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $transitionId = $route->getArgument('transitionId');
+                $response->getBody()->write(json_encode($block->updateTransition($request->getAttribute('userId'), $transitionId, $request->getParsedBody())));
                 return $response;
             });
         });

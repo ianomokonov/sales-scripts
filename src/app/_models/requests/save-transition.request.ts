@@ -1,7 +1,7 @@
 import { TransitionType } from '../transition-type';
 import { CreateBlockRequest } from './create-block.request';
 
-export interface CreateTransitionRequest {
+export interface SaveTransitionRequest {
   name: string;
   status: TransitionType;
   block?: CreateBlockRequest;

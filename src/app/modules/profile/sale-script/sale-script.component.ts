@@ -4,12 +4,12 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Block } from 'src/app/_entities/block.entity';
 import { Script } from 'src/app/_entities/script.entity';
-import { CreateTransitionRequest } from 'src/app/_models/requests/create-transition.request';
 import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
 import { TransitionType } from 'src/app/_models/transition-type';
 import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { SaveTransitionRequest } from 'src/app/_models/requests/save-transition.request';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
 import { LoadingService } from '../../../_services/front/loading.service';
@@ -67,7 +67,7 @@ export class SaleScriptComponent implements OnInit {
       header: 'Добавление перехода',
     });
 
-    modal.onClose.subscribe((formValue: CreateTransitionRequest) => {
+    modal.onClose.subscribe((formValue: SaveTransitionRequest) => {
       if (!formValue) {
         return;
       }

@@ -31,6 +31,22 @@ class Block
         return $this->dataBase->db->lastInsertId();
     }
 
+    public function update($userId, $blockId, $request)
+    {
+        $request = $this->dataBase->stripAll((array)$request);
+        $request['lastModifyUserId'] = $userId;
+        $request['lastModifyDate'] = 'now()';
+        $query = $this->dataBase->genUpdateQuery(
+            $request,
+            $this->table,
+            $blockId
+        );
+
+        $stmt = $this->dataBase->db->prepare($query[0]);
+        $stmt->execute($query[1]);
+        return true;
+    }
+
     public function createTransition($userId, $blockId, $request)
     {
         if ($request['block']) {
@@ -51,6 +67,26 @@ class Block
             $stmt->execute($query[1]);
         }
         return $this->dataBase->db->lastInsertId();
+    }
+
+    public function updateTransition($userId, $transitionId, $request)
+    {
+        if ($request['block']) {
+            $request['nextBlockId'] = $this->create($userId, $request['block']);
+            unset($request['block']);
+        }
+        $request = $this->dataBase->stripAll((array)$request);
+        $request['lastModifyUserId'] = $userId;
+        $request['lastModifyDate'] = 'now()';
+        $query = $this->dataBase->genUpdateQuery(
+            $request,
+            'Transition',
+            $transitionId
+        );
+
+        $stmt = $this->dataBase->db->prepare($query[0]);
+        $stmt->execute($query[1]);
+        return true;
     }
 
     public function getTransitions($blockId, $incomming = true)
@@ -79,6 +115,14 @@ class Block
         $query = "delete from Block where id=?";
         $stmt = $this->dataBase->db->prepare($query);
         $stmt->execute(array($blockId));
+        return true;
+    }
+
+    public function deleteTransition($transitionId)
+    {
+        $query = "delete from Transition where id=?";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($transitionId));
         return true;
     }
 

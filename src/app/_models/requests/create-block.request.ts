@@ -1,6 +1,5 @@
-export interface CreateBlockRequest {
-  name: string;
-  descriptions: string;
-  isGroup: boolean;
+import { SaveBlockRequest } from './save-block.request';
+
+export interface CreateBlockRequest extends SaveBlockRequest {
   scriptId: number;
 }
