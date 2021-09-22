@@ -103,6 +103,17 @@ class Script
         return $script;
     }
 
+    public function isOpened($isAdmin, $userId, $scriptId)
+    {
+        $query = "SELECT s.id, s.name, lastModifyDate, lastModifyUserId FROM UserScript us JOIN Script s ON s.id=us.scriptId WHERE us.userId=$userId AND s.id=$scriptId";
+        if ($isAdmin) {
+            $query = "SELECT s.id, s.name, lastModifyDate, lastModifyUserId FROM Script s WHERE s.id=$scriptId";
+        }
+        $script = $this->dataBase->db->query($query)->fetch();
+
+        return !!$script;
+    }
+
     public function getBreadCrumbs($scriptId, $result = array())
     {
         $query = "SELECT id, name, parentFolderId FROM $this->table WHERE id='$scriptId'";

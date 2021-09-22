@@ -135,6 +135,14 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $response->getBody()->write(json_encode($script->getBlocks($scriptId)));
             return $response;
         });
+
+        $scriptGroup->get('/{scriptId}/is-opened', function (Request $request, Response $response) use ($script) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $scriptId = $route->getArgument('scriptId');
+            $response->getBody()->write(json_encode($script->isOpened($request->getAttribute('isAdmin'), $request->getAttribute('userId'), $scriptId)));
+            return $response;
+        });
     });
 
     $group->group('block',  function (RouteCollectorProxy $scriptGroup) use ($block) {

@@ -49,4 +49,8 @@ export class ScriptService {
   public reorderBlocks(id: number, blocks: { id: number; index: number }[]): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/admin/script/${id}/reorder-blocks`, { blocks });
   }
+
+  public canOpenScript(scriptId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseUrl}/script/${scriptId}/is-opened`);
+  }
 }

@@ -33,12 +33,12 @@ const routes: Routes = [
     component: SignUpComponent,
   },
   {
-    path: '404',
+    path: 'not-found',
     component: NotFoundComponent,
   },
   {
     path: '**',
-    redirectTo: '404',
+    redirectTo: 'not-found',
   },
 ];
 
