@@ -3,7 +3,7 @@
     <div class="flex justify-content-between align-items-center mb-3">
       <h2 class="my-0">Блоки</h2>
       <button pButton pRipple [disabled]="isError" type="button" label="Создать блок без переходов"
-        class="p-button-raised p-button-text" (click)="createBlock()"></button>
+        class="p-button-raised p-button-text" (click)="formBlock()"></button>
     </div>
     <div class="mb-2">
       <p-breadcrumb class="mb-3" *ngIf="breadCrumbs.length > 1" [model]="breadCrumbs"
@@ -14,7 +14,7 @@
         class="flex flex-column justify-content-center align-items-center mt-5">
         <div class="mb-2">Блоки разговора отсутствуют.</div>
         <div class="flex justify-content-center align-items-center">
-          <span>Создайте первый <span class="clickable-elem" (click)="createBlock()">блок</span></span>
+          <span>Создайте первый <span class="clickable-elem" (click)="formBlock()">блок</span></span>
         </div>
       </div>
       <p-orderList [value]="script?.blocks || []" [dragdrop]="true" (onReorder)="onReorder($event)">
@@ -25,7 +25,7 @@
                 <div class="flex align-items-center flex-grow-1 edit-action">
                   <h4 class="m-0 pl-2 pr-1 p-0">{{ block.name }}</h4>
                   <button pButton pRipple type="button" icon="pi pi-pencil"
-                    class="p-button-rounded p-button-text"></button>
+                    class="p-button-rounded p-button-text block__edit" (click)="formBlock(block, $event)"></button>
                 </div>
 
                 <div class="block__actions">
@@ -41,12 +41,21 @@
             <ng-template pTemplate="content">
               <div class="accordion-body block">
                 <div class="block__transitions mb-3 block__actions">
-                  <button pButton pRipple *ngFor="let transition of block.incommingTransitions" type="button"
-                    (click)="onMarkedBlockClick(transition.blockId)" [label]="transition.name"
-                    class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"></button>
+                  <!-- <div class="transition_panel"> -->
+                    <button pButton pRipple *ngFor="let transition of block.incommingTransitions" type="button"
+                      (click)="onMarkedBlockClick(transition.blockId)" [label]="transition.name"
+                      class="{{ getTransitionButtonClass(transition.status) }} transition mr-1 mb-1"></button>
+                    <!-- <div>
+                      <button pButton pRipple type="button" icon="pi pi-pencil"
+                        class="p-button-rounded p-button-text transition_edit"></button>
+                      <button pButton pRipple type="button" icon="pi pi-trash"
+                        class="p-button-rounded p-button-text transition_delete"></button>
+                    </div>
+                  </div> -->
                   <div class="inline-block">
                     <button pButton pRipple icon="pi pi-link" type="button"
-                      (click)="onAddTransitionClick(block.id, true, true)" class="p-button-outlined mr-1 mb-1"></button>
+                      (click)="onFormTransitionClick(block.id, true, true)"
+                      class="p-button-outlined mr-1 mb-1"></button>
                   </div>
                 </div>
                 <div class="block__description mb-3" [innerHTML]="block.description"></div>
@@ -56,9 +65,9 @@
                     class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
                     (click)="onMarkedBlockClick(transition.nextBlockId)"></button>
                   <div class="inline-block">
-                    <button pButton pRipple (click)="onAddTransitionClick(block.id)" icon="pi pi-plus" type="button"
+                    <button pButton pRipple (click)="onFormTransitionClick(block.id)" icon="pi pi-plus" type="button"
                       class="p-button-outlined mr-1 mb-1"></button>
-                    <button pButton pRipple (click)="onAddTransitionClick(block.id, true)" icon="pi pi-link"
+                    <button pButton pRipple (click)="onFormTransitionClick(block.id, true)" icon="pi pi-link"
                       type="button" class="p-button-outlined mr-1 mb-1"></button>
                   </div>
                 </div>

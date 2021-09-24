@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { isFormInvalid } from 'src/app/_utils/formValidCheck';
 
 export enum BlockType {
@@ -17,6 +17,7 @@ export enum BlockType {
 export class AddBlockComponent implements OnInit {
   @Input() public blockForm: FormGroup | undefined;
 
+  public currentBlock = this.config.data.block;
   public blockType = BlockType;
   public showBtns = false;
 
@@ -24,14 +25,15 @@ export class AddBlockComponent implements OnInit {
     private fb: FormBuilder,
     public modal: DynamicDialogRef,
     private toastService: MessageService,
+    private config: DynamicDialogConfig,
   ) {}
 
   public ngOnInit(): void {
     if (!this.blockForm) {
       this.blockForm = this.fb.group({
-        name: [null, Validators.required],
-        type: [this.blockType.Block, Validators.required],
-        description: [null, Validators.required],
+        name: [this.currentBlock.name || null, Validators.required],
+        type: [this.currentBlock.type || this.blockType.Block, Validators.required],
+        description: [this.currentBlock.description || null, Validators.required],
       });
       this.showBtns = true;
     }

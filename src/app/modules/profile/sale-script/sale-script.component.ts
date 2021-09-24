@@ -10,6 +10,8 @@ import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { SaveTransitionRequest } from 'src/app/_models/requests/save-transition.request';
+import { Observable } from 'rxjs';
+import { Transition } from 'src/app/_entities/transition.entity';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
 import { LoadingService } from '../../../_services/front/loading.service';
@@ -56,13 +58,14 @@ export class SaleScriptComponent implements OnInit {
     });
   }
 
-  public onAddTransitionClick(
+  public onFormTransitionClick(
     blockId: number,
     addLink: boolean = false,
     isIncomming: boolean = false,
+    transition?: Transition,
   ) {
     const modal = this.modalService.open(AddTransitionComponent, {
-      data: { addLink, blocks: this.blocks },
+      data: { addLink, blocks: this.blocks, transition },
       width: '50%',
       header: 'Добавление перехода',
     });
@@ -127,18 +130,25 @@ export class SaleScriptComponent implements OnInit {
     this.loadingService.addSubscription(sub);
   }
 
-  public createBlock() {
+  public formBlock(editBlock?: Block, event?: MouseEvent) {
+    event?.stopPropagation();
     const modal = this.dialogService.open(AddBlockComponent, {
-      header: 'Создание нового блока или группы',
+      header: `${editBlock ? 'Редактирование' : 'Создание нового'} блока или группы`,
       width: '50%',
+      data: { block: editBlock },
     });
 
     modal.onClose.subscribe((block) => {
       if (!block || !this.script) {
         return;
       }
-
-      this.blockService.addBlock({ ...block, scriptId: this.script?.id }).subscribe(() => {
+      let obs: Observable<number>;
+      if (editBlock) {
+        obs = this.blockService.updateBlock(editBlock.id, { ...block, scriptId: this.script.id });
+      } else {
+        obs = this.blockService.addBlock({ ...block, scriptId: this.script?.id });
+      }
+      obs.subscribe(() => {
         if (this.script) {
           this.getScript(this.script?.id);
         }
