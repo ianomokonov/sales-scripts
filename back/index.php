@@ -128,6 +128,16 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             return $response;
         });
 
+        $scriptGroup->get('/{scriptId}/operator', function (Request $request, Response $response) use ($script, $block) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $scriptId = $route->getArgument('scriptId');
+            $userId = $request->getAttribute('userId');
+            $isAdmin = $request->getAttribute('isAdmin');
+            $response->getBody()->write(json_encode($script->read($isAdmin, $userId, $scriptId, $block, true)));
+            return $response;
+        });
+
         $scriptGroup->get('/{scriptId}/blocks', function (Request $request, Response $response) use ($script) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
@@ -151,6 +161,13 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $route = $routeContext->getRoute();
             $blockId = $route->getArgument('blockId');
             $response->getBody()->write(json_encode($block->markBlock($blockId, $request->getParsedBody())));
+            return $response;
+        });
+        $scriptGroup->get('/{blockId}', function (Request $request, Response $response) use ($block) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $blockId = $route->getArgument('blockId');
+            $response->getBody()->write(json_encode($block->read($blockId)));
             return $response;
         });
     });

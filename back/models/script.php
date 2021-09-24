@@ -86,7 +86,7 @@ class Script
         return $scripts;
     }
 
-    public function read($isAdmin, $userId, $scriptId, $block)
+    public function read($isAdmin, $userId, $scriptId, $block, $isOperator = false)
     {
         $query = "SELECT s.id, s.name, lastModifyDate, lastModifyUserId FROM UserScript us JOIN Script s ON s.id=us.scriptId WHERE us.userId=$userId AND s.id=$scriptId";
         if ($isAdmin) {
@@ -98,7 +98,10 @@ class Script
         }
         $script['id'] =  $script['id'] * 1;
         $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:i:s", strtotime($script['lastModifyDate'])) : null;
-        $script['blocks'] = $this->readBlocks($scriptId, $userId, $block);
+        $script['blocks'] = $isOperator ? [$this->readFirstBlock($scriptId)] : $this->readBlocks($scriptId, $userId, $block);
+        if ($isOperator) {
+            $script['favoriteBlocks'] = $this->readFavoriteBlocks($scriptId, $userId);
+        }
         $script['breadCrumbs'] = $this->getBreadCrumbs($script['id']);
         return $script;
     }
@@ -184,6 +187,39 @@ class Script
             $blocks[] = $block;
         }
         return $blocks;
+    }
+
+    private function readFavoriteBlocks($scriptId, $userId)
+    {
+        $query = "SELECT b.id as blockId, b.name as blockName FROM UserScriptFavorite usf JOIN UserScript us ON us.id=usf.userScriptId JOIN Block b ON b.id=usf.blockId WHERE us.userId=? AND us.scriptId=?";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($userId, $scriptId));
+        $blocks = [];
+        while ($block = $stmt->fetch()) {
+            $block['blockId'] = $block['blockId'] * 1;
+            $blocks[] = $block;
+        }
+        return $blocks;
+    }
+
+    private function readFirstBlock($scriptId)
+    {
+        $query = "SELECT b.id, b.name, b.description, b.lastModifyDate, b.lastModifyUserId FROM Block b WHERE b.scriptId=? AND b.blockIndex=0";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($scriptId));
+        $block = $stmt->fetch();
+
+        if (!$block) {
+            return null;
+        }
+
+        $blockModel = new Block($this->dataBase);
+
+        $block['lastModifyDate'] = $block['lastModifyDate'] ? date("Y/m/d H:i:s", strtotime($block['lastModifyDate'])) : null;
+        $block['id'] = $block['id'] * 1;
+        $block['incommingTransitions'] = $blockModel->getTransitions($block['id']);
+        $block['outgoingTransitions'] = $blockModel->getTransitions($block['id'], false);
+        return $block;
     }
 
     public function sortBlocks($blocks)

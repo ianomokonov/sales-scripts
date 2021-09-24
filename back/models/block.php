@@ -12,6 +12,24 @@ class Block
         $this->dataBase = $dataBase;
     }
 
+    public function read($blockId)
+    {
+        $query = "SELECT b.id, b.name, b.description, b.lastModifyDate, b.lastModifyUserId FROM Block b WHERE b.id=? ";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($blockId));
+        $block = $stmt->fetch();
+
+        if (!$block) {
+            return null;
+        }
+
+        $block['lastModifyDate'] = $block['lastModifyDate'] ? date("Y/m/d H:i:s", strtotime($block['lastModifyDate'])) : null;
+        $block['id'] = $block['id'] * 1;
+        $block['incommingTransitions'] = $this->getTransitions($block['id']);
+        $block['outgoingTransitions'] = $this->getTransitions($block['id'], false);
+        return $block;
+    }
+
     public function create($userId, $request)
     {
         $scriptModel = new Script($this->dataBase);
