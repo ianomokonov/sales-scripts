@@ -34,6 +34,8 @@ import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
 import { AddTransitionComponent } from './sale-script/add-transition/add-transition.component';
 import { AddBlockComponent } from './sale-script/add-block/add-block.component';
 import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-folder.component';
+import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
+import { ConstructorComponent } from './sale-script/constructor/constructor.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-fo
     AddBlockComponent,
     ScriptOrFolderComponent,
     AddBlockComponent,
+    OperatorViewComponent,
+    ConstructorComponent,
   ],
   imports: [
     CommonModule,

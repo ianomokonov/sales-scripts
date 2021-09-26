@@ -12,13 +12,6 @@ const routes: Routes = [
     redirectTo: 'sign-in',
   },
   {
-    path: 'panel',
-    loadChildren: () =>
-      import('./modules/dialog-panel/dialog-panel.module').then((m) => m.DialogPanelModule),
-    canActivateChild: [AuthGuard],
-    runGuardsAndResolvers: 'paramsChange',
-  },
-  {
     path: 'profile',
     loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
     canActivateChild: [AuthGuard],
