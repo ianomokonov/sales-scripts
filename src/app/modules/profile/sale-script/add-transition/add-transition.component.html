@@ -15,17 +15,8 @@
   <div class="col-12">
     <ng-container *ngIf="addLink; else newBlock">
       <div class="p-float-label pb-2">
-        <p-dropdown
-          [options]="blocks"
-          optionLabel="name"
-          optionValue="id"
-          id="dropdown"
-          [filter]="true"
-          formControlName="nextBlockId"
-          filterBy="name"
-          placeholder="&nbsp;"
-          [showClear]="true"
-        >
+        <p-dropdown [options]="blocks" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
+          formControlName="nextBlockId" filterBy="name" placeholder="&nbsp;" [showClear]="true">
           <!-- <ng-template pTemplate="selectedItem">
             <div class="country-item country-item-value" *ngIf="selectedCountry">
               <img
@@ -44,20 +35,11 @@
     </ng-container>
   </div>
   <div class="col-12 flex justify-content-end">
-    <button
-      pButton
-      type="button"
-      label="Отмена"
-      (click)="modal.destroy()"
-      class="p-button-outlined p-button-secondary"
-    ></button>
-    <button
-      pButton
-      type="button"
-      label="Сохранить"
-      class="ml-1"
-      (click)="saveTransition()"
-    ></button>
+    <button pButton type="button" label="Удалить переход" (click)="delete()" class="p-button-outlined p-button-secondary">
+    </button>
+    <button pButton type="button" label="Отмена" (click)="modal.destroy()"
+      class="p-button-outlined p-button-secondary ml-1"></button>
+    <button pButton type="button" label="Сохранить" class="ml-1" (click)="saveTransition()"></button>
   </div>
 </form>
 

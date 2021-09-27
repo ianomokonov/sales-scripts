@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
 import { TransitionType } from 'src/app/_models/transition-type';
+import { BlockService } from 'src/app/_services/back/block.service';
 import { markInvalidFields } from 'src/app/_utils/formValidCheck';
 import { BlockType } from '../add-block/add-block.component';
 
@@ -30,17 +31,22 @@ export class AddTransitionComponent {
     private config: DynamicDialogConfig,
     private fb: FormBuilder,
     private toastService: MessageService,
+    private blockService: BlockService,
+    private confirmService: ConfirmationService,
   ) {
     this.addLink = this.config.data.addLink;
     this.blocks = this.config.data.blocks;
     this.transitionForm = this.fb.group({
-      name: [null, Validators.required],
+      name: [this.config.data?.transition?.name || null, Validators.required],
 
-      status: [TransitionType.Good, Validators.required],
+      status: [this.config.data?.transition?.status || TransitionType.Good, Validators.required],
     });
 
     if (this.addLink) {
-      this.transitionForm.addControl('nextBlockId', new FormControl(null, Validators.required));
+      this.transitionForm.addControl(
+        'nextBlockId',
+        new FormControl(this.config.data?.transition?.nextBlockId, Validators.required),
+      );
       return;
     }
 
@@ -52,6 +58,10 @@ export class AddTransitionComponent {
         description: [null, Validators.required],
       }),
     );
+  }
+
+  public delete() {
+    this.modal.close({ isDelete: true });
   }
 
   public saveTransition() {

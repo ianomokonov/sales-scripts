@@ -67,28 +67,52 @@ export class SaleScriptComponent implements OnInit {
     const modal = this.modalService.open(AddTransitionComponent, {
       data: { addLink, blocks: this.blocks, transition },
       width: '50%',
-      header: 'Добавление перехода',
+      header: `${transition ? 'Изменение' : 'Добавление'} перехода`,
     });
 
-    modal.onClose.subscribe((formValue: SaveTransitionRequest) => {
+    modal.onClose.subscribe((formValue: SaveTransitionRequest | any) => {
       if (!formValue) {
         return;
       }
-      if (formValue.block && this.script) {
-        // eslint-disable-next-line no-param-reassign
-        formValue.block.scriptId = this.script?.id;
+      if (formValue.isDelete && transition) {
+        this.confirmService.confirm({
+          message: 'Удалить переход?',
+          acceptLabel: 'Да',
+          rejectLabel: 'Нет',
+          header: 'Удаление перехода',
+          icon: 'pi pi-exclamation-triangle',
+          accept: () => {
+            this.blockService.deleteTransition(transition.id).subscribe(() => {
+              if (this.script) {
+                this.getScript(this.script?.id);
+              }
+            });
+          },
+        });
       }
-      let prevBlockId = blockId;
-      if (isIncomming && formValue.nextBlockId) {
-        prevBlockId = formValue.nextBlockId;
-        // eslint-disable-next-line no-param-reassign
-        formValue.nextBlockId = blockId;
-      }
-      this.blockService.addTransition(prevBlockId, formValue).subscribe(() => {
-        if (this.script) {
-          this.getScript(this.script?.id);
+      if (!transition) {
+        if (formValue.block && this.script) {
+          // eslint-disable-next-line no-param-reassign
+          formValue.block.scriptId = this.script?.id;
         }
-      });
+        let prevBlockId = blockId;
+        if (isIncomming && formValue.nextBlockId) {
+          prevBlockId = formValue.nextBlockId;
+          // eslint-disable-next-line no-param-reassign
+          formValue.nextBlockId = blockId;
+        }
+        this.blockService.addTransition(prevBlockId, formValue).subscribe(() => {
+          if (this.script) {
+            this.getScript(this.script?.id);
+          }
+        });
+      } else {
+        this.blockService.updateTransition(transition.id, formValue).subscribe(() => {
+          if (this.script) {
+            this.getScript(this.script?.id);
+          }
+        });
+      }
     });
   }
 

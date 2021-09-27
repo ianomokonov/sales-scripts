@@ -41,17 +41,12 @@
             <ng-template pTemplate="content">
               <div class="accordion-body block">
                 <div class="block__transitions mb-3 block__actions">
-                  <!-- <div class="transition_panel"> -->
-                    <button pButton pRipple *ngFor="let transition of block.incommingTransitions" type="button"
-                      (click)="onMarkedBlockClick(transition.blockId)" [label]="transition.name"
-                      class="{{ getTransitionButtonClass(transition.status) }} transition mr-1 mb-1"></button>
-                    <!-- <div>
-                      <button pButton pRipple type="button" icon="pi pi-pencil"
-                        class="p-button-rounded p-button-text transition_edit"></button>
-                      <button pButton pRipple type="button" icon="pi pi-trash"
-                        class="p-button-rounded p-button-text transition_delete"></button>
-                    </div>
-                  </div> -->
+                  <div *ngFor="let transition of block.incommingTransitions" class="block__transition mr-2 mb-1">
+                    <button pButton pRipple type="button" (click)="onMarkedBlockClick(transition.blockId)"
+                      [label]="transition.name" class="{{ getTransitionButtonClass(transition.status) }}"></button>
+                    <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-text transition_edit"
+                      (click)="onFormTransitionClick(block.id, true, false, transition)"></button>
+                  </div>
                   <div class="inline-block">
                     <button pButton pRipple icon="pi pi-link" type="button"
                       (click)="onFormTransitionClick(block.id, true, true)"

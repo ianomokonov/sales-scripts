@@ -28,3 +28,30 @@
     }
   }
 }
+
+.block__transitions {
+  display: flex;
+  .block__transition {
+    display: flex;
+    position: relative;
+    .transition_edit {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 15px;
+      height: auto;
+      display: none;
+      background: white;
+      border: 1px solid var(--gray-600);
+      span {
+        font-size: 10px !important;
+      }
+    }
+
+    &:hover {
+      button:last-child {
+        display: block;
+      }
+    }
+  }
+}
