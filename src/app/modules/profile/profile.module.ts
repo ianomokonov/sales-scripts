@@ -19,6 +19,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
+import { TabViewModule } from 'primeng/tabview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { MenuModule } from 'primeng/menu';
 import { RippleModule } from 'primeng/ripple';
@@ -72,6 +73,7 @@ import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-fo
     OverlayPanelModule,
     ScrollPanelModule,
     MenubarModule,
+    TabViewModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService, ScriptGuard],
 })

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Transition } from 'src/app/_entities/transition.entity';
 import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
 import { TransitionType } from 'src/app/_models/transition-type';
 import { markInvalidFields } from 'src/app/_utils/formValidCheck';
@@ -16,6 +17,8 @@ export class AddTransitionComponent {
   public addLink = false;
   public blocks: IdNameResponse[] = [];
   public transitionForm: FormGroup;
+  public currentTransition: Transition;
+  public activeTabId = 0;
   public statusOptions = [
     { name: 'Хороший', class: 'success', value: TransitionType.Good },
     { name: 'Нормальный', class: 'secondary', value: TransitionType.Normal },
@@ -31,17 +34,23 @@ export class AddTransitionComponent {
     private fb: FormBuilder,
     private toastService: MessageService,
   ) {
+    this.currentTransition = this.config.data?.transition;
     this.addLink = this.config.data.addLink;
     this.blocks = this.config.data.blocks;
     this.transitionForm = this.fb.group({
-      name: [null, Validators.required],
+      name: [this.config.data?.transition?.name || null, Validators.required],
 
-      status: [TransitionType.Good, Validators.required],
+      status: [this.config.data?.transition?.status || TransitionType.Good, Validators.required],
     });
 
     if (this.addLink) {
-      this.transitionForm.addControl('nextBlockId', new FormControl(null, Validators.required));
-      return;
+      this.transitionForm.addControl(
+        'nextBlockId',
+        new FormControl(this.config.data?.transition?.nextBlockId, Validators.required),
+      );
+      if (!this.currentTransition) {
+        return;
+      }
     }
 
     this.transitionForm.addControl(
@@ -54,10 +63,17 @@ export class AddTransitionComponent {
     );
   }
 
+  public delete() {
+    this.modal.close({ isDelete: true });
+  }
+
   public saveTransition() {
+    if (this.activeTabId !== 1) {
+      this.transitionForm.removeControl('block');
+    }
     if (this.transitionForm.invalid) {
       markInvalidFields(this.transitionForm);
-      if (this.blockForm) {
+      if (this.blockForm && this.activeTabId === 1) {
         markInvalidFields(this.blockForm);
       }
 
