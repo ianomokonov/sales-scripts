@@ -67,7 +67,9 @@ export class SaleScriptComponent implements OnInit {
     const modal = this.modalService.open(AddTransitionComponent, {
       data: { addLink, blocks: this.blocks, transition },
       width: '50%',
-      header: `${transition ? 'Изменение' : 'Добавление'} перехода`,
+      header: `${transition ? 'Изменение' : 'Добавление'} ${
+        isIncomming ? 'входящего' : 'исходящего'
+      } перехода`,
     });
 
     modal.onClose.subscribe((formValue: SaveTransitionRequest | any) => {

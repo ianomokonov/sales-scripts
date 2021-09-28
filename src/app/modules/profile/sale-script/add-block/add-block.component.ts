@@ -16,10 +16,10 @@ export enum BlockType {
 })
 export class AddBlockComponent implements OnInit {
   @Input() public blockForm: FormGroup | undefined;
+  @Input() public showBtns = false;
 
   public currentBlock = this.config.data.block;
   public blockType = BlockType;
-  public showBtns = false;
 
   constructor(
     private fb: FormBuilder,
@@ -31,11 +31,10 @@ export class AddBlockComponent implements OnInit {
   public ngOnInit(): void {
     if (!this.blockForm) {
       this.blockForm = this.fb.group({
-        name: [this.currentBlock.name || null, Validators.required],
-        type: [this.currentBlock.type || this.blockType.Block, Validators.required],
-        description: [this.currentBlock.description || null, Validators.required],
+        name: [this.currentBlock?.name || null, Validators.required],
+        type: [this.currentBlock?.type || this.blockType.Block, Validators.required],
+        description: [this.currentBlock?.description || null, Validators.required],
       });
-      this.showBtns = true;
     }
   }
 

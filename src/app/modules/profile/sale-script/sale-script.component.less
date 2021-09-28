@@ -36,21 +36,23 @@
     position: relative;
     .transition_edit {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 15px;
-      height: auto;
+      top: -10px;
+      right: -7px;
+      min-height: auto !important;
+      width: 24px;
+      height: 24px;
       display: none;
       background: white;
       border: 1px solid var(--gray-600);
-      span {
-        font-size: 10px !important;
+
+      ::ng-deep span.pi {
+        font-size: 10px;
       }
     }
 
     &:hover {
       button:last-child {
-        display: block;
+        display: flex;
       }
     }
   }

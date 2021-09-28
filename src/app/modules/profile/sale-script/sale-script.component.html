@@ -45,7 +45,7 @@
                     <button pButton pRipple type="button" (click)="onMarkedBlockClick(transition.blockId)"
                       [label]="transition.name" class="{{ getTransitionButtonClass(transition.status) }}"></button>
                     <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-text transition_edit"
-                      (click)="onFormTransitionClick(block.id, true, false, transition)"></button>
+                      (click)="onFormTransitionClick(block.id, true, true, transition)"></button>
                   </div>
                   <div class="inline-block">
                     <button pButton pRipple icon="pi pi-link" type="button"
@@ -55,10 +55,13 @@
                 </div>
                 <div class="block__description mb-3" [innerHTML]="block.description"></div>
                 <div class="block__transitions block__actions">
-                  <button pButton pRipple type="button" [label]="transition.name"
-                    *ngFor="let transition of block.outgoingTransitions"
+                  <div *ngFor="let transition of block.outgoingTransitions" class="block__transition mr-2 mb-1">
+                    <button pButton pRipple type="button" [label]="transition.name"
                     class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
                     (click)="onMarkedBlockClick(transition.nextBlockId)"></button>
+                    <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-text transition_edit"
+                      (click)="onFormTransitionClick(block.id, true, false, transition)"></button>
+                  </div>
                   <div class="inline-block">
                     <button pButton pRipple (click)="onFormTransitionClick(block.id)" icon="pi pi-plus" type="button"
                       class="p-button-outlined mr-1 mb-1"></button>
