@@ -18,6 +18,10 @@ export class ScriptService {
     return this.http.get<Script>(`${this.baseUrl}/script/${id}`);
   }
 
+  public getOperatorScript(id: number): Observable<Script> {
+    return this.http.get<Script>(`${this.baseUrl}/script/${id}/operator`);
+  }
+
   public getFolder(folderId?: number, searchString?: string): Observable<FolderResponse> {
     return this.http.get<FolderResponse>(
       `${this.baseUrl}/scripts${folderId ? `/${folderId}` : ``}${

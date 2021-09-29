@@ -192,12 +192,12 @@ class Script
 
     private function readFavoriteBlocks($scriptId, $userId)
     {
-        $query = "SELECT b.id as blockId, b.name as blockName FROM UserScriptFavorite usf JOIN UserScript us ON us.id=usf.userScriptId JOIN Block b ON b.id=usf.blockId WHERE us.userId=? AND us.scriptId=?";
+        $query = "SELECT b.id, b.name FROM UserScriptFavorite usf JOIN UserScript us ON us.id=usf.userScriptId JOIN Block b ON b.id=usf.blockId WHERE us.userId=? AND us.scriptId=?";
         $stmt = $this->dataBase->db->prepare($query);
         $stmt->execute(array($userId, $scriptId));
         $blocks = [];
         while ($block = $stmt->fetch()) {
-            $block['blockId'] = $block['blockId'] * 1;
+            $block['id'] = $block['id'] * 1;
             $blocks[] = $block;
         }
         return $blocks;

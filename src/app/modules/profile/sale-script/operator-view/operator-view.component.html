@@ -1,1 +1,108 @@
-<p>operator-view works!</p>
+<div class="m-0 grid px-3" *ngIf="script">
+  <div class="col">
+    <div class="flex justify-content-between align-items-center mb-3">
+      <div class="flex align-items-center">
+        <h2 class="my-0 mr-3">{{ script?.name }}</h2>
+        <button
+          [routerLink]="['/profile', 'script', script.id]"
+          pButton
+          type="button"
+          [label]="'Режим конструктора'"
+          class="p-button-text"
+        ></button>
+      </div>
+    </div>
+    <div class="mb-4">
+      <p-breadcrumb
+        class="mb-3"
+        *ngIf="breadCrumbs.length > 1"
+        [model]="breadCrumbs"
+        (onItemClick)="breadCrumbToggle($event)"
+      ></p-breadcrumb>
+    </div>
+    <div
+      *ngIf="!loadingService.isLoading && !script?.blocks?.length"
+      class="flex flex-column justify-content-center align-items-center mt-5"
+    >
+      <div class="mb-2">Блоки разговора отсутствуют.</div>
+    </div>
+    <div *ngFor="let block of script?.blocks; let last = last" class="block-tab" [ngClass]="{ 'prev-block': !last }">
+      <div class="flex align-items-center accordion-header">
+        <div class="flex align-items-center flex-grow-1 edit-action pb-3">
+          <h4 class="m-0 pr-1 p-0">{{ block.name }}</h4>
+        </div>
+      </div>
+      <div class="accordion-body block">
+        <div class="block__transitions mb-3 block__actions">
+          <div
+            *ngFor="let transition of block.incommingTransitions"
+            class="block__transition mr-2 mb-1"
+          >
+            <button
+              [disabled]="!last"
+              pButton
+              pRipple
+              type="button"
+              (click)="nextBlock(transition.blockId)"
+              [label]="transition.name"
+              class="{{ getTransitionButtonClass(transition.status) }}"
+            ></button>
+          </div>
+        </div>
+        <div class="block__description mb-3" [innerHTML]="block.description"></div>
+        <div class="block__transitions block__actions">
+          <div
+            *ngFor="let transition of block.outgoingTransitions"
+            class="block__transition mr-2 mb-1"
+          >
+            <button
+              pButton
+              pRipple
+              [disabled]="!last"
+              type="button"
+              [label]="transition.name"
+              class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
+              (click)="nextBlock(transition.nextBlockId)"
+            ></button>
+          </div>
+        </div>
+      </div>
+      <p-divider *ngIf="!last" layout="horizontal" styleClass="m-3 mx-0 p-0"></p-divider>
+    </div>
+  </div>
+  <ng-container *ngIf="script.favoriteBlocks?.length">
+    <p-divider layout="vertical" styleClass="m-3 my-0 p-0"></p-divider>
+    <div class="col-fixed px-0">
+      <h2 class="mt-0">Быстрые переходы</h2>
+      <div class="marked-blocks">
+        <button
+          pButton
+          pRipple
+          type="button"
+          [label]="block.name"
+          class="p-button-outlined mr-2 mb-2"
+          *ngFor="let block of script.favoriteBlocks"
+          (click)="nextBlock(block.id)"
+        ></button>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<p-overlayPanel #subMenu>
+  <ng-template pTemplate>
+    <p-scrollPanel [style]="{ 'max-height': '150px' }">
+      <div *ngFor="let item of subMenuItems">
+        <button
+          pButton
+          type="button"
+          icon="pi pi-folder-open"
+          [label]="item.name"
+          [routerLink]="['/profile', 'scripts', item.id]"
+          (click)="subMenu.hide()"
+          class="p-button-text"
+        ></button>
+      </div>
+    </p-scrollPanel>
+  </ng-template>
+</p-overlayPanel>

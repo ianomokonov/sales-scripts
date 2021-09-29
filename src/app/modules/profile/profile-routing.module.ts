@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ScriptGuard } from 'src/app/_guards/script.guard';
 import { ProfileComponent } from './profile.component';
-import { ConstructorComponent } from './sale-script/constructor/constructor.component';
 import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
@@ -30,21 +29,11 @@ const routes: Routes = [
         path: 'script/:id',
         component: SaleScriptComponent,
         canActivate: [ScriptGuard],
-        children: [
-          {
-            path: 'constructor',
-            component: ConstructorComponent,
-          },
-          {
-            path: 'operator',
-            component: OperatorViewComponent,
-          },
-
-          {
-            path: '',
-            redirectTo: 'constructor',
-          },
-        ],
+      },
+      {
+        path: 'script/:id/operator',
+        component: OperatorViewComponent,
+        canActivate: [ScriptGuard],
       },
     ],
   },

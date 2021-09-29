@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Block } from 'src/app/_entities/block.entity';
 import { CreateBlockRequest } from 'src/app/_models/requests/create-block.request';
 import { SaveBlockRequest } from 'src/app/_models/requests/save-block.request';
 import { SaveTransitionRequest } from 'src/app/_models/requests/save-transition.request';
@@ -11,6 +12,10 @@ export class BlockService {
   private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}
+
+  public getBlock(id: number): Observable<Block> {
+    return this.http.get<Block>(`${this.baseUrl}/block/${id}`);
+  }
 
   public markFavorite(id: number, isFavorite: boolean, userScriptId: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/block/${id}/mark`, { isFavorite, userScriptId });
