@@ -173,11 +173,12 @@ class Script
 
     private function readBlocks($scriptId, $userId, Block $blockModel)
     {
-        $query = "SELECT b.id, b.name, b.description, b.lastModifyDate, b.lastModifyUserId, b.blockIndex, (SELECT count(*) FROM UserScriptFavorite usf JOIN UserScript us ON us.id=usf.userScriptId WHERE us.userId=? AND usf.blockId=b.id) as isFavorite FROM Block b WHERE b.scriptId=? ORDER BY b.blockIndex";
+        $query = "SELECT b.id, b.name, b.isGroup, b.description, b.lastModifyDate, b.lastModifyUserId, b.blockIndex, (SELECT count(*) FROM UserScriptFavorite usf JOIN UserScript us ON us.id=usf.userScriptId WHERE us.userId=? AND usf.blockId=b.id) as isFavorite FROM Block b WHERE b.scriptId=? ORDER BY b.blockIndex";
         $stmt = $this->dataBase->db->prepare($query);
         $stmt->execute(array($userId, $scriptId));
         $blocks = [];
         while ($block = $stmt->fetch()) {
+            $block['isGroup'] = $block['isGroup'] == '1';
             $block['isFavorite'] = $block['isFavorite'] == '1';
             $block['blockIndex'] = $block['blockIndex'] * 1;
             $block['lastModifyDate'] = $block['lastModifyDate'] ? date("Y/m/d H:i:s", strtotime($block['lastModifyDate'])) : null;

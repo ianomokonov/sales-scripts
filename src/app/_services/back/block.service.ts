@@ -37,6 +37,6 @@ export class BlockService {
   }
 
   public updateTransition(id: number, request: SaveTransitionRequest): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/admin/transition/${id}`, request);
+    return this.http.put<number>(`${this.baseUrl}/admin/transition/${id}`, request);
   }
 }

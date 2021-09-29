@@ -9,4 +9,6 @@ export interface Block extends BaseEntity {
   isOpened?: boolean;
   incommingTransitions?: Transition[];
   outgoingTransitions?: Transition[];
+
+  isGroup?: boolean;
 }
