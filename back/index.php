@@ -160,7 +160,7 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
             $blockId = $route->getArgument('blockId');
-            $response->getBody()->write(json_encode($block->markBlock($blockId, $request->getParsedBody())));
+            $response->getBody()->write(json_encode($block->markBlock($blockId, $request->getAttribute('userId'), $request->getParsedBody())));
             return $response;
         });
         $scriptGroup->get('/{blockId}', function (Request $request, Response $response) use ($block) {
