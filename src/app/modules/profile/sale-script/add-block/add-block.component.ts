@@ -16,7 +16,7 @@ export enum BlockType {
 })
 export class AddBlockComponent implements OnInit {
   @Input() public blockForm: FormGroup | undefined;
-  @Input() public showBtns = false;
+  @Input() public showBtns = true;
 
   public currentBlock = this.config.data.block;
   public blockType = BlockType;

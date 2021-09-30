@@ -147,6 +147,25 @@ class Script
         return $this->dataBase->db->lastInsertId();
     }
 
+    public function createUserScript($userId, $scriptId)
+    {
+        $userScriptId = null;
+        $query = "INSERT INTO UserScript (userId, scriptId) VALUES (?, ?)";
+        $stmt = $this->dataBase->db->prepare($query);
+
+        try {
+            $stmt->execute([$userId, $scriptId]);
+            $userScriptId = $this->dataBase->db->lastInsertId();
+        } catch (Exception $e) {
+            $query = "SELECT id FROM UserScript WHERE userId=? AND scriptId=?";
+            $stmt = $this->dataBase->db->prepare($query);
+            $stmt->execute([$userId, $scriptId]);
+            $userScriptId = $stmt->fetch()['id'] * 1;
+        }
+
+        return $userScriptId;
+    }
+
     public function update($userId, $scriptId, $request)
     {
         $request = $this->dataBase->stripAll((array)$request);

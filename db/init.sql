@@ -86,7 +86,8 @@ CREATE TABLE `UserScript` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `scriptId` INTEGER NOT NULL,
   `userId` INTEGER NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE (`userId`, `scriptId`)
 );
 
 -- ---

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../utils/database.php';
+require_once __DIR__ . '/../models/script.php';
 class Block
 {
     private $dataBase;
@@ -144,17 +145,21 @@ class Block
         return true;
     }
 
-    public function markBlock($blockId, $request)
+    public function markBlock($blockId, $userId, $request)
     {
+
+        $scriptModel = new Script($this->dataBase);
+        $userScriptId = $scriptModel->createUserScript($userId, $request['scriptId']);
+
         if ($request['isFavorite']) {
             $query = "insert into UserScriptFavorite (userScriptId, blockId) VALUES (?, ?)";
             $stmt = $this->dataBase->db->prepare($query);
-            $stmt->execute(array($request['userScriptId'], $blockId));
+            $stmt->execute(array($userScriptId, $blockId));
             return true;
         }
         $query = "delete from UserScriptFavorite where userScriptId=? AND blockId=?";
         $stmt = $this->dataBase->db->prepare($query);
-        $stmt->execute(array($request['userScriptId'], $blockId));
+        $stmt->execute(array($userScriptId, $blockId));
         return true;
     }
 }

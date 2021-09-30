@@ -17,8 +17,8 @@ export class BlockService {
     return this.http.get<Block>(`${this.baseUrl}/block/${id}`);
   }
 
-  public markFavorite(id: number, isFavorite: boolean, userScriptId: number): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/block/${id}/mark`, { isFavorite, userScriptId });
+  public markFavorite(id: number, isFavorite: boolean, scriptId: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/block/${id}/mark`, { isFavorite, scriptId });
   }
 
   public delete(id: number): Observable<any> {

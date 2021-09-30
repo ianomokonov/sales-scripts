@@ -45,7 +45,12 @@
       </div>
       <p-orderList [value]="script?.blocks || []" [dragdrop]="true" (onReorder)="onReorder($event)">
         <ng-template let-block pTemplate="item">
-          <p-accordionTab [(selected)]="block.isOpened" class="tab-{{ block.id }}" tabindex="1">
+          <p-accordionTab
+            [(selected)]="block.isOpened"
+            class="tab-{{ block.id }}"
+            [ngClass]="{ group: block.isGroup }"
+            tabindex="1"
+          >
             <ng-template pTemplate="header">
               <div class="flex align-items-center accordion-header">
                 <div class="flex align-items-center flex-grow-1 edit-action">

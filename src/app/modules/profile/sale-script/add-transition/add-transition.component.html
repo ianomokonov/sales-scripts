@@ -17,19 +17,19 @@
       <p-tabView [(activeIndex)]="activeTabId">
         <p-tabPanel header="Выбор блока">
           <div class="p-float-label pb-2">
-            <p-dropdown [options]="blocks" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
-              formControlName="nextBlockId" filterBy="name" placeholder="&nbsp;" [showClear]="true">
-              <!-- <ng-template pTemplate="selectedItem">
-                <div class="country-item country-item-value" *ngIf="selectedCountry">
-                  <img
-                    src="assets/showcase/images/demo/flag/flag_placeholder.png"
-                    [class]="'flag flag-' + selectedCountry.code.toLowerCase()"
-                  />
-                  <div>{{ selectedCountry.name }}</div>
-                </div>
-              </ng-template> -->
-              <ng-template let-country pTemplate="item">
-                {{ country.name }}
+            <p-dropdown
+              [options]="blocks"
+              optionLabel="name"
+              optionValue="id"
+              id="dropdown"
+              [filter]="true"
+              formControlName="nextBlockId"
+              filterBy="name"
+              placeholder="&nbsp;"
+              [showClear]="true"
+            >
+              <ng-template let-block pTemplate="item">
+                {{ block.name }}
               </ng-template>
             </p-dropdown>
             <label for="dropdown">Целевой блок</label>
@@ -43,19 +43,19 @@
     <ng-container *ngIf="!currentTransition">
       <ng-container *ngIf="addLink; else newBlock">
         <div class="p-float-label pb-2">
-          <p-dropdown [options]="blocks" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
-            formControlName="nextBlockId" filterBy="name" placeholder="&nbsp;" [showClear]="true">
-            <!-- <ng-template pTemplate="selectedItem">
-              <div class="country-item country-item-value" *ngIf="selectedCountry">
-                <img
-                  src="assets/showcase/images/demo/flag/flag_placeholder.png"
-                  [class]="'flag flag-' + selectedCountry.code.toLowerCase()"
-                />
-                <div>{{ selectedCountry.name }}</div>
-              </div>
-            </ng-template> -->
-            <ng-template let-country pTemplate="item">
-              {{ country.name }}
+          <p-dropdown
+            [options]="blocks"
+            optionLabel="name"
+            optionValue="id"
+            id="dropdown"
+            [filter]="true"
+            formControlName="nextBlockId"
+            filterBy="name"
+            placeholder="&nbsp;"
+            [showClear]="true"
+          >
+            <ng-template let-block pTemplate="item">
+              {{ block.name }}
             </ng-template>
           </p-dropdown>
           <label for="dropdown">Целевой блок</label>
@@ -64,16 +64,32 @@
     </ng-container>
   </div>
   <div class="col-12 flex justify-content-end">
-    <button *ngIf="currentTransition" pButton type="button" label="Удалить переход" (click)="delete()"
-      class="p-button-outlined p-button-secondary">
-    </button>
-    <button pButton type="button" label="Отмена" (click)="modal.destroy()"
-      class="p-button-outlined p-button-secondary ml-1"></button>
-    <button pButton type="button" label="Сохранить" class="ml-1" (click)="saveTransition()"></button>
+    <button
+      *ngIf="currentTransition"
+      pButton
+      type="button"
+      label="Удалить переход"
+      (click)="delete()"
+      class="p-button-outlined p-button-secondary"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Отмена"
+      (click)="modal.destroy()"
+      class="p-button-outlined p-button-secondary ml-1"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Сохранить"
+      class="ml-1"
+      (click)="saveTransition()"
+    ></button>
   </div>
 </form>
 
 <ng-template #newBlock>
   <p class="add-block-title mb-0">Создание блока или группы</p>
-  <app-add-block [blockForm]="blockForm"></app-add-block>
+  <app-add-block [blockForm]="blockForm" [showBtns]="false"></app-add-block>
 </ng-template>
