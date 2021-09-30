@@ -182,7 +182,7 @@ INSERT INTO `User` (`id`, `password`, `email`, `phone`, `isAdmin`) VALUES
 (2, '$2y$10$JAIkLQvfbwEJ7KTwgcbDC.U20YdyJQ59Sb71FiVY8zIAyRCQCmgqC', 'i.a.volik@gmail.com', '', b'1'),
 (3, '$2y$10$TIrglIa3gLD18VTzN41LruYoK1VIex5zwUVN1Dk.I2ksT19fw9PQ2', 'ledashev.andrew@yandex.ru', '+7 (916) 936-26-76', b'1'),
 (4, '$2y$10$Nonfk8CDUcFGt1Mg1Pu2xeaXKxwXcKCj3boYbzVZ.3e4.fwgVT3B2', 'alex.kushnerr@gmail.com', '+7 (903) 126-41-53', b'1'),
-(1, '$2y$10$2KGKgW0BISA4QzlaY6ljNe61sVXHmRpQV8quzjLFr9ZJv3gRWI.la', 'nomokonov.vana@yandex.ru', '+7 (915) 199-98-45', b'1');
+(5, '$2y$10$2KGKgW0BISA4QzlaY6ljNe61sVXHmRpQV8quzjLFr9ZJv3gRWI.la', 'nomokonov.vana@yandex.ru', '+7 (915) 199-98-45', b'1');
 
 --
 -- Дамп данных таблицы `Script`
