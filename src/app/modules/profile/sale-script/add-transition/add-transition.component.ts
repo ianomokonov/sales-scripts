@@ -68,12 +68,12 @@ export class AddTransitionComponent {
   }
 
   public saveTransition() {
-    if (this.activeTabId !== 1) {
+    if (this.currentTransition && this.activeTabId !== 1) {
       this.transitionForm.removeControl('block');
     }
     if (this.transitionForm.invalid) {
       markInvalidFields(this.transitionForm);
-      if (this.blockForm && this.activeTabId === 1) {
+      if (this.blockForm && (!this.currentTransition || this.activeTabId === 1)) {
         markInvalidFields(this.blockForm);
       }
 
