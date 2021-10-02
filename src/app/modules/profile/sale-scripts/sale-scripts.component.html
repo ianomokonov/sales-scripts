@@ -1,6 +1,9 @@
 <div class="grid m-0">
   <div class="col-10 m-auto">
-    <div class="flex align-items-center mt-3">
+    <div class="mb-2" [ngClass]="{ 'no-opacity': !items.id }">
+      <p-breadcrumb [model]="breadCrumb" (onItemClick)="breadCrumbToggle($event)"></p-breadcrumb>
+    </div>
+    <div class="flex align-items-center mt-3 mb-3">
       <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
       <div class="scripts-actions flex justify-content-between">
         <input class="search-input flex-grow-1 mr-3" type="text" placeholder="Поиск..." pInputText
@@ -11,9 +14,6 @@
       </div>
     </div>
     <div class="my-2">
-      <div class="mb-2" [ngClass]="{ 'no-opacity': !items.id }">
-        <p-breadcrumb [model]="breadCrumb" (onItemClick)="breadCrumbToggle($event)"></p-breadcrumb>
-      </div>
       <p-card>
         <p-table *ngIf="items.scripts.length; else emptyFolder" [value]="items.scripts" responsiveLayout="scroll"
           class="table">
