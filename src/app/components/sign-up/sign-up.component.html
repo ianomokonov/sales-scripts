@@ -3,7 +3,7 @@
     <div class="grid">
       <h3 class="col-6 m-auto text-center">Регистрация</h3>
     </div>
-    <div class="m-5" [formGroup]="signUpForm">
+    <form class="m-5" [formGroup]="signUpForm" (submit)="signUp()" #form>
       <div class="field col-12 flex justify-content-center">
         <span class="p-float-label p-input-icon-left w-12">
           <i class="pi pi-envelope"></i>
@@ -61,7 +61,7 @@
               pInputText
               [type]="showPasswordConfirm ? 'text' : 'password'"
               id="password_confirm"
-              [ngClass]="signUpForm.hasError('notSame') ? 'ng-dirty ng-invalid' : ''"
+              [ngClass]="submitted && signUpForm.hasError('notSame') ? 'ng-dirty ng-invalid' : ''"
               formControlName="passwordConfirm"
             />
             <label for="password_confirm">Повторите пароль</label>
@@ -74,21 +74,24 @@
             <i class="pi" [ngClass]="showPasswordConfirm ? 'pi-eye' : 'pi-eye-slash'"></i>
           </span>
         </div>
-        <span *ngIf="signUpForm.hasError('notSame')" class="p-error mt-2">Пароли не совпадают</span>
+        <span *ngIf="submitted && signUpForm.hasError('notSame')" class="p-error mt-2"
+          >Пароли не совпадают</span
+        >
       </div>
-    </div>
-    <div class="flex justify-content-center">
-      <p-button
-        label="Авторизация"
-        styleClass="p-button-primary"
-        [routerLink]="['/sign-in']"
-      ></p-button>
-      <p-button
-        type="submit"
-        label="Подтвердить"
-        styleClass="p-button-success ml-2"
-        (onClick)="signUp()"
-      ></p-button>
-    </div>
+
+      <div class="flex justify-content-center">
+        <p-button
+          type="button"
+          label="Вход"
+          styleClass="p-button-primary"
+          [routerLink]="['/sign-in']"
+        ></p-button>
+        <p-button
+          type="submit"
+          label="Зарегистрироваться"
+          styleClass="p-button-success ml-2"
+        ></p-button>
+      </div>
+    </form>
   </p-card>
 </div>

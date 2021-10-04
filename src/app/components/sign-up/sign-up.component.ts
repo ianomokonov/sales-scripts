@@ -21,6 +21,7 @@ export class SignUpComponent {
   public signUpForm: FormGroup;
   public showPassword = false;
   public showPasswordConfirm = false;
+  public submitted = false;
 
   constructor(
     private userService: UserService,
@@ -40,6 +41,7 @@ export class SignUpComponent {
   }
 
   public signUp() {
+    this.submitted = true;
     if (isFormInvalid(this.signUpForm)) return;
     const signUpData = this.signUpForm.getRawValue();
     delete signUpData.passwordConfirm;
