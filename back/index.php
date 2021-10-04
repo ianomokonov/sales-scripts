@@ -138,6 +138,13 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             return $response;
         });
 
+        $scriptGroup->get('/{scriptId}/variables', function (Request $request, Response $response) use ($script, $block) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $response->getBody()->write(json_encode($script->getScriptVariables($route->getArgument('scriptId'))));
+            return $response;
+        });
+
         $scriptGroup->get('/{scriptId}/blocks', function (Request $request, Response $response) use ($script) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();
@@ -151,6 +158,18 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $route = $routeContext->getRoute();
             $scriptId = $route->getArgument('scriptId');
             $response->getBody()->write(json_encode($script->isOpened($request->getAttribute('isAdmin'), $request->getAttribute('userId'), $scriptId)));
+            return $response;
+        });
+        $scriptGroup->post('/{scriptId}/variable', function (Request $request, Response $response) use ($script) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $response->getBody()->write(json_encode($script->createScriptVariable($route->getArgument('scriptId'), $request->getParsedBody())));
+            return $response;
+        });
+        $scriptGroup->put('/{scriptId}/variable', function (Request $request, Response $response) use ($script) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $response->getBody()->write(json_encode($script->updateScriptVariable($request->getParsedBody())));
             return $response;
         });
     });

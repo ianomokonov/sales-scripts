@@ -135,7 +135,8 @@ CREATE TABLE `ScriptParam` (
   `name` VARCHAR(200) NOT NULL,
   `uniquePlaceholder` VARCHAR(200) NOT NULL,
   `scriptId` INTEGER NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE (`uniquePlaceholder`, `scriptId`)
 );
 
 -- ---

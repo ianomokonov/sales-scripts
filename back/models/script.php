@@ -166,6 +166,39 @@ class Script
         return $userScriptId;
     }
 
+    public function getScriptVariables($scriptId)
+    {
+        $query = "SELECT * FROM ScriptParam WHERE scriptId=?";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute([$scriptId]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function createScriptVariable($scriptId, $request)
+    {
+        $request['scriptId'] = $scriptId;
+        $query = $this->dataBase->genInsertQuery($request, 'ScriptParam');
+        $stmt = $this->dataBase->db->prepare($query[0]);
+
+        $stmt->execute($query[1]);
+
+        return $this->dataBase->db->lastInsertId();
+    }
+
+    public function updateScriptVariable($request)
+    {
+        $id = $request['id'];
+        unset($request['id']);
+
+        $query = $this->dataBase->genUpdateQuery($request, 'ScriptParam', $id);
+        $stmt = $this->dataBase->db->prepare($query[0]);
+
+        $stmt->execute($query[1]);
+
+        return true;
+    }
+
     public function update($userId, $scriptId, $request)
     {
         $request = $this->dataBase->stripAll((array)$request);
