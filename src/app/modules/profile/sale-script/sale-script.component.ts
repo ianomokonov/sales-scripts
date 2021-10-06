@@ -12,10 +12,12 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { SaveTransitionRequest } from 'src/app/_models/requests/save-transition.request';
 import { Observable } from 'rxjs';
 import { Transition } from 'src/app/_entities/transition.entity';
+import { ScriptParam } from 'src/app/_entities/script-param';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
 import { LoadingService } from '../../../_services/front/loading.service';
 import { convertToBreadCrumb } from '../sale-scripts/breadCrumb.converter';
+import { SaveParamComponent } from './save-param/save-param.component';
 
 @Component({
   selector: 'app-sale-script',
@@ -27,9 +29,9 @@ export class SaleScriptComponent implements OnInit {
   public subMenu: OverlayPanel | undefined;
   public subMenuItems: IdNameResponse[] | undefined;
   public script: Script | undefined;
-  public isError: boolean = false;
   public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
+  public params: ScriptParam[] = [];
 
   /** Список отмеченных блоков */
   public get favoriteBlocks(): Block[] {
@@ -51,6 +53,7 @@ export class SaleScriptComponent implements OnInit {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
         this.getScript(id);
+        this.getParams(id);
         this.scriptService.getBlocks(id).subscribe((blocks) => {
           this.blocks = blocks;
         });
@@ -118,6 +121,38 @@ export class SaleScriptComponent implements OnInit {
     });
   }
 
+  public onEditParamClick(param?: ScriptParam) {
+    const modal = this.modalService.open(SaveParamComponent, {
+      header: 'Добавление параметра',
+      data: param,
+    });
+
+    modal.onClose.subscribe((formValue) => {
+      if (!formValue) {
+        return;
+      }
+
+      if (this.script) {
+        this.getParams(this.script.id);
+      }
+    });
+  }
+
+  public onRemoveParamClick(param: ScriptParam) {
+    this.confirmService.confirm({
+      message: 'Удалить параметр?',
+      acceptLabel: 'Да',
+      rejectLabel: 'Нет',
+      header: `Удаление параметра "${param.name}"`,
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.scriptService.deleteScriptParam(param.id, param.scriptId).subscribe(() => {
+          this.getParams(param.scriptId);
+        });
+      },
+    });
+  }
+
   public getTransitionButtonClass(type: TransitionType) {
     switch (type) {
       case TransitionType.Good: {
@@ -145,7 +180,6 @@ export class SaleScriptComponent implements OnInit {
         this.loadingService.removeSubscription(sub);
       },
       ({ error }) => {
-        this.isError = true;
         this.loadingService.removeSubscription(sub);
         this.messageService.add({
           severity: 'error',
@@ -154,6 +188,12 @@ export class SaleScriptComponent implements OnInit {
       },
     );
     this.loadingService.addSubscription(sub);
+  }
+
+  private getParams(scriptId: number) {
+    this.scriptService.getScriptParams(scriptId).subscribe((params) => {
+      this.params = params;
+    });
   }
 
   public formBlock(editBlock?: Block, event?: MouseEvent) {

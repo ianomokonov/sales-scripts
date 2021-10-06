@@ -19,6 +19,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
+import { KeyFilterModule } from 'primeng/keyfilter';
 import { TabViewModule } from 'primeng/tabview';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { MenuModule } from 'primeng/menu';
@@ -37,6 +38,7 @@ import { AddBlockComponent } from './sale-script/add-block/add-block.component';
 import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-folder.component';
 import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
 import { ConstructorComponent } from './sale-script/constructor/constructor.component';
+import { SaveParamComponent } from './sale-script/save-param/save-param.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { ConstructorComponent } from './sale-script/constructor/constructor.comp
     AddBlockComponent,
     OperatorViewComponent,
     ConstructorComponent,
+    SaveParamComponent,
   ],
   imports: [
     CommonModule,
@@ -63,6 +66,7 @@ import { ConstructorComponent } from './sale-script/constructor/constructor.comp
     OrderListModule,
     TreeModule,
     InputTextModule,
+    KeyFilterModule,
     DropdownModule,
     ReactiveFormsModule,
     FormsModule,

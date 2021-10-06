@@ -21,7 +21,6 @@ export class OperatorViewComponent implements OnInit {
   public subMenu: OverlayPanel | undefined;
   public subMenuItems: IdNameResponse[] | undefined;
   public script: Script | undefined;
-  public isError: boolean = false;
   public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
 
@@ -91,7 +90,6 @@ export class OperatorViewComponent implements OnInit {
         this.loadingService.removeSubscription(sub);
       },
       ({ error }) => {
-        this.isError = true;
         this.loadingService.removeSubscription(sub);
         this.messageService.add({
           severity: 'error',

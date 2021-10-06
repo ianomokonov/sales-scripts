@@ -161,16 +161,39 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             return $response;
         });
         $scriptGroup->post('/{scriptId}/variable', function (Request $request, Response $response) use ($script) {
-            $routeContext = RouteContext::fromRequest($request);
-            $route = $routeContext->getRoute();
-            $response->getBody()->write(json_encode($script->createScriptVariable($route->getArgument('scriptId'), $request->getParsedBody())));
-            return $response;
+            try {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $response->getBody()->write(json_encode($script->createScriptVariable($route->getArgument('scriptId'), $request->getParsedBody())));
+                return $response;
+            } catch (Exception $e) {
+                $response = new ResponseClass();
+                $response->getBody()->write(json_encode(array("message" => $e->getMessage())));
+                return $response->withStatus(500);
+            }
         });
         $scriptGroup->put('/{scriptId}/variable', function (Request $request, Response $response) use ($script) {
-            $routeContext = RouteContext::fromRequest($request);
-            $route = $routeContext->getRoute();
-            $response->getBody()->write(json_encode($script->updateScriptVariable($request->getParsedBody())));
-            return $response;
+            try {
+                $response->getBody()->write(json_encode($script->updateScriptVariable($request->getParsedBody())));
+                return $response;
+            } catch (Exception $e) {
+                $response = new ResponseClass();
+                $response->getBody()->write(json_encode(array("message" => $e->getMessage())));
+                return $response->withStatus(500);
+            }
+        });
+
+        $scriptGroup->delete('/{scriptId}/variable/{variableId}', function (Request $request, Response $response) use ($script) {
+            try {
+                $routeContext = RouteContext::fromRequest($request);
+                $route = $routeContext->getRoute();
+                $response->getBody()->write(json_encode($script->deleteScriptVariable($route->getArgument('variableId'))));
+                return $response;
+            } catch (Exception $e) {
+                $response = new ResponseClass();
+                $response->getBody()->write(json_encode(array("message" => $e->getMessage())));
+                return $response->withStatus(500);
+            }
         });
     });
 

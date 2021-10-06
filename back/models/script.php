@@ -180,8 +180,12 @@ class Script
         $request['scriptId'] = $scriptId;
         $query = $this->dataBase->genInsertQuery($request, 'ScriptParam');
         $stmt = $this->dataBase->db->prepare($query[0]);
+        try {
+            $stmt->execute($query[1]);
+        } catch (Exception $e) {
+            throw new Exception('Такой код переменной уже существует в скрипте', 409);
+        }
 
-        $stmt->execute($query[1]);
 
         return $this->dataBase->db->lastInsertId();
     }
@@ -194,7 +198,11 @@ class Script
         $query = $this->dataBase->genUpdateQuery($request, 'ScriptParam', $id);
         $stmt = $this->dataBase->db->prepare($query[0]);
 
-        $stmt->execute($query[1]);
+        try {
+            $stmt->execute($query[1]);
+        } catch (Exception $e) {
+            throw new Exception('Такой код переменной уже существует в скрипте', 409);
+        }
 
         return true;
     }
@@ -212,6 +220,14 @@ class Script
 
         $stmt = $this->dataBase->db->prepare($query[0]);
         $stmt->execute($query[1]);
+        return true;
+    }
+
+    public function deleteScriptVariable($id)
+    {
+        $query = "delete from ScriptParam where id=?";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($id));
         return true;
     }
 

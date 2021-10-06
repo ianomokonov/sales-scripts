@@ -62,11 +62,15 @@ export class ScriptService {
   }
 
   public addScriptParam(scriptId: number, request: SaveScriptParamRequest): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/script/${scriptId}`, request);
+    return this.http.post<number>(`${this.baseUrl}/script/${scriptId}/variable`, request);
   }
 
   public updateScriptParam(request: UpdateScriptParamRequest, id: number): Observable<boolean> {
-    return this.http.put<boolean>(`${this.baseUrl}/script/${id}`, request);
+    return this.http.put<boolean>(`${this.baseUrl}/script/${id}/variable`, request);
+  }
+
+  public deleteScriptParam(paramId: number, id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.baseUrl}/script/${id}/variable/${paramId}`);
   }
 
   public getScriptParams(scriptId: number): Observable<ScriptParam[]> {
