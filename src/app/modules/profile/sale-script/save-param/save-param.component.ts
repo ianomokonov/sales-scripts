@@ -26,9 +26,9 @@ export class SaveParamComponent {
       uniquePlaceholder: [null, Validators.required],
     });
 
-    if (config.data) {
+    if (config.data.param) {
       this.isEditing = true;
-      this.paramForm.patchValue(this.config.data);
+      this.paramForm.patchValue(this.config.data.param);
     }
   }
 
@@ -54,7 +54,7 @@ export class SaveParamComponent {
     }
 
     this.scriptService
-      .updateScriptParam({ ...formValue, id: this.config.data.id }, this.config.data.scriptId)
+      .updateScriptParam({ ...formValue, id: this.config.data.param.id }, this.config.data.scriptId)
       .subscribe(
         () => this.modal.close(true),
         (error) => {

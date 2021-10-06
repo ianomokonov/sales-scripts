@@ -172,7 +172,12 @@ class Script
         $stmt = $this->dataBase->db->prepare($query);
         $stmt->execute([$scriptId]);
 
-        return $stmt->fetchAll();
+        $params = [];
+        while ($param = $stmt->fetch()) {
+            $param['id'] = $param['id'] * 1;
+            $params[] = $param;
+        }
+        return $params;
     }
 
     public function createScriptVariable($scriptId, $request)

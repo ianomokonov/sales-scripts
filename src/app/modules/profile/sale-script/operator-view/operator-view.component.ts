@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,7 +11,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { forkJoin } from 'rxjs';
 import { Block } from 'src/app/_entities/block.entity';
+import { ScriptParam } from 'src/app/_entities/script-param';
 import { Script } from 'src/app/_entities/script.entity';
 import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
 import { TransitionType } from 'src/app/_models/transition-type';
@@ -32,6 +35,7 @@ export class OperatorViewComponent implements OnInit {
   public script: Script | undefined;
   public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
+  public params: ScriptParam[] = [];
 
   /** Список отмеченных блоков */
   public get favoriteBlocks(): Block[] {
@@ -66,12 +70,23 @@ export class OperatorViewComponent implements OnInit {
       this.script?.blocks[this.script?.blocks.length - 1]?.id !== blockId
     ) {
       this.blockService.getBlock(blockId).subscribe((block) => {
+        block.safeDescription = this.parseDescription(block.description);
         this.script?.blocks.push(block);
         this.cdRef.detectChanges();
 
         document.querySelector('.block-tab:last-child')?.scrollIntoView();
       });
     }
+  }
+
+  public setNewParamValue(param: ScriptParam) {
+    this.saveParams();
+
+    document
+      .querySelectorAll<HTMLInputElement>(`.param-input[data-param-id="${param.id}"]`)
+      .forEach((input: HTMLInputElement) => {
+        input.value = param.value || '';
+      });
   }
 
   public getTransitionButtonClass(type: TransitionType) {
@@ -92,9 +107,26 @@ export class OperatorViewComponent implements OnInit {
   }
 
   private getScript(id: number) {
-    const sub = this.scriptService.getOperatorScript(id).subscribe(
-      (script) => {
+    const sub = forkJoin([
+      this.scriptService.getOperatorScript(id),
+      this.scriptService.getScriptParams(id),
+    ]).subscribe(
+      ([script, params]) => {
+        this.params = params;
+        const savedParams = this.getStorageParams();
+        if (savedParams) {
+          savedParams.forEach((p) => {
+            const param = this.params.find((pa) => pa.id === p.id);
+
+            if (param) {
+              param.value = p.value;
+            }
+          });
+        }
         this.script = script;
+        this.script.blocks.forEach((b) => {
+          b.safeDescription = this.parseDescription(b.description);
+        });
         const crumbs = convertToBreadCrumb(this.script.breadCrumbs, true);
         this.breadCrumbs = crumbs.data;
         this.subMenuItems = crumbs.crumbs;
@@ -121,30 +153,51 @@ export class OperatorViewComponent implements OnInit {
     }
   }
 
-  public onParamInput({ target }: any) {
-    const input = target.closest('[data-paramId]');
+  public onParamChange({ target }: any) {
+    const input = target.closest('[data-param-id]');
     if (!input) {
       return;
     }
 
-    const param = {
-      id: +input.dataset.paramId,
-      value: input.value,
-    };
+    const param = this.params.find((p) => p.id === +input.dataset.paramId);
+
+    if (!param) {
+      return;
+    }
+
+    param.value = target.value;
+    this.setNewParamValue(param);
+
+    this.cdRef.detectChanges();
   }
 
   public parseDescription(text: string): SafeHtml {
-    const safeText = this.sanitizer.sanitize(SecurityContext.HTML, text);
+    let safeText = this.sanitizer.sanitize(SecurityContext.HTML, text);
     if (!safeText) {
       return '';
     }
-    return (
-      this.sanitizer.bypassSecurityTrustHtml(
-        safeText.replace(
-          /\{\s*name\s*\}/g,
-          `<input data-paramId="1" class="param-input" placeholder="${'Имя клиента'}"/>`,
-        ),
-      ) || ''
-    );
+    this.params.forEach((p) => {
+      safeText =
+        safeText?.replace(
+          // eslint-disable-next-line no-useless-escape
+          new RegExp(`\\{\\s*${p.uniquePlaceholder}\\s*\}`, 'gi'),
+          `<input data-param-id="${p.id}" value="${
+            p.value || ''
+          }" class="param-input" placeholder="${p.name}"/>`,
+        ) || '';
+    });
+    return this.sanitizer.bypassSecurityTrustHtml(safeText);
+  }
+
+  private saveParams() {
+    sessionStorage.setItem('scriptParams', JSON.stringify(this.params));
+  }
+
+  private getStorageParams(): ScriptParam[] {
+    if (sessionStorage.getItem('scriptParams')) {
+      return JSON.parse(sessionStorage.getItem('scriptParams') as string);
+    }
+
+    return [];
   }
 }

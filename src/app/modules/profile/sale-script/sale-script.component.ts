@@ -124,7 +124,7 @@ export class SaleScriptComponent implements OnInit {
   public onEditParamClick(param?: ScriptParam) {
     const modal = this.modalService.open(SaveParamComponent, {
       header: 'Добавление параметра',
-      data: param,
+      data: { param, scriptId: this.script?.id },
     });
 
     modal.onClose.subscribe((formValue) => {

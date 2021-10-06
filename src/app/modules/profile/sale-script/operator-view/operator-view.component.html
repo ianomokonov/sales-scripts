@@ -39,8 +39,8 @@
       <div class="accordion-body block">
         <div
           class="block__description mb-3"
-          [innerHTML]="parseDescription(block.description)"
-          (input)="onParamInput($event)"
+          [innerHTML]="block.safeDescription"
+          (input)="onParamChange($event)"
         ></div>
         <div class="block__transitions block__actions">
           <div
@@ -62,23 +62,43 @@
       <p-divider *ngIf="!last" layout="horizontal" styleClass="m-3 mx-0 p-0"></p-divider>
     </div>
   </div>
-  <ng-container *ngIf="script.favoriteBlocks?.length">
-    <p-divider layout="vertical" styleClass="m-3 my-0 p-0"></p-divider>
-    <div class="col-fixed px-0">
+  <p-divider layout="vertical" styleClass="m-3 my-0 mr-0 p-0"></p-divider>
+  <div class="col-fixed px-0 flex flex-column">
+    <div class="flex-grow-1 pl-3">
       <h2 class="mt-0">Быстрые переходы</h2>
-      <div class="marked-blocks">
+      <div class="marked-blocks" *ngIf="favoriteBlocks?.length; else noParams">
         <button
           pButton
           pRipple
           type="button"
           [label]="block.name"
           class="p-button-outlined mr-2 mb-2"
-          *ngFor="let block of script.favoriteBlocks"
+          *ngFor="let block of favoriteBlocks"
           (click)="nextBlock(block.id)"
         ></button>
       </div>
     </div>
-  </ng-container>
+    <p-divider layout="horizontal" styleClass="m-3 mx-0 p-0"></p-divider>
+    <div class="pl-3">
+      <div class="flex align-items-center justify-content-between">
+        <h2 class="mt-0">Переменные</h2>
+      </div>
+
+      <ng-container *ngIf="params?.length; else noParams">
+        <div *ngFor="let param of params" class="mb-1">
+          <small class="block text-muted">{{ param.name }}</small>
+          <div class="flex align-items-center justify-content-between">
+            <input
+              class="flex-grow-1"
+              type="text"
+              (input)="setNewParamValue(param)"
+              [(ngModel)]="param.value"
+            />
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
 </div>
 
 <p-overlayPanel #subMenu>
@@ -98,3 +118,7 @@
     </p-scrollPanel>
   </ng-template>
 </p-overlayPanel>
+
+<ng-template #noParams>
+  <div class="p-3 text-center text-bold" [ngStyle]="{ color: 'var(--gray-400)' }">Нет данных</div>
+</ng-template>

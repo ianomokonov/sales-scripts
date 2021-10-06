@@ -3,4 +3,5 @@ export interface ScriptParam {
   name: string;
   uniquePlaceholder: string;
   scriptId: number;
+  value?: string;
 }
