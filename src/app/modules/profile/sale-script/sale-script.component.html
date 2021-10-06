@@ -208,21 +208,22 @@
       <ng-container *ngIf="params?.length; else noParams">
         <div *ngFor="let param of params" class="flex align-items-center justify-content-between">
           <div>
-            <b>{{ param.name }}: </b>{{ param.uniquePlaceholder }}
+            <small class="block text-muted">{{ param.name }}</small>
+            {{ param.uniquePlaceholder }}
           </div>
 
           <div>
             <button
               pButton
               pRipple
-              class="p-button-text p-button-sm"
+              class="p-button-text p-button-sm ml-1 px-1"
               icon="pi pi-trash"
               (click)="onRemoveParamClick(param)"
             ></button>
             <button
               pButton
               pRipple
-              class="p-button-text p-button-sm"
+              class="p-button-text p-button-sm px-1"
               icon="pi pi-pencil"
               (click)="onEditParamClick(param)"
             ></button>

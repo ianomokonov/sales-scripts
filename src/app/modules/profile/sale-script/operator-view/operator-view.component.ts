@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  SecurityContext,
+  ViewChild,
+} from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
@@ -15,6 +23,7 @@ import { convertToBreadCrumb } from '../../sale-scripts/breadCrumb.converter';
   selector: 'app-operator-view',
   templateUrl: './operator-view.component.html',
   styleUrls: ['./operator-view.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorViewComponent implements OnInit {
   @ViewChild('subMenu')
@@ -36,6 +45,7 @@ export class OperatorViewComponent implements OnInit {
     public loadingService: LoadingService,
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
   ) {}
 
   public ngOnInit() {
@@ -44,6 +54,7 @@ export class OperatorViewComponent implements OnInit {
         this.getScript(id);
         this.scriptService.getBlocks(id).subscribe((blocks) => {
           this.blocks = blocks;
+          this.cdRef.detectChanges();
         });
       }
     });
@@ -88,6 +99,7 @@ export class OperatorViewComponent implements OnInit {
         this.breadCrumbs = crumbs.data;
         this.subMenuItems = crumbs.crumbs;
         this.loadingService.removeSubscription(sub);
+        this.cdRef.detectChanges();
       },
       ({ error }) => {
         this.loadingService.removeSubscription(sub);
@@ -95,6 +107,7 @@ export class OperatorViewComponent implements OnInit {
           severity: 'error',
           detail: error.message || 'Ошибка загрузки данных',
         });
+        this.cdRef.detectChanges();
       },
     );
     this.loadingService.addSubscription(sub);
@@ -104,6 +117,34 @@ export class OperatorViewComponent implements OnInit {
     const { originalEvent, item } = action;
     if (item.id === 'toggle') {
       this.subMenu?.toggle(originalEvent);
+      this.cdRef.detectChanges();
     }
+  }
+
+  public onParamInput({ target }: any) {
+    const input = target.closest('[data-paramId]');
+    if (!input) {
+      return;
+    }
+
+    const param = {
+      id: +input.dataset.paramId,
+      value: input.value,
+    };
+  }
+
+  public parseDescription(text: string): SafeHtml {
+    const safeText = this.sanitizer.sanitize(SecurityContext.HTML, text);
+    if (!safeText) {
+      return '';
+    }
+    return (
+      this.sanitizer.bypassSecurityTrustHtml(
+        safeText.replace(
+          /\{\s*name\s*\}/g,
+          `<input data-paramId="1" class="param-input" placeholder="${'Имя клиента'}"/>`,
+        ),
+      ) || ''
+    );
   }
 }

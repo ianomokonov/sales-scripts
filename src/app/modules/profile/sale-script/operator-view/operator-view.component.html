@@ -26,14 +26,22 @@
     >
       <div class="mb-2">Блоки разговора отсутствуют.</div>
     </div>
-    <div *ngFor="let block of script?.blocks; let last = last" class="block-tab" [ngClass]="{ 'prev-block': !last }">
+    <div
+      *ngFor="let block of script?.blocks; let last = last"
+      class="block-tab"
+      [ngClass]="{ 'prev-block': !last }"
+    >
       <div class="flex align-items-center accordion-header">
         <div class="flex align-items-center flex-grow-1 edit-action pb-3">
           <h4 class="m-0 pr-1 p-0">{{ block.name }}</h4>
         </div>
       </div>
       <div class="accordion-body block">
-        <div class="block__description mb-3" [innerHTML]="block.description"></div>
+        <div
+          class="block__description mb-3"
+          [innerHTML]="parseDescription(block.description)"
+          (input)="onParamInput($event)"
+        ></div>
         <div class="block__transitions block__actions">
           <div
             *ngFor="let transition of block.outgoingTransitions"
