@@ -6,8 +6,13 @@
     <div class="flex align-items-center mt-3 mb-3">
       <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
       <div class="scripts-actions flex justify-content-between">
-        <input class="search-input flex-grow-1 mr-3" type="text" placeholder="Поиск..." pInputText
-          [formControl]="searchControl" />
+        <p-dropdown [options]="folders" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
+          [formControl]="searchControl" filterBy="name" placeholder="Поиск..." [showClear]="true"
+          emptyFilterMessage="Нет данных" class="search-input mr-3" (onChange)="getFolder($event.value)">
+          <ng-template let-block pTemplate="item" class="search-block">
+              {{ block.name }}
+          </ng-template>
+        </p-dropdown>
         <button pButton [disabled]="isError" type="button" icon="pi pi-plus" label="Добавить"
           (click)="menu.toggle($event)">
         </button>
@@ -27,11 +32,11 @@
           <ng-template pTemplate="body" let-item let-row="rowIndex">
             <tr [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }">
               <td class="col-8 py-1 pl-0">
-                <p-button [routerLink]="['/profile', 'script', item.id]"
-                  *ngIf="!item.isFolder" [label]="item.name" styleClass="p-button-link">
+                <p-button [routerLink]="['/profile', 'script', item.id]" *ngIf="!item.isFolder" [label]="item.name"
+                  styleClass="p-button-link">
                 </p-button>
-                <button [routerLink]="['/profile', 'scripts', item.id]" *ngIf="item.isFolder"
-                  pButton type="button" icon="pi pi-folder-open" [label]="item.name" class="p-button-text"></button>
+                <button [routerLink]="['/profile', 'scripts', item.id]" *ngIf="item.isFolder" pButton type="button"
+                  icon="pi pi-folder-open" [label]="item.name" class="p-button-text"></button>
               </td>
               <td class="py-1">
                 {{

@@ -71,6 +71,9 @@ export class OperatorViewComponent implements OnInit {
     ) {
       this.blockService.getBlock(blockId).subscribe((block) => {
         block.safeDescription = this.parseDescription(block.description);
+        if (this.script && this.script?.blocks?.length > 1) {
+          this.script.blocks = [this.script.blocks.pop()!];
+        }
         this.script?.blocks.push(block);
         this.cdRef.detectChanges();
 
