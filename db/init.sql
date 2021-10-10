@@ -155,6 +155,21 @@ CREATE TABLE `UserScriptParamValue` (
 );
 
 -- ---
+-- Table 'UserTasks'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `UserTasks`;
+		
+CREATE TABLE `UserTasks` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `userScriptId` INTEGER NOT NULL,
+  `name` VARCHAR(200) NOT NULL,
+  `isDone` bit(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
 -- Foreign Keys 
 -- ---
 
@@ -172,6 +187,7 @@ ALTER TABLE `Transition` ADD FOREIGN KEY (nextBlockId) REFERENCES `Block` (`id`)
 ALTER TABLE `ScriptParam` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptParam` (`id`) ON DELETE CASCADE;
+ALTER TABLE `UserTasks` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
 
 
 --
@@ -239,3 +255,8 @@ INSERT INTO `UserScriptFavorite` (`id`, `userScriptId`, `blockId`) VALUES (1, '1
 -- ScriptParam
 
 INSERT INTO `ScriptParam` (`id`, `name`, `uniquePlaceholder`, `scriptId`) VALUES (1, 'Имя клиента', 'name', 1);
+
+
+-- UserTasks
+
+INSERT INTO `UserTasks` (`id`, `name`, `isDone`, `userScriptId`) VALUES (1, 'Выполнить 10 подтягиваний', 0, 1), (2, 'Выполнить 10 отжиманий', 0, 1);
