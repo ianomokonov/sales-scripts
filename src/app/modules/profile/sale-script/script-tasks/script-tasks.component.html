@@ -1,0 +1,48 @@
+<form class="py-2" autocomplete="off">
+  <div class="mb-2">
+    <div class="field mb-0 w-12 flex justify-content-center align-items-center">
+      <p-checkbox name="groupname" value="val1" label="Value 1" class="w-12"></p-checkbox>
+      <button pButton pRipple class="p-button-text ml-1 px-1" icon="pi pi-trash"></button>
+    </div>
+    <p-divider layout="horizontal" styleClass="mx-0 my-1 p-0"></p-divider>
+    <div class="field mb-0 w-12 flex justify-content-center align-items-center">
+      <p-checkbox name="groupname" value="val1" label="Value 1" class="w-12"></p-checkbox>
+      <button pButton pRipple class="p-button-text ml-1 px-1" icon="pi pi-trash"></button>
+    </div>
+    <p-divider layout="horizontal" styleClass="mx-0 my-1 p-0"></p-divider>
+    <div class="field w-12 mb-0 flex justify-content-center align-items-center">
+      <p-checkbox
+        name="groupname"
+        value="val1"
+        label="Lorem ipsum dolomnis eos distinctio quas ratione. Assumenda quod quidem nisi?"
+        class="w-12"
+      ></p-checkbox>
+      <button pButton pRipple class="p-button-text ml-1 px-1" icon="pi pi-trash"></button>
+    </div>
+  </div>
+  <div class="w-12" *ngIf="showNewField">
+    <div class="p-inputgroup">
+      <input type="text" pInputText class="p-inputtext-sm" placeholder="Название" />
+
+      <button
+        type="button"
+        class="p-button-danger"
+        pButton
+        pRipple
+        icon="pi pi-times"
+        (click)="showNewField = !showNewField"
+      ></button>
+      <button type="button" pButton pRipple icon="pi pi-save" (click)="save()"></button>
+    </div>
+  </div>
+
+  <button
+    *ngIf="!showNewField"
+    pButton
+    pRipple
+    type="button"
+    label="Добавить"
+    class="p-button-raised p-button-text p-button-plain"
+    (click)="showNewField = !showNewField"
+  ></button>
+</form>

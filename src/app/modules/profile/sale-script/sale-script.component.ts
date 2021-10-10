@@ -18,6 +18,7 @@ import { AddTransitionComponent } from './add-transition/add-transition.componen
 import { LoadingService } from '../../../_services/front/loading.service';
 import { convertToBreadCrumb } from '../sale-scripts/breadCrumb.converter';
 import { SaveParamComponent } from './save-param/save-param.component';
+import { ScriptTasksComponent } from './script-tasks/script-tasks.component';
 
 @Component({
   selector: 'app-sale-script',
@@ -118,6 +119,13 @@ export class SaleScriptComponent implements OnInit {
           }
         });
       }
+    });
+  }
+
+  public onOpenTasksClick() {
+    this.modalService.open(ScriptTasksComponent, {
+      header: 'Упражнения',
+      data: { scriptId: this.script?.id },
     });
   }
 
