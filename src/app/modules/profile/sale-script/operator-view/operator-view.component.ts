@@ -12,7 +12,6 @@ import { ActivatedRoute } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { forkJoin } from 'rxjs';
-import { Block } from 'src/app/_entities/block.entity';
 import { ScriptParam } from 'src/app/_entities/script-param';
 import { Script } from 'src/app/_entities/script.entity';
 import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
@@ -37,11 +36,6 @@ export class OperatorViewComponent implements OnInit {
   public blocks: IdNameResponse[] = [];
   public params: ScriptParam[] = [];
 
-  /** Список отмеченных блоков */
-  public get favoriteBlocks(): Block[] {
-    return this.script?.blocks.filter((b) => b.isFavorite) || [];
-  }
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private scriptService: ScriptService,
@@ -64,15 +58,15 @@ export class OperatorViewComponent implements OnInit {
     });
   }
 
-  public nextBlock(blockId: number) {
+  public nextBlock(blockId: number, isLast: boolean, index?: number) {
     if (
       !this.script?.blocks?.length ||
       this.script?.blocks[this.script?.blocks.length - 1]?.id !== blockId
     ) {
       this.blockService.getBlock(blockId).subscribe((block) => {
         block.safeDescription = this.parseDescription(block.description);
-        if (this.script && this.script?.blocks?.length > 1) {
-          this.script.blocks = [this.script.blocks.pop()!];
+        if (!isLast && index !== undefined) {
+          this.script?.blocks.splice(index + 1);
         }
         this.script?.blocks.push(block);
         this.cdRef.detectChanges();
