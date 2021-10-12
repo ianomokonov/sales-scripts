@@ -6,7 +6,7 @@
     <div class="flex align-items-center mt-3 mb-3">
       <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
       <div class="scripts-actions flex justify-content-between">
-        <p-dropdown [options]="folders" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
+        <p-dropdown [options]="searchedScripts" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
           [formControl]="searchControl" filterBy="name" placeholder="Поиск..." [showClear]="true"
           emptyFilterMessage="Нет данных" class="search-input mr-3" (onChange)="getFolder($event.value)">
           <ng-template let-block pTemplate="item" class="search-block">
