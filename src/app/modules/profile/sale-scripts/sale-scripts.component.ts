@@ -29,7 +29,6 @@ export class SaleScriptsComponent implements OnInit {
   public isError: boolean = false;
   public buttonItems: MenuItem[];
   public breadCrumb: MenuItem[];
-  public searchString: string = '';
   public searchControl = new FormControl();
 
   constructor(
@@ -81,13 +80,10 @@ export class SaleScriptsComponent implements OnInit {
         this.searchedScripts = searchedScripts;
       });
     });
-    this.router.events.subscribe(() => {
-      this.searchControl.setValue('', { emitEvent: false });
-      this.searchString = '';
-    });
   }
 
   public getFolder(id?: number) {
+    this.searchControl.setValue(null, { emitEvent: false });
     const sub = this.scriptService.getFolder(id).subscribe(
       (response) => {
         this.items = response;
@@ -124,12 +120,6 @@ export class SaleScriptsComponent implements OnInit {
         this.router.navigate(['scripts', folderId], { relativeTo: this.route.parent });
       }
     });
-  }
-
-  public getEmptyMessage(): string {
-    return this.searchString
-      ? `В текущей директории по поисковому запросу "${this.searchString}" папки и скрипты не найдены.`
-      : 'Папки и скрипты отсутствуют в текущей директории.';
   }
 
   public addScript() {
