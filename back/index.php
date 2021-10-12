@@ -104,6 +104,14 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             return $response;
         });
 
+        $scriptGroup->get('/search', function (Request $request, Response $response) use ($script) {
+            $query = $request->getQueryParams();
+            $userId = $request->getAttribute('userId');
+            $isAdmin = $request->getAttribute('isAdmin');
+            $response->getBody()->write(json_encode($script->searchScripts($isAdmin, $userId, isset($query['searchString']) ? $query['searchString'] : '')));
+            return $response;
+        });
+
         $scriptGroup->get('/{folderId}', function (Request $request, Response $response) use ($script) {
             $routeContext = RouteContext::fromRequest($request);
             $route = $routeContext->getRoute();

@@ -25,6 +25,22 @@ class Script
         }
         return $folders;
     }
+
+    public function searchScripts($isAdmin, $userId, $searchString = '')
+    {
+        $query = "SELECT s.id, s.name FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND name LIKE '%$searchString%'";
+        if ($isAdmin) {
+            $query = "SELECT s.id, s.name FROM Script s AND s.name LIKE '%$searchString%'";
+        }
+        $stmt = $this->dataBase->db->query($query);
+        $folders = [];
+        while ($folder = $stmt->fetch()) {
+            $folder['id'] =  $folder['id'] * 1;
+            $folders[] = $folder;
+        }
+        return $folders;
+    }
+
     public function getBlocks($scriptId)
     {
         $query = "SELECT id, name FROM Block WHERE scriptId=?";

@@ -27,7 +27,7 @@
       <div class="mb-2">Блоки разговора отсутствуют.</div>
     </div>
     <div
-      *ngFor="let block of script?.blocks; let last = last"
+      *ngFor="let block of script?.blocks; let last = last; let index = index"
       class="block-tab"
       [ngClass]="{ 'prev-block': !last }"
     >
@@ -50,11 +50,10 @@
             <button
               pButton
               pRipple
-              [disabled]="!last"
               type="button"
               [label]="transition.name"
               class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
-              (click)="nextBlock(transition.nextBlockId)"
+              (click)="nextBlock(transition.nextBlockId, last, index)"
             ></button>
           </div>
         </div>
@@ -66,15 +65,15 @@
   <div class="col-fixed px-0 flex flex-column">
     <div class="flex-grow-1 pl-3">
       <h2 class="mt-0">Быстрые переходы</h2>
-      <div class="marked-blocks" *ngIf="favoriteBlocks?.length; else noParams">
+      <div class="marked-blocks" *ngIf="script?.favoriteBlocks?.length; else noParams">
         <button
           pButton
           pRipple
           type="button"
           [label]="block.name"
           class="p-button-outlined mr-2 mb-2"
-          *ngFor="let block of favoriteBlocks"
-          (click)="nextBlock(block.id)"
+          *ngFor="let block of script?.favoriteBlocks"
+          (click)="nextBlock(block.id, true)"
         ></button>
       </div>
     </div>

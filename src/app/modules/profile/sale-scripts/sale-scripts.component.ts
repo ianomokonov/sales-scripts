@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { debounceTime } from 'rxjs/operators';
+// import { debounceTime } from 'rxjs/operators';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -23,7 +23,8 @@ export class SaleScriptsComponent implements OnInit {
   public subMenu: OverlayPanel | undefined;
   public subMenuItems: IdNameResponse[] | undefined;
   public items: FolderResponse = { scripts: [] };
-  private folders: IdNameResponse[] = [];
+  public folders: IdNameResponse[] = [];
+  public searchedScripts: IdNameResponse[] = [];
   private lastFolderId: number | null = null;
   public isError: boolean = false;
   public buttonItems: MenuItem[];
@@ -76,23 +77,18 @@ export class SaleScriptsComponent implements OnInit {
       this.scriptService.getFolders().subscribe((folders) => {
         this.folders = folders;
       });
+      this.scriptService.getScripts().subscribe((searchedScripts) => {
+        this.searchedScripts = searchedScripts;
+      });
     });
     this.router.events.subscribe(() => {
       this.searchControl.setValue('', { emitEvent: false });
       this.searchString = '';
     });
-    this.searchControl.valueChanges.pipe(debounceTime(1000)).subscribe((change: string) => {
-      this.searchString = change;
-      if (this.lastFolderId) {
-        this.getFolder(this.lastFolderId, change);
-      } else {
-        this.getFolder(undefined, change);
-      }
-    });
   }
 
-  public getFolder(id?: number, searchString?: string) {
-    const sub = this.scriptService.getFolder(id, searchString).subscribe(
+  public getFolder(id?: number) {
+    const sub = this.scriptService.getFolder(id).subscribe(
       (response) => {
         this.items = response;
         const crumb = convertToBreadCrumb(this.items.breadCrumbs);
