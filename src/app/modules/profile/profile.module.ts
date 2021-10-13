@@ -39,6 +39,7 @@ import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-fo
 import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
 import { ConstructorComponent } from './sale-script/constructor/constructor.component';
 import { SaveParamComponent } from './sale-script/save-param/save-param.component';
+import { ScriptAccessComponent } from './script-access/script-access.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { SaveParamComponent } from './sale-script/save-param/save-param.componen
     OperatorViewComponent,
     ConstructorComponent,
     SaveParamComponent,
+    ScriptAccessComponent,
   ],
   imports: [
     CommonModule,
