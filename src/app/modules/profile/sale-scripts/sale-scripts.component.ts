@@ -24,7 +24,7 @@ export class SaleScriptsComponent implements OnInit {
   public subMenuItems: IdNameResponse[] | undefined;
   public items: FolderResponse = { scripts: [] };
   public folders: IdNameResponse[] = [];
-  public searchedScripts: IdNameResponse[] = [];
+  public searchedScripts: ScriptShortView[] = [];
   private lastFolderId: number | null = null;
   public isError: boolean = false;
   public buttonItems: MenuItem[];
