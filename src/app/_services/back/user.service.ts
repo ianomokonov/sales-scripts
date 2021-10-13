@@ -69,6 +69,10 @@ export class UserService {
     );
   }
 
+  public getUsers(): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/admin/users`);
+  }
+
   public checkAdmin(): Observable<boolean> {
     return this.http.get<boolean>(`${this.baseUrl}/user/check-admin`);
   }

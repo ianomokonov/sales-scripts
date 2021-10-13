@@ -28,7 +28,7 @@ class Script
 
     public function searchScripts($isAdmin, $userId, $searchString = '')
     {
-        $query = "SELECT s.id, s.name FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND s.name LIKE '%$searchString%'";
+        $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND s.name LIKE '%$searchString%'";
         if ($isAdmin) {
             $query = "SELECT s.id, s.name FROM Script s WHERE s.name LIKE '%$searchString%'";
         }
