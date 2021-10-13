@@ -36,6 +36,9 @@ export class AddTransitionComponent {
   ) {
     this.currentTransition = this.config.data?.transition;
     this.addLink = this.config.data.addLink;
+    if (!this.addLink) {
+      this.activeTabId = 1;
+    }
     this.blocks = this.config.data.blocks;
     this.transitionForm = this.fb.group({
       name: [this.config.data?.transition?.name || null, Validators.required],
@@ -43,24 +46,21 @@ export class AddTransitionComponent {
       status: [this.config.data?.transition?.status || TransitionType.Good, Validators.required],
     });
 
-    if (this.addLink) {
-      this.transitionForm.addControl(
-        'nextBlockId',
-        new FormControl(this.config.data?.transition?.nextBlockId, Validators.required),
-      );
-      if (!this.currentTransition) {
-        return;
-      }
-    }
-
     this.transitionForm.addControl(
-      'block',
-      this.fb.group({
-        name: [null, Validators.required],
-        type: [BlockType.Block, Validators.required],
-        description: [null, Validators.required],
-      }),
+      'nextBlockId',
+      new FormControl(this.config.data?.transition?.nextBlockId, Validators.required),
     );
+    if (!this.addLink) {
+      this.transitionForm.controls.nextBlockId.disable();
+      this.transitionForm.addControl(
+        'block',
+        this.fb.group({
+          name: [null, Validators.required],
+          type: [BlockType.Block, Validators.required],
+          description: [null, Validators.required],
+        }),
+      );
+    }
   }
 
   public delete() {

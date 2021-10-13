@@ -5,6 +5,7 @@ import { ProfileComponent } from './profile.component';
 import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
 import { SaleScriptsComponent } from './sale-scripts/sale-scripts.component';
+import { ScriptAccessComponent } from './script-access/script-access.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
         path: 'script/:id/operator',
         component: OperatorViewComponent,
         canActivate: [ScriptGuard],
+      },
+      {
+        path: 'scripts-access',
+        component: ScriptAccessComponent,
       },
     ],
   },
