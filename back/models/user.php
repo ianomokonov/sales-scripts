@@ -63,6 +63,48 @@ class User
     {
     }
 
+    public function getUserTasks($userId)
+    {
+        $query = "SELECT id, name, isDone FROM UserTask WHERE userId=?";
+        $stmt = $this->dataBase->db->prepare($query);
+        $stmt->execute(array($userId));
+        $tasks = [];
+        while ($task = $stmt->fetch()) {
+            $task['id'] = $task['id'] * 1;
+            $task['isDone'] = $task['isDone'] == '1';
+            $task[] = $task;
+        }
+        return $tasks;
+    }
+
+    public function addUserTask($userId, $request)
+    {
+        $query = "INSERT INTO UserTask (userId, name) VALUES (?, ?)";
+        $query = $this->dataBase->db->prepare($query);
+        $query->execute(array($userId, $request['name']));
+    }
+
+    public function removeUserTask($userTaskId)
+    {
+        $query = "DELETE FROM UserTask WHERE id = ?";
+        $this->dataBase->db->prepare($query)->execute(array($userTaskId));
+    }
+
+    public function setUserScripts($request)
+    {
+        $query = "DELETE FROM UserScript WHERE userId=?";
+        $this->dataBase->db->prepare($query)->execute($request['userId']);
+        $query = "INSERT INTO UserScript (userId, scriptId) VALUES";
+        $props = [];
+        foreach ($request['scriptIds'] as $scriptId) {
+            $query = $query . " (?,?),";
+            $props[] = $request['userId'];
+            $props[] = $scriptId;
+        }
+        $query  = rtrim($query, ',');
+        $this->dataBase->db->prepare($query)->execute($props);
+    }
+
     public function getUsers()
     {
         $query = "SELECT id, email, phone, isAdmin FROM " . $this->table . " WHERE isAdmin=0";

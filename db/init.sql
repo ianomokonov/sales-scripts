@@ -163,7 +163,7 @@ DROP TABLE IF EXISTS `UserTasks`;
 		
 CREATE TABLE `UserTasks` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `userScriptId` INTEGER NOT NULL,
+  `userId` INTEGER NOT NULL,
   `name` VARCHAR(200) NOT NULL,
   `isDone` bit(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
@@ -259,4 +259,4 @@ INSERT INTO `ScriptParam` (`id`, `name`, `uniquePlaceholder`, `scriptId`) VALUES
 
 -- UserTasks
 
-INSERT INTO `UserTasks` (`id`, `name`, `isDone`, `userScriptId`) VALUES (1, 'Выполнить 10 подтягиваний', 0, 1), (2, 'Выполнить 10 отжиманий', 0, 1);
+INSERT INTO `UserTasks` (`id`, `name`, `isDone`, `userId`) VALUES (1, 'Выполнить 10 подтягиваний', 0, 1), (2, 'Выполнить 10 отжиманий', 0, 1);

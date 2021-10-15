@@ -235,11 +235,35 @@ $app->group('/', function (RouteCollectorProxy $group) use ($block, $script, $us
             $response->getBody()->write(json_encode($user->checkAdmin($userId)));
             return $response;
         });
+
+        $userGroup->get('/tasks', function (Request $request, Response $response) use ($user) {
+            $userId = $request->getAttribute('userId');
+            $response->getBody()->write(json_encode($user->getUserTasks($userId)));
+            return $response;
+        });
+
+        $userGroup->post('/task', function (Request $request, Response $response) use ($user) {
+            $userId = $request->getAttribute('userId');
+            $response->getBody()->write(json_encode($user->addUserTask($userId, $request->getParsedBody())));
+            return $response;
+        });
+
+        $userGroup->delete('/task/{taskId}', function (Request $request, Response $response) use ($user) {
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
+            $response->getBody()->write(json_encode($user->removeUserTask($route->getArgument('taskId'))));
+            return $response;
+        });
     });
 
     $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($script, $block, $user) {
         $adminGroup->get('/users', function (Request $request, Response $response) use ($user) {
             $response->getBody()->write(json_encode($user->getUsers()));
+            return $response;
+        });
+
+        $adminGroup->put('/user-scripts', function (Request $request, Response $response) use ($user) {
+            $response->getBody()->write(json_encode($user->setUserScripts($request->getParsedBody())));
             return $response;
         });
 
