@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-script-tasks',
@@ -7,8 +8,13 @@ import { Component } from '@angular/core';
 })
 export class ScriptTasksComponent {
   public showNewField = false;
+  public newTaskControl = new FormControl(null, Validators.required);
 
   public save() {
+    if (this.newTaskControl.invalid) {
+      this.newTaskControl.markAsDirty();
+      return;
+    }
     this.showNewField = false;
   }
 }

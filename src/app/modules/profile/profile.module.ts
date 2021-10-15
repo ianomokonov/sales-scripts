@@ -38,7 +38,6 @@ import { AddTransitionComponent } from './sale-script/add-transition/add-transit
 import { AddBlockComponent } from './sale-script/add-block/add-block.component';
 import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-folder.component';
 import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
-import { ConstructorComponent } from './sale-script/constructor/constructor.component';
 import { SaveParamComponent } from './sale-script/save-param/save-param.component';
 import { ScriptTasksComponent } from './sale-script/script-tasks/script-tasks.component';
 
@@ -52,7 +51,6 @@ import { ScriptTasksComponent } from './sale-script/script-tasks/script-tasks.co
     ScriptOrFolderComponent,
     AddBlockComponent,
     OperatorViewComponent,
-    ConstructorComponent,
     SaveParamComponent,
     ScriptTasksComponent,
   ],

@@ -22,7 +22,13 @@
   </div>
   <div class="w-12" *ngIf="showNewField">
     <div class="p-inputgroup">
-      <input type="text" pInputText class="p-inputtext-sm" placeholder="Название" />
+      <input
+        type="text"
+        [formControl]="newTaskControl"
+        pInputText
+        class="p-inputtext-sm"
+        placeholder="Название"
+      />
 
       <button
         type="button"
