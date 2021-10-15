@@ -69,8 +69,8 @@ export class UserService {
     );
   }
 
-  public getUsers(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/admin/users`);
+  public getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.baseUrl}/admin/users`);
   }
 
   public checkAdmin(): Observable<boolean> {
@@ -83,5 +83,9 @@ export class UserService {
 
   public setNewPassword(password: string) {
     return this.http.post(`${this.baseUrl}/user/update-password`, { password });
+  }
+
+  public addAccess(userId: number, elementsIds: number[]) {
+    return this.http.post(`${this.baseUrl}/admin/add-access`, { userId, elementsIds });
   }
 }

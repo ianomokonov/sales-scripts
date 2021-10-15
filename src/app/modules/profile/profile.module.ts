@@ -84,6 +84,7 @@ import { ScriptAccessComponent } from './script-access/script-access.component';
     ScrollPanelModule,
     MenubarModule,
     TabViewModule,
+    TreeModule,
   ],
   providers: [ConfirmationService, ScriptService, DialogService, BlockService, ScriptGuard],
 })
