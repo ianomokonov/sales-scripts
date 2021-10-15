@@ -1,24 +1,21 @@
 <form class="py-2" autocomplete="off">
-  <div class="mb-2">
+  <div class="mb-2" *ngFor="let task of tasks; let last = last">
     <div class="field mb-0 w-12 flex justify-content-center align-items-center">
-      <p-checkbox name="groupname" value="val1" label="Value 1" class="w-12"></p-checkbox>
-      <button pButton pRipple class="p-button-text ml-1 px-1" icon="pi pi-trash"></button>
-    </div>
-    <p-divider layout="horizontal" styleClass="mx-0 my-1 p-0"></p-divider>
-    <div class="field mb-0 w-12 flex justify-content-center align-items-center">
-      <p-checkbox name="groupname" value="val1" label="Value 1" class="w-12"></p-checkbox>
-      <button pButton pRipple class="p-button-text ml-1 px-1" icon="pi pi-trash"></button>
-    </div>
-    <p-divider layout="horizontal" styleClass="mx-0 my-1 p-0"></p-divider>
-    <div class="field w-12 mb-0 flex justify-content-center align-items-center">
       <p-checkbox
         name="groupname"
-        value="val1"
-        label="Lorem ipsum dolomnis eos distinctio quas ratione. Assumenda quod quidem nisi?"
+        [value]="task.isDone"
+        [label]="task.name"
         class="w-12"
       ></p-checkbox>
-      <button pButton pRipple class="p-button-text ml-1 px-1" icon="pi pi-trash"></button>
+      <button
+        pButton
+        pRipple
+        class="p-button-text ml-1 px-1"
+        icon="pi pi-trash"
+        (click)="remove(task.id)"
+      ></button>
     </div>
+    <p-divider layout="horizontal" styleClass="mx-0 my-1 p-0" *ngIf="!last"></p-divider>
   </div>
   <div class="w-12" *ngIf="showNewField">
     <div class="p-inputgroup">
