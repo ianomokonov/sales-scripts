@@ -6,17 +6,42 @@
     <div class="flex align-items-center mt-3 mb-3">
       <p-menu #menu [popup]="true" [model]="buttonItems"></p-menu>
       <div class="scripts-actions flex justify-content-between">
-        <input class="search-input flex-grow-1 mr-3" type="text" placeholder="Поиск..." pInputText
-          [formControl]="searchControl" />
-        <button pButton [disabled]="isError" type="button" icon="pi pi-plus" label="Добавить"
-          (click)="menu.toggle($event)">
-        </button>
+        <p-dropdown
+          [options]="searchedScripts"
+          optionLabel="name"
+          optionValue="id"
+          id="dropdown"
+          [filter]="true"
+          [formControl]="searchControl"
+          filterBy="name"
+          placeholder="Поиск..."
+          [showClear]="true"
+          emptyFilterMessage="Нет данных"
+          class="search-input mr-3 flex-grow-1"
+          (onChange)="getFolder($event.value)"
+        >
+          <ng-template let-block pTemplate="item" class="search-block">
+            {{ block.name }}
+          </ng-template>
+        </p-dropdown>
+        <button
+          pButton
+          [disabled]="isError"
+          type="button"
+          icon="pi pi-plus"
+          label="Добавить"
+          (click)="menu.toggle($event)"
+        ></button>
       </div>
     </div>
     <div class="my-2">
       <p-card>
-        <p-table *ngIf="items.scripts.length; else emptyFolder" [value]="items.scripts" responsiveLayout="scroll"
-          class="table">
+        <p-table
+          *ngIf="items.scripts.length; else emptyFolder"
+          [value]="items.scripts"
+          responsiveLayout="scroll"
+          class="table"
+        >
           <ng-template pTemplate="header">
             <tr>
               <th>Наименование</th>
@@ -27,21 +52,40 @@
           <ng-template pTemplate="body" let-item let-row="rowIndex">
             <tr [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }">
               <td class="col-8 py-1 pl-0">
-                <p-button [routerLink]="['/profile', 'script', item.id]"
-                  *ngIf="!item.isFolder" [label]="item.name" styleClass="p-button-link">
+                <p-button
+                  [routerLink]="['/profile', 'script', item.id]"
+                  *ngIf="!item.isFolder"
+                  [label]="item.name"
+                  styleClass="p-button-link"
+                >
                 </p-button>
-                <button [routerLink]="['/profile', 'scripts', item.id]" *ngIf="item.isFolder"
-                  pButton type="button" icon="pi pi-folder-open" [label]="item.name" class="p-button-text"></button>
+                <button
+                  [routerLink]="['/profile', 'scripts', item.id]"
+                  *ngIf="item.isFolder"
+                  pButton
+                  type="button"
+                  icon="pi pi-folder-open"
+                  [label]="item.name"
+                  class="p-button-text"
+                ></button>
               </td>
               <td class="py-1">
                 {{
-                (item.lastModifyDate ? item.lastModifyDate : item.createDate)
-                | date: 'dd.MM.yyyy HH:mm'
+                  (item.lastModifyDate ? item.lastModifyDate : item.createDate)
+                    | date: 'dd.MM.yyyy HH:mm'
                 }}
               </td>
               <td class="text-right py-1 pr-0">
-                <p-button icon="pi pi-pencil" styleClass="p-button-text" (onClick)="onEditClick(item)"></p-button>
-                <p-button icon="pi pi-trash" styleClass="p-button-text" (onClick)="onDeleteClick(item)"></p-button>
+                <p-button
+                  icon="pi pi-pencil"
+                  styleClass="p-button-text"
+                  (onClick)="onEditClick(item)"
+                ></p-button>
+                <p-button
+                  icon="pi pi-trash"
+                  styleClass="p-button-text"
+                  (onClick)="onDeleteClick(item)"
+                ></p-button>
               </td>
             </tr>
           </ng-template>
@@ -55,19 +99,31 @@
   <ng-template pTemplate>
     <p-scrollPanel [style]="{ 'max-height': '150px' }">
       <div *ngFor="let item of subMenuItems">
-        <button pButton type="button" icon="pi pi-folder-open" [label]="item.name"
-          [routerLink]="['/profile', 'scripts', item.id]" (click)="subMenu.hide()" class="p-button-text"></button>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-folder-open"
+          [label]="item.name"
+          [routerLink]="['/profile', 'scripts', item.id]"
+          (click)="subMenu.hide()"
+          class="p-button-text"
+        ></button>
       </div>
     </p-scrollPanel>
   </ng-template>
 </p-overlayPanel>
 
 <ng-template #emptyFolder>
-  <div *ngIf="!loadingService.isLoading" class="flex flex-column justify-content-center align-items-center">
-    <div class="mb-2">{{getEmptyMessage()}}</div>
+  <div
+    *ngIf="!loadingService.isLoading"
+    class="flex flex-column justify-content-center align-items-center"
+  >
+    <div class="mb-2">Папки и скрипты отсутствуют в текущей директории.</div>
     <div class="flex justify-content-center align-items-center">
-      <span>Создайте <span class="clickable-elem" (click)="addScript()">скрипт</span> или <span class="clickable-elem"
-          (click)="addFolder()">папку</span></span>
+      <span
+        >Создайте <span class="clickable-elem" (click)="addScript()">скрипт</span> или
+        <span class="clickable-elem" (click)="addFolder()">папку</span></span
+      >
     </div>
   </div>
 </ng-template>

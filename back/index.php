@@ -22,6 +22,7 @@ $dataBase = new DataBase();
 $token = new Token();
 $block = new Block($dataBase);
 $script = new Script($dataBase);
+$user = new User($dataBase);
 $app = AppFactory::create();
 $app->setBasePath(rtrim($_SERVER['PHP_SELF'], '/index.php'));
 
@@ -88,7 +89,7 @@ $app->post('/update-password', function (Request $request, Response $response) u
     }
 });
 
-$app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $script) {
+$app->group('/', function (RouteCollectorProxy $group) use ($block, $script, $user) {
     $group->get('folders', function (Request $request, Response $response) use ($script) {
         $userId = $request->getAttribute('userId');
         $isAdmin = $request->getAttribute('isAdmin');
@@ -101,6 +102,14 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
             $userId = $request->getAttribute('userId');
             $isAdmin = $request->getAttribute('isAdmin');
             $response->getBody()->write(json_encode($script->getFolder($isAdmin, $userId, null, isset($query['searchString']) ? $query['searchString'] : '')));
+            return $response;
+        });
+
+        $scriptGroup->get('/search', function (Request $request, Response $response) use ($script) {
+            $query = $request->getQueryParams();
+            $userId = $request->getAttribute('userId');
+            $isAdmin = $request->getAttribute('isAdmin');
+            $response->getBody()->write(json_encode($script->searchScripts($isAdmin, $userId, isset($query['searchString']) ? $query['searchString'] : '')));
             return $response;
         });
 
@@ -214,23 +223,26 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
         });
     });
 
-    $group->group('user',  function (RouteCollectorProxy $userGroup) use ($dataBase) {
-        $userGroup->get('', function (Request $request, Response $response) use ($dataBase) {
+    $group->group('user',  function (RouteCollectorProxy $userGroup) use ($user) {
+        $userGroup->get('', function (Request $request, Response $response) use ($user) {
             $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
             $response->getBody()->write(json_encode($user->read($userId)));
             return $response;
         });
 
-        $userGroup->get('/check-admin', function (Request $request, Response $response) use ($dataBase) {
+        $userGroup->get('/check-admin', function (Request $request, Response $response) use ($user) {
             $userId = $request->getAttribute('userId');
-            $user = new User($dataBase);
             $response->getBody()->write(json_encode($user->checkAdmin($userId)));
             return $response;
         });
     });
 
-    $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($script, $block) {
+    $group->group('admin', function (RouteCollectorProxy $adminGroup) use ($script, $block, $user) {
+        $adminGroup->get('/users', function (Request $request, Response $response) use ($user) {
+            $response->getBody()->write(json_encode($user->getUsers()));
+            return $response;
+        });
+
         $adminGroup->group('/script',  function (RouteCollectorProxy $scriptGroup) use ($script) {
             $scriptGroup->post('', function (Request $request, Response $response) use ($script) {
                 $response->getBody()->write(json_encode($script->create($request->getAttribute('userId'), $request->getParsedBody())));
@@ -307,10 +319,8 @@ $app->group('/', function (RouteCollectorProxy $group) use ($dataBase, $block, $
                 return $response;
             });
         });
-    })->add(function (Request $request, RequestHandler $handler) use ($dataBase) {
+    })->add(function (Request $request, RequestHandler $handler) use ($user) {
         $userId = $request->getAttribute('userId');
-
-        $user = new User($dataBase);
 
         if ($user->checkAdmin($userId)) {
             return $handler->handle($request);

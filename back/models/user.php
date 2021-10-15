@@ -65,14 +65,28 @@ class User
 
     public function getUsers()
     {
-        $query = "SELECT email, phone FROM " . $this->table;
+        $query = "SELECT id, email, phone, isAdmin FROM " . $this->table . " WHERE isAdmin=0";
         $stmt = $this->dataBase->db->query($query);
         $users = [];
         while ($user = $stmt->fetch()) {
-            $user = $user;
+            $user['id'] = $user['id'] * 1;
+            $user['isAdmin'] = $user['isAdmin'] == '1';
+            $user['scriptIds'] = $this->getUserScriptsIds($user['id']);
             $users[] = $user;
         }
         return $users;
+    }
+
+    public function getUserScriptsIds($userId)
+    {
+        $query = "SELECT scriptId FROM UserScript WHERE userId=?";
+        $query = $this->dataBase->db->prepare($query);
+        $query->execute(array($userId));
+        $scriptIds = [];
+        while ($script = $query->fetch()) {
+            $scriptIds[] = $script['scriptId'] * 1;
+        }
+        return $scriptIds;
     }
 
     public function checkAdmin($userId)

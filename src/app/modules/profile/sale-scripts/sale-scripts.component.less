@@ -23,6 +23,13 @@
   width: 100%;
 
   .search-input {
-    max-height: 40px;
+    ::ng-deep .p-dropdown {
+      max-height: 40px;
+      display: flex;
+
+      .p-dropdown-label {
+        padding: 11px;
+      }
+    }
   }
 }

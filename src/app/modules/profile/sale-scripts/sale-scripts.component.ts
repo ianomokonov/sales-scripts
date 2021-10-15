@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { debounceTime } from 'rxjs/operators';
+// import { debounceTime } from 'rxjs/operators';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -23,12 +23,12 @@ export class SaleScriptsComponent implements OnInit {
   public subMenu: OverlayPanel | undefined;
   public subMenuItems: IdNameResponse[] | undefined;
   public items: FolderResponse = { scripts: [] };
-  private folders: IdNameResponse[] = [];
+  public folders: IdNameResponse[] = [];
+  public searchedScripts: ScriptShortView[] = [];
   private lastFolderId: number | null = null;
   public isError: boolean = false;
   public buttonItems: MenuItem[];
   public breadCrumb: MenuItem[];
-  public searchString: string = '';
   public searchControl = new FormControl();
 
   constructor(
@@ -76,23 +76,15 @@ export class SaleScriptsComponent implements OnInit {
       this.scriptService.getFolders().subscribe((folders) => {
         this.folders = folders;
       });
-    });
-    this.router.events.subscribe(() => {
-      this.searchControl.setValue('', { emitEvent: false });
-      this.searchString = '';
-    });
-    this.searchControl.valueChanges.pipe(debounceTime(1000)).subscribe((change: string) => {
-      this.searchString = change;
-      if (this.lastFolderId) {
-        this.getFolder(this.lastFolderId, change);
-      } else {
-        this.getFolder(undefined, change);
-      }
+      this.scriptService.getScripts().subscribe((searchedScripts) => {
+        this.searchedScripts = searchedScripts;
+      });
     });
   }
 
-  public getFolder(id?: number, searchString?: string) {
-    const sub = this.scriptService.getFolder(id, searchString).subscribe(
+  public getFolder(id?: number) {
+    this.searchControl.setValue(null, { emitEvent: false });
+    const sub = this.scriptService.getFolder(id).subscribe(
       (response) => {
         this.items = response;
         const crumb = convertToBreadCrumb(this.items.breadCrumbs);
@@ -128,12 +120,6 @@ export class SaleScriptsComponent implements OnInit {
         this.router.navigate(['scripts', folderId], { relativeTo: this.route.parent });
       }
     });
-  }
-
-  public getEmptyMessage(): string {
-    return this.searchString
-      ? `В текущей директории по поисковому запросу "${this.searchString}" папки и скрипты не найдены.`
-      : 'Папки и скрипты отсутствуют в текущей директории.';
   }
 
   public addScript() {
