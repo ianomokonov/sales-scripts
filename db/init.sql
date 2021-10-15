@@ -187,7 +187,7 @@ ALTER TABLE `Transition` ADD FOREIGN KEY (nextBlockId) REFERENCES `Block` (`id`)
 ALTER TABLE `ScriptParam` ADD FOREIGN KEY (scriptId) REFERENCES `Script` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
 ALTER TABLE `UserScriptParamValue` ADD FOREIGN KEY (paramId) REFERENCES `ScriptParam` (`id`) ON DELETE CASCADE;
-ALTER TABLE `UserTasks` ADD FOREIGN KEY (userScriptId) REFERENCES `UserScript` (`id`) ON DELETE CASCADE;
+ALTER TABLE `UserTasks` ADD FOREIGN KEY (userId) REFERENCES `User` (`id`) ON DELETE CASCADE;
 
 
 --
