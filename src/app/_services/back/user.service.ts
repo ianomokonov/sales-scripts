@@ -4,6 +4,8 @@ import { mergeMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TokensResponse } from 'src/app/_models/responses/tokens.response';
+import { SetUserScripts } from 'src/app/_models/requests/set-user-scripts.request';
+import { UserTask } from 'src/app/_entities/user-task';
 import { TokenService } from '../front/token.service';
 import { environment } from '../../../environments/environment';
 import { User } from '../../_entities/user.entity';
@@ -69,8 +71,24 @@ export class UserService {
     );
   }
 
-  public getUsers(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/admin/users`);
+  public getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.baseUrl}/admin/users`);
+  }
+
+  public getUserTasks(): Observable<UserTask[]> {
+    return this.http.get<UserTask[]>(`${this.baseUrl}/user/tasks`);
+  }
+
+  public addUserTask(name: string): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/user/task`, { name });
+  }
+
+  public removeUserTask(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/user/task/${id}`);
+  }
+
+  public setUserScripts(request: SetUserScripts): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/admin/user-scripts`, request);
   }
 
   public checkAdmin(): Observable<boolean> {
