@@ -15,7 +15,8 @@
   <div class="col-12" [ngClass]="{'hide-tabs': !currentTransition}">
     <ng-container>
       <p-tabView [(activeIndex)]="activeTabId">
-        <p-tabPanel header="Выбор блока" class="sususus">
+        <p-tabPanel header="Выбор блока">
+          <p class="add-block-title mb-2" *ngIf="!currentTransition">Выбор блока</p>
           <div class="p-float-label pb-2">
             <p-dropdown [options]="blocks" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
               formControlName="nextBlockId" filterBy="name" placeholder="&nbsp;" [showClear]="true">
@@ -26,7 +27,9 @@
             <label for="dropdown">Целевой блок</label>
           </div>
         </p-tabPanel>
-        <p-tabPanel header="Создание нового блока или группы">
+        <p-tabPanel header="Создание блока или группы">
+          <p class="add-block-title mb-2" *ngIf="!currentTransition">Создание блока или группы</p>
+          <ng-template pTemplate="header"></ng-template>
           <app-add-block [blockForm]="blockForm" [showBtns]="false"></app-add-block>
         </p-tabPanel>
       </p-tabView>
@@ -41,7 +44,7 @@
   </div>
 </form>
 
-<ng-template #newBlock>
+<!-- <ng-template #newBlock>
   <p class="add-block-title mb-0">Создание блока или группы</p>
   <app-add-block [blockForm]="blockForm" [showBtns]="false"></app-add-block>
-</ng-template>
+</ng-template> -->

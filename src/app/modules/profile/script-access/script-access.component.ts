@@ -12,46 +12,47 @@ import { UserService } from 'src/app/_services/back/user.service';
   styleUrls: ['./script-access.component.less'],
 })
 export class ScriptAccessComponent implements OnInit {
-  public userFormControl = new FormControl('null', [Validators.required]);
-  private users: User[] = [];
-  public usersSearchResult: User[] = [];
+  public userFormControl = new FormControl(null, [Validators.required]);
+  public users: User[] = [];
+  private usersScriptsIds: number[] = [];
   public scripts: ScriptShortView[] = [];
   public treeData: TreeNode[] = [];
-  public selectedElems: any = null;
+  public selectedElems: TreeNode[] = [];
 
   constructor(private userService: UserService, private scriptService: ScriptService) {}
 
   ngOnInit(): void {
     this.userService.getUsers().subscribe((data: User[]) => {
       this.users = data;
-      this.usersSearchResult = this.users;
     });
     this.scriptService.getScripts().subscribe((data: ScriptShortView[]) => {
       this.scripts = data;
-      this.treeData = this.sortData(data);
+      this.treeData = this.getScriptsTree(data);
     });
   }
 
-  public searchUser(event: any) {
-    const filterValue = event.query.toLowerCase();
-    this.usersSearchResult = this.users.filter((user) => user.email.includes(filterValue));
-  }
-
-  private sortData(data: ScriptShortView[]): TreeNode[] {
+  private getScriptsTree(data: ScriptShortView[]): TreeNode[] {
     const tree: TreeNode[] = [];
     data.forEach((elem) => {
+      if (this.usersScriptsIds.includes(elem.id)) {
+        this.selectedElems.push({
+          key: elem.id.toString(),
+          label: elem.name,
+          children: this.getChildrenTree(elem.id),
+        });
+      }
       if (!elem.parentFolderId) {
         tree.push({
           key: elem.id.toString(),
           label: elem.name,
-          children: this.getChildren(elem.id),
+          children: this.getChildrenTree(elem.id),
         });
       }
     });
     return tree;
   }
 
-  private getChildren(id: number): TreeNode[] {
+  private getChildrenTree(id: number): TreeNode[] {
     const childTree: TreeNode[] = [];
     const children = this.scripts.filter((sc) => sc.parentFolderId == id);
     if (children?.length) {
@@ -59,7 +60,7 @@ export class ScriptAccessComponent implements OnInit {
         childTree.push({
           key: child.id.toString(),
           label: child.name,
-          children: this.getChildren(child.id),
+          children: this.getChildrenTree(child.id),
         });
       });
     }
@@ -68,7 +69,7 @@ export class ScriptAccessComponent implements OnInit {
 
   public addAccess() {
     if (this.userFormControl.invalid) {
-      this.userFormControl.markAsTouched();
+      this.userFormControl.markAsDirty();
       return;
     }
     this.userService
@@ -76,8 +77,11 @@ export class ScriptAccessComponent implements OnInit {
         this.userFormControl.value,
         this.selectedElems.map((e: any) => e.key),
       )
-      .subscribe((response) => {
-        console.log(response);
-      });
+      .subscribe();
+  }
+
+  public selectElems(event: any) {
+    this.usersScriptsIds = this.users.find((u) => u.id === event)?.scriptIds || [];
+    this.getScriptsTree(this.scripts);
   }
 }

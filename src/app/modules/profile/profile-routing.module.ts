@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from 'src/app/_guards/admin.guard';
 import { ScriptGuard } from 'src/app/_guards/script.guard';
 import { ProfileComponent } from './profile.component';
 import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
@@ -39,6 +40,7 @@ const routes: Routes = [
       {
         path: 'scripts-access',
         component: ScriptAccessComponent,
+        canActivate: [AdminGuard],
       },
     ],
   },
