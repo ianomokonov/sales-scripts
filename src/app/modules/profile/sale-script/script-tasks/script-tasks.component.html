@@ -1,22 +1,35 @@
 <form class="py-2" autocomplete="off">
-  <div class="mb-2" *ngFor="let task of tasks; let last = last">
-    <div class="field mb-0 w-12 flex justify-content-center align-items-center">
-      <p-checkbox
-        name="groupname"
-        [value]="task.isDone"
-        [label]="task.name"
-        class="w-12"
-      ></p-checkbox>
-      <button
-        pButton
-        pRipple
-        class="p-button-text ml-1 px-1"
-        icon="pi pi-trash"
-        (click)="remove(task.id)"
-      ></button>
+  <ng-container *ngIf="tasks?.length; else noParams">
+    <div class="mb-2" *ngFor="let task of tasks; let last = last">
+      <div class="field mb-0 w-12 flex justify-content-center align-items-center">
+        <p-checkbox
+          name="groupname"
+          [value]="task.isDone"
+          [label]="task.name"
+          class="w-12"
+        ></p-checkbox>
+        <button
+          pButton
+          pRipple
+          class="p-button-text ml-1 px-1"
+          icon="pi pi-trash"
+          (click)="remove(task.id)"
+        ></button>
+      </div>
+      <p-divider layout="horizontal" styleClass="mx-0 my-1 p-0" *ngIf="!last"></p-divider>
     </div>
-    <p-divider layout="horizontal" styleClass="mx-0 my-1 p-0" *ngIf="!last"></p-divider>
-  </div>
+
+    <button
+      *ngIf="!showNewField"
+      pButton
+      pRipple
+      type="button"
+      label="Добавить"
+      class="p-button-raised p-button-text p-button-plain"
+      (click)="showNewField = !showNewField"
+    ></button>
+  </ng-container>
+
   <div class="w-12" *ngIf="showNewField">
     <div class="p-inputgroup">
       <input
@@ -38,14 +51,11 @@
       <button type="button" pButton pRipple icon="pi pi-save" (click)="save()"></button>
     </div>
   </div>
-
-  <button
-    *ngIf="!showNewField"
-    pButton
-    pRipple
-    type="button"
-    label="Добавить"
-    class="p-button-raised p-button-text p-button-plain"
-    (click)="showNewField = !showNewField"
-  ></button>
 </form>
+
+<ng-template #noParams>
+  <div class="p-3 text-center text-bold pb-5 no-data">
+    Нет упражнений,
+    <span class="clickable-elem" (click)="showNewField = !showNewField">создайте первое</span>
+  </div>
+</ng-template>
