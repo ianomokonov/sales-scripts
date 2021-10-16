@@ -68,6 +68,25 @@
   }
 }
 
-.p-button-sm.p-button-icon-only{
+.p-button-sm.p-button-icon-only {
   width: 2rem;
+}
+
+.tasks-btn {
+  transition: unset;
+
+  &.btn-blink {
+    animation: blink 1s infinite;
+  }
+}
+
+@keyframes blink {
+  from {
+    background-color: white;
+    color: var(--primary-color);
+  }
+  to {
+    background-color: var(--primary-color);
+    color: white;
+  }
 }

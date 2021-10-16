@@ -185,7 +185,8 @@
           pRipple
           type="button"
           icon="pi pi-star"
-          class="p-button-text p-button-raised"
+          [ngClass]="{ 'btn-blink': !tasksModalOpen && shouldBlink }"
+          class="p-button-text p-button-raised tasks-btn"
           (click)="onOpenTasksClick()"
         ></button>
       </div>
