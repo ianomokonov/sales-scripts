@@ -72,7 +72,7 @@ class User
         while ($task = $stmt->fetch()) {
             $task['id'] = $task['id'] * 1;
             $task['isDone'] = $task['isDone'] == '1';
-            $task[] = $task;
+            $tasks[] = $task;
         }
         return $tasks;
     }
@@ -82,6 +82,7 @@ class User
         $query = "INSERT INTO UserTask (userId, name) VALUES (?, ?)";
         $query = $this->dataBase->db->prepare($query);
         $query->execute(array($userId, $request['name']));
+        return $this->dataBase->db->lastInsertId();
     }
 
     public function removeUserTask($userTaskId)

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { UserTask } from 'src/app/_entities/user-task';
+import { UserService } from 'src/app/_services/back/user.service';
 
 @Component({
   selector: 'app-script-tasks',
@@ -9,39 +11,32 @@ import { FormControl, Validators } from '@angular/forms';
 export class ScriptTasksComponent {
   public showNewField = false;
   public newTaskControl = new FormControl(null, Validators.required);
-  public tasks = [
-    {
-      id: 1,
-      name: 'Lorem ipsum dolomnis eos distinctio quas ratione. Assumenda quod quidem nisi?',
-      isDone: false,
-    },
-    {
-      id: 2,
-      name: 'Lorem ipsum dolomnis eos distinctio quas ratione. Assumenda quod quidem nisi?',
-      isDone: false,
-    },
-    {
-      id: 3,
-      name: 'Lorem ipsum dolomnis eos distinctio quas ratione. Assumenda quod quidem nisi?',
-      isDone: false,
-    },
-  ];
+  public tasks: UserTask[];
+
+  constructor(private userService: UserService) {
+    this.tasks = this.userService.tasks || [];
+  }
 
   public save() {
     if (this.newTaskControl.invalid) {
       this.newTaskControl.markAsDirty();
       return;
     }
-    this.showNewField = false;
-    this.tasks.push({
-      id: this.tasks.length + 1,
-      name: this.newTaskControl.value,
-      isDone: false,
+
+    this.userService.addUserTask(this.newTaskControl.value).subscribe((id) => {
+      this.tasks.push({
+        id,
+        name: this.newTaskControl.value,
+        isDone: false,
+      });
+      this.showNewField = false;
+      this.newTaskControl.reset();
     });
-    this.newTaskControl.reset();
   }
 
   public remove(id: number) {
-    this.tasks = this.tasks.filter((t) => t.id !== id);
+    this.userService.removeUserTask(id).subscribe(() => {
+      this.tasks = this.tasks.filter((t) => t.id !== id);
+    });
   }
 }
