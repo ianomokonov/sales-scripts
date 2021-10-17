@@ -28,9 +28,9 @@ class Script
 
     public function searchScripts($isAdmin, $userId, $searchString = '')
     {
-        $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND s.name LIKE '%$searchString%'";
+        $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId FROM UserScript us JOIN Script s ON us.scriptId = s.id WHERE us.userId=$userId AND s.name LIKE '%$searchString%' ORDER BY s.isFolder DESC";
         if ($isAdmin) {
-            $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId FROM Script s WHERE s.name LIKE '%$searchString%'";
+            $query = "SELECT s.id, s.name, s.isFolder, s.parentFolderId FROM Script s WHERE s.name LIKE '%$searchString%' ORDER BY s.isFolder DESC";
         }
         $stmt = $this->dataBase->db->query($query);
         $folders = [];
