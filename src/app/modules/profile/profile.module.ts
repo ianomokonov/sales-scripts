@@ -29,6 +29,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { MenubarModule } from 'primeng/menubar';
 import { ScriptGuard } from 'src/app/_guards/script.guard';
+import { CheckboxModule } from 'primeng/checkbox';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -37,9 +38,9 @@ import { AddTransitionComponent } from './sale-script/add-transition/add-transit
 import { AddBlockComponent } from './sale-script/add-block/add-block.component';
 import { ScriptOrFolderComponent } from './_modals/script-or-folder/script-or-folder.component';
 import { OperatorViewComponent } from './sale-script/operator-view/operator-view.component';
-import { ConstructorComponent } from './sale-script/constructor/constructor.component';
 import { SaveParamComponent } from './sale-script/save-param/save-param.component';
 import { ScriptAccessComponent } from './script-access/script-access.component';
+import { ScriptTasksComponent } from './sale-script/script-tasks/script-tasks.component';
 
 @NgModule({
   declarations: [
@@ -51,12 +52,13 @@ import { ScriptAccessComponent } from './script-access/script-access.component';
     ScriptOrFolderComponent,
     AddBlockComponent,
     OperatorViewComponent,
-    ConstructorComponent,
     SaveParamComponent,
     ScriptAccessComponent,
+    ScriptTasksComponent,
   ],
   imports: [
     CommonModule,
+    CheckboxModule,
     PersonalCabinetRoutingModule,
     DividerModule,
     DynamicDialogModule,
