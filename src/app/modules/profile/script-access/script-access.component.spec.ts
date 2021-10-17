@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConstructorComponent } from './constructor.component';
+import { ScriptAccessComponent } from './script-access.component';
 
-describe('ConstructorComponent', () => {
-  let component: ConstructorComponent;
-  let fixture: ComponentFixture<ConstructorComponent>;
+describe('ScriptAccessComponent', () => {
+  let component: ScriptAccessComponent;
+  let fixture: ComponentFixture<ScriptAccessComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConstructorComponent ]
+      declarations: [ ScriptAccessComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConstructorComponent);
+    fixture = TestBed.createComponent(ScriptAccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

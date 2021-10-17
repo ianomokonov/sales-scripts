@@ -1,0 +1,19 @@
+<div class="grid m-0">
+    <div class="col-10 m-auto">
+        <div class="col-12 w-12 mt-1 mb-0">
+            <p-dropdown [options]="users" optionLabel="email" optionValue="id" id="dropdown" [filter]="true"
+                [formControl]="userFormControl" filterBy="email" placeholder="Выбор пользователя"
+                emptyFilterMessage="Нет данных" emptyMessage="Нет данных" class="w-12 access-dropdown"
+                (onChange)="selectElems($event.value)">
+                <ng-template let-user pTemplate="item">
+                    {{ user.email }}
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="col-12 mt-1 mb-3">
+            <p-tree [value]="treeData" selectionMode="checkbox" [(selection)]="selectedElems"></p-tree>
+        </div>
+        <p-button class="col-12" label="Добавить доступ" styleClass="p-button-success" (onClick)="addAccess()">
+        </p-button>
+    </div>
+</div>

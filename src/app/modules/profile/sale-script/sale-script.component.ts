@@ -13,11 +13,14 @@ import { SaveTransitionRequest } from 'src/app/_models/requests/save-transition.
 import { Observable } from 'rxjs';
 import { Transition } from 'src/app/_entities/transition.entity';
 import { ScriptParam } from 'src/app/_entities/script-param';
+import { TasksService } from 'src/app/_services/front/tasks.service';
+import { TasksInfo } from 'src/app/_models/tasks-info';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { AddTransitionComponent } from './add-transition/add-transition.component';
 import { LoadingService } from '../../../_services/front/loading.service';
 import { convertToBreadCrumb } from '../sale-scripts/breadCrumb.converter';
 import { SaveParamComponent } from './save-param/save-param.component';
+import { ScriptTasksComponent } from './script-tasks/script-tasks.component';
 
 @Component({
   selector: 'app-sale-script',
@@ -32,6 +35,9 @@ export class SaleScriptComponent implements OnInit {
   public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
   public params: ScriptParam[] = [];
+  public tasksModalOpen = false;
+  public shouldBlink = false;
+  private blinkInterval: any;
 
   /** Список отмеченных блоков */
   public get favoriteBlocks(): Block[] {
@@ -47,6 +53,7 @@ export class SaleScriptComponent implements OnInit {
     private dialogService: DialogService,
     public loadingService: LoadingService,
     private messageService: MessageService,
+    public tasksService: TasksService,
   ) {}
 
   public ngOnInit() {
@@ -59,6 +66,7 @@ export class SaleScriptComponent implements OnInit {
         });
       }
     });
+    this.setBlinkInterval();
   }
 
   public onFormTransitionClick(
@@ -118,6 +126,25 @@ export class SaleScriptComponent implements OnInit {
           }
         });
       }
+    });
+  }
+
+  public onOpenTasksClick() {
+    this.tasksModalOpen = true;
+    if (this.blinkInterval) {
+      clearInterval(this.blinkInterval);
+      this.shouldBlink = false;
+    }
+
+    const modal = this.modalService.open(ScriptTasksComponent, {
+      header: 'Упражнения',
+      data: { scriptId: this.script?.id },
+    });
+
+    modal.onDestroy.subscribe(() => {
+      this.tasksModalOpen = false;
+      this.tasksService.setTasksInfo(new TasksInfo());
+      this.setBlinkInterval();
     });
   }
 
@@ -308,5 +335,11 @@ export class SaleScriptComponent implements OnInit {
     if (item.id === 'toggle') {
       this.subMenu?.toggle(originalEvent);
     }
+  }
+
+  private setBlinkInterval() {
+    this.blinkInterval = setInterval(() => {
+      this.shouldBlink = !!this.tasksService.tasksInfo?.shouldDoTasks();
+    }, 1000);
   }
 }

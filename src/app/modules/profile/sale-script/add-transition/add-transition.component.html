@@ -12,22 +12,14 @@
       </ng-template>
     </p-selectButton>
   </div>
-  <div class="col-12">
-    <ng-container *ngIf="currentTransition">
+  <div class="col-12" [ngClass]="{'hide-tabs': !currentTransition}">
+    <ng-container>
       <p-tabView [(activeIndex)]="activeTabId">
         <p-tabPanel header="Выбор блока">
+          <p class="add-block-title mb-2" *ngIf="!currentTransition">Выбор блока</p>
           <div class="p-float-label pb-2">
-            <p-dropdown
-              [options]="blocks"
-              optionLabel="name"
-              optionValue="id"
-              id="dropdown"
-              [filter]="true"
-              formControlName="nextBlockId"
-              filterBy="name"
-              placeholder="&nbsp;"
-              [showClear]="true"
-            >
+            <p-dropdown [options]="blocks" optionLabel="name" optionValue="id" id="dropdown" [filter]="true"
+              formControlName="nextBlockId" filterBy="name" placeholder="&nbsp;" [showClear]="true">
               <ng-template let-block pTemplate="item">
                 {{ block.name }}
               </ng-template>
@@ -35,62 +27,24 @@
             <label for="dropdown">Целевой блок</label>
           </div>
         </p-tabPanel>
-        <p-tabPanel header="Создание нового блока или группы">
+        <p-tabPanel header="Создание блока или группы">
+          <p class="add-block-title mb-2" *ngIf="!currentTransition">Создание блока или группы</p>
+          <ng-template pTemplate="header"></ng-template>
           <app-add-block [blockForm]="blockForm" [showBtns]="false"></app-add-block>
         </p-tabPanel>
       </p-tabView>
     </ng-container>
-    <ng-container *ngIf="!currentTransition">
-      <ng-container *ngIf="addLink; else newBlock">
-        <div class="p-float-label pb-2">
-          <p-dropdown
-            [options]="blocks"
-            optionLabel="name"
-            optionValue="id"
-            id="dropdown"
-            [filter]="true"
-            formControlName="nextBlockId"
-            filterBy="name"
-            placeholder="&nbsp;"
-            [showClear]="true"
-            emptyFilterMessage="Нет данных"
-          >
-            <ng-template let-block pTemplate="item">
-              {{ block.name }}
-            </ng-template>
-          </p-dropdown>
-          <label for="dropdown">Целевой блок</label>
-        </div>
-      </ng-container>
-    </ng-container>
   </div>
   <div class="col-12 flex justify-content-end">
-    <button
-      *ngIf="currentTransition"
-      pButton
-      type="button"
-      label="Удалить переход"
-      (click)="delete()"
-      class="p-button-outlined p-button-secondary"
-    ></button>
-    <button
-      pButton
-      type="button"
-      label="Отмена"
-      (click)="modal.destroy()"
-      class="p-button-outlined p-button-secondary ml-1"
-    ></button>
-    <button
-      pButton
-      type="button"
-      label="Сохранить"
-      class="ml-1"
-      (click)="saveTransition()"
-    ></button>
+    <button *ngIf="currentTransition" pButton type="button" label="Удалить переход" (click)="delete()"
+      class="p-button-outlined p-button-secondary"></button>
+    <button pButton type="button" label="Отмена" (click)="modal.destroy()"
+      class="p-button-outlined p-button-secondary ml-1"></button>
+    <button pButton type="button" label="Сохранить" class="ml-1" (click)="saveTransition()"></button>
   </div>
 </form>
 
-<ng-template #newBlock>
+<!-- <ng-template #newBlock>
   <p class="add-block-title mb-0">Создание блока или группы</p>
   <app-add-block [blockForm]="blockForm" [showBtns]="false"></app-add-block>
-</ng-template>
+</ng-template> -->

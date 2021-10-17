@@ -178,7 +178,18 @@
   <p-divider layout="vertical" styleClass=" mr-0 p-0"></p-divider>
   <div class="col-fixed px-0 flex flex-column">
     <div class="flex-grow-1 pl-3">
-      <h2 class="mt-0">Быстрые переходы</h2>
+      <div class="flex align-items-center justify-content-between mb-3">
+        <h2 class="my-0">Быстрые переходы</h2>
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="pi pi-star"
+          [ngClass]="{ 'btn-blink': !tasksModalOpen && shouldBlink }"
+          class="p-button-text p-button-raised tasks-btn"
+          (click)="onOpenTasksClick()"
+        ></button>
+      </div>
       <div class="marked-blocks" *ngIf="favoriteBlocks?.length; else noParams">
         <button
           pButton

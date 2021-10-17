@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TokensResponse } from 'src/app/_models/responses/tokens.response';
@@ -15,7 +15,8 @@ import { User } from '../../_entities/user.entity';
 })
 export class UserService {
   private baseUrl = environment.baseUrl;
-  private user: User | undefined;
+  public user: User | undefined;
+  public tasks: UserTask[] | undefined;
 
   constructor(
     private http: HttpClient,
@@ -64,10 +65,12 @@ export class UserService {
   }
 
   public getUserInfo(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/user`).pipe(
-      tap((user) => {
+    return forkJoin([this.http.get<User>(`${this.baseUrl}/user`), this.getUserTasks()]).pipe(
+      tap(([user, tasks]) => {
         this.user = user;
+        this.tasks = tasks;
       }),
+      map(([user]) => user),
     );
   }
 
@@ -101,5 +104,9 @@ export class UserService {
 
   public setNewPassword(password: string) {
     return this.http.post(`${this.baseUrl}/user/update-password`, { password });
+  }
+
+  public addAccess(userId: number, elementsIds: number[]) {
+    return this.http.post(`${this.baseUrl}/admin/add-access`, { userId, elementsIds });
   }
 }
