@@ -35,6 +35,8 @@ class Script
         $stmt = $this->dataBase->db->query($query);
         $folders = [];
         while ($folder = $stmt->fetch()) {
+            $folder['isFolder'] =  $folder['isFolder'] == '1';
+            $folder['parentFolderId'] =  $folder['parentFolderId'] * 1;
             $folder['id'] =  $folder['id'] * 1;
             $folders[] = $folder;
         }

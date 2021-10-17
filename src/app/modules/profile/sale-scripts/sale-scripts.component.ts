@@ -67,18 +67,25 @@ export class SaleScriptsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       const { id } = params;
-      if (id) {
-        this.lastFolderId = id;
-        this.getFolder(id);
-      } else {
-        this.getFolder();
+      this.lastFolderId = id;
+      this.getFolder(id);
+    });
+
+    this.scriptService.getFolders().subscribe((folders) => {
+      this.folders = folders;
+    });
+    this.getSearchedScripts();
+    this.searchControl.valueChanges.subscribe((script: ScriptShortView) => {
+      if (!script) {
+        return;
       }
-      this.scriptService.getFolders().subscribe((folders) => {
-        this.folders = folders;
-      });
-      this.scriptService.getScripts().subscribe((searchedScripts) => {
-        this.searchedScripts = searchedScripts;
-      });
+
+      if (script.isFolder) {
+        this.getFolder(script.id);
+        return;
+      }
+
+      this.router.navigate(['/profile', 'script', script.id]);
     });
   }
 
@@ -151,25 +158,22 @@ export class SaleScriptsComponent implements OnInit {
     });
     modal.onClose.subscribe((changedItem: ScriptShortView) => {
       if (changedItem) {
-        if (item.parentFolderId !== changedItem.parentFolderId) {
-          const index = this.items.scripts.findIndex(
-            (scriptsItem) => scriptsItem.id === changedItem.id,
-          );
-          this.items.scripts.splice(index, 1);
-          this.messageService.add({
-            severity: 'success',
-            detail: 'Успешно перемещено',
-          });
-        } else {
-          const changedScriptItem = this.items.scripts.find(
-            (scriptsItem) => scriptsItem.id === changedItem.id,
-          );
-          if (changedScriptItem) changedScriptItem.name = changedItem.name;
-          this.messageService.add({
-            severity: 'success',
-            detail: 'Успешно изменено',
-          });
+        const index = this.items.scripts.findIndex(
+          (scriptsItem) => scriptsItem.id === changedItem.id,
+        );
+        if (this.items.scripts[index]) {
+          this.items.scripts[index].name = changedItem.name;
         }
+        if (item.parentFolderId !== changedItem.parentFolderId) {
+          this.items.scripts.splice(index, 1);
+        }
+        this.messageService.add({
+          severity: 'success',
+          detail: `${item.isFolder ? 'Папка' : 'Скрипт'} успешно ${
+            item.isFolder ? 'изменена' : 'изменен'
+          }`,
+        });
+        this.getSearchedScripts();
       }
     });
   }
@@ -208,5 +212,11 @@ export class SaleScriptsComponent implements OnInit {
     if (item.id === 'toggle') {
       this.subMenu?.toggle(originalEvent);
     }
+  }
+
+  private getSearchedScripts() {
+    this.scriptService.getScripts().subscribe((searchedScripts) => {
+      this.searchedScripts = searchedScripts;
+    });
   }
 }

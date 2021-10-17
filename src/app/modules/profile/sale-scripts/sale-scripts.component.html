@@ -9,7 +9,6 @@
         <p-dropdown
           [options]="searchedScripts"
           optionLabel="name"
-          optionValue="id"
           id="dropdown"
           [filter]="true"
           [formControl]="searchControl"
@@ -18,7 +17,6 @@
           [showClear]="true"
           emptyFilterMessage="Нет данных"
           class="search-input mr-3 flex-grow-1"
-          (onChange)="getFolder($event.value)"
         >
           <ng-template let-block pTemplate="item" class="search-block">
             {{ block.name }}
