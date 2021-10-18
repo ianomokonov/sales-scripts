@@ -35,9 +35,6 @@ export class SaleScriptComponent implements OnInit {
   public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
   public params: ScriptParam[] = [];
-  public tasksModalOpen = false;
-  public shouldBlink = false;
-  private blinkInterval: any;
 
   /** Список отмеченных блоков */
   public get favoriteBlocks(): Block[] {
@@ -66,7 +63,6 @@ export class SaleScriptComponent implements OnInit {
         });
       }
     });
-    this.setBlinkInterval();
   }
 
   public onFormTransitionClick(
@@ -126,25 +122,6 @@ export class SaleScriptComponent implements OnInit {
           }
         });
       }
-    });
-  }
-
-  public onOpenTasksClick() {
-    this.tasksModalOpen = true;
-    if (this.blinkInterval) {
-      clearInterval(this.blinkInterval);
-      this.shouldBlink = false;
-    }
-
-    const modal = this.modalService.open(ScriptTasksComponent, {
-      header: 'Упражнения',
-      data: { scriptId: this.script?.id },
-    });
-
-    modal.onDestroy.subscribe(() => {
-      this.tasksModalOpen = false;
-      this.tasksService.setTasksInfo(new TasksInfo());
-      this.setBlinkInterval();
     });
   }
 
@@ -279,6 +256,17 @@ export class SaleScriptComponent implements OnInit {
     });
   }
 
+  public onOpenTasksClick() {
+    const modal = this.modalService.open(ScriptTasksComponent, {
+      header: 'Упражнения',
+      data: { scriptId: this.script?.id },
+    });
+
+    modal.onDestroy.subscribe(() => {
+      this.tasksService.setTasksInfo(new TasksInfo());
+    });
+  }
+
   public onMarkBlock(id: number, event: MouseEvent) {
     const block = this.script?.blocks.find((b) => b.id === id);
 
@@ -335,11 +323,5 @@ export class SaleScriptComponent implements OnInit {
     if (item.id === 'toggle') {
       this.subMenu?.toggle(originalEvent);
     }
-  }
-
-  private setBlinkInterval() {
-    this.blinkInterval = setInterval(() => {
-      this.shouldBlink = !!this.tasksService.tasksInfo?.shouldDoTasks();
-    }, 1000);
   }
 }

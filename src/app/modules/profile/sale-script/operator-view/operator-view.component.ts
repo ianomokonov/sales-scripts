@@ -10,16 +10,20 @@ import {
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { forkJoin } from 'rxjs';
 import { ScriptParam } from 'src/app/_entities/script-param';
 import { Script } from 'src/app/_entities/script.entity';
 import { IdNameResponse } from 'src/app/_models/responses/id-name.response';
+import { TasksInfo } from 'src/app/_models/tasks-info';
 import { TransitionType } from 'src/app/_models/transition-type';
 import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
 import { LoadingService } from 'src/app/_services/front/loading.service';
+import { TasksService } from 'src/app/_services/front/tasks.service';
 import { convertToBreadCrumb } from '../../sale-scripts/breadCrumb.converter';
+import { ScriptTasksComponent } from '../script-tasks/script-tasks.component';
 
 @Component({
   selector: 'app-operator-view',
@@ -35,6 +39,8 @@ export class OperatorViewComponent implements OnInit {
   public breadCrumbs: MenuItem[] = [];
   public blocks: IdNameResponse[] = [];
   public params: ScriptParam[] = [];
+  public shouldBlink = false;
+  private blinkInterval: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -44,6 +50,9 @@ export class OperatorViewComponent implements OnInit {
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
+
+    private modalService: DialogService,
+    public tasksService: TasksService,
   ) {}
 
   public ngOnInit() {
@@ -56,6 +65,8 @@ export class OperatorViewComponent implements OnInit {
         });
       }
     });
+
+    this.setBlinkInterval();
   }
 
   public nextBlock(blockId: number, isLast: boolean, index?: number) {
@@ -186,6 +197,23 @@ export class OperatorViewComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(safeText);
   }
 
+  public onOpenTasksClick() {
+    if (this.blinkInterval) {
+      clearInterval(this.blinkInterval);
+      this.shouldBlink = false;
+    }
+
+    const modal = this.modalService.open(ScriptTasksComponent, {
+      header: 'Упражнения',
+      data: { scriptId: this.script?.id },
+    });
+
+    modal.onDestroy.subscribe(() => {
+      this.tasksService.setTasksInfo(new TasksInfo());
+      this.setBlinkInterval();
+    });
+  }
+
   private saveParams() {
     sessionStorage.setItem('scriptParams', JSON.stringify(this.params));
   }
@@ -196,5 +224,15 @@ export class OperatorViewComponent implements OnInit {
     }
 
     return [];
+  }
+
+  private setBlinkInterval() {
+    this.blinkInterval = setInterval(() => {
+      const blink = !!this.tasksService.tasksInfo?.shouldDoTasks();
+      if (blink !== this.shouldBlink) {
+        this.shouldBlink = blink;
+        this.cdRef.detectChanges();
+      }
+    }, 1000);
   }
 }
