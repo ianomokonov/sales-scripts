@@ -94,7 +94,7 @@ class User
     public function setUserScripts($request)
     {
         $query = "DELETE FROM UserScript WHERE userId=?";
-        $this->dataBase->db->prepare($query)->execute($request['userId']);
+        $this->dataBase->db->prepare($query)->execute(array($request['userId'])); 
         $query = "INSERT INTO UserScript (userId, scriptId) VALUES";
         $props = [];
         foreach ($request['scriptIds'] as $scriptId) {
