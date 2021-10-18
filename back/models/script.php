@@ -116,7 +116,7 @@ class Script
         }
         $script['id'] =  $script['id'] * 1;
         $script['lastModifyDate'] = $script['lastModifyDate'] ? date("Y/m/d H:i:s", strtotime($script['lastModifyDate'])) : null;
-        $script['blocks'] = $isOperator ? [$this->readFirstBlock($scriptId)] : $this->readBlocks($scriptId, $userId, $block);
+        $script['blocks'] = $isOperator ? $this->readFirstBlock($scriptId) : $this->readBlocks($scriptId, $userId, $block);
         if ($isOperator) {
             $script['favoriteBlocks'] = $this->readFavoriteBlocks($scriptId, $userId);
         }
@@ -302,7 +302,7 @@ class Script
         $block = $stmt->fetch();
 
         if (!$block) {
-            return null;
+            return [];
         }
 
         $blockModel = new Block($this->dataBase);
@@ -311,7 +311,7 @@ class Script
         $block['id'] = $block['id'] * 1;
         $block['incommingTransitions'] = $blockModel->getTransitions($block['id']);
         $block['outgoingTransitions'] = $blockModel->getTransitions($block['id'], false);
-        return $block;
+        return [$block];
     }
 
     public function sortBlocks($blocks)

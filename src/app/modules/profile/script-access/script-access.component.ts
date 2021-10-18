@@ -26,12 +26,16 @@ export class ScriptAccessComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe((data: User[]) => {
-      this.users = data;
-    });
+    this.getUsers();
     this.scriptService.getScripts().subscribe((data: ScriptShortView[]) => {
       this.scripts = data;
       this.treeData = this.getScriptsTree(data);
+    });
+  }
+
+  private getUsers() {
+    this.userService.getUsers().subscribe((data: User[]) => {
+      this.users = data;
     });
   }
 
@@ -59,7 +63,7 @@ export class ScriptAccessComponent implements OnInit {
 
   private getChildrenTree(id: number, expanded?: boolean): TreeNode[] {
     const childTree: TreeNode[] = [];
-    const children = this.scripts.filter((sc) => sc.parentFolderId == id);
+    const children = this.scripts.filter((sc) => sc.parentFolderId === id);
     if (children?.length) {
       children.forEach((child) => {
         childTree.push({
@@ -89,8 +93,9 @@ export class ScriptAccessComponent implements OnInit {
             severity: 'success',
             detail: `Права успешно добавлены`,
           });
+          this.getUsers();
         },
-        (e: any) => {
+        () => {
           this.messageService.add({
             severity: 'error',
             detail: `При добавлении прав произошла ошибка`,
@@ -103,5 +108,27 @@ export class ScriptAccessComponent implements OnInit {
     this.selectedElems = [];
     this.usersScriptsIds = this.users.find((u) => u.id === event)?.scriptIds || [];
     this.getScriptsTree(this.scripts);
+  }
+
+  public nodeSelect({ node }: any) {
+    let { parent } = node;
+    while (parent) {
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      if (!this.selectedElems.find((e) => e.key === parent.key)) {
+        this.selectedElems.push(parent);
+      }
+      parent = parent.parent;
+    }
+  }
+
+  public nodeUnselect({ node }: any) {
+    let { parent } = node;
+    while (parent) {
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      if (parent.partialSelected && !this.selectedElems.find((e) => e.key === parent.key)) {
+        this.selectedElems.push(parent);
+      }
+      parent = parent.parent;
+    }
   }
 }
