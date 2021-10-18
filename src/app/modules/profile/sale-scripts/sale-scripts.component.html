@@ -15,6 +15,7 @@
           filterBy="name"
           placeholder="Поиск..."
           [showClear]="true"
+          
           emptyFilterMessage="Нет данных"
           class="search-input mr-3 flex-grow-1"
         >
@@ -51,7 +52,12 @@
             <tr [ngClass]="{ 'none-td-border': row + 1 === items.scripts.length }">
               <td class="col-8 py-1 pl-0">
                 <p-button
-                  [routerLink]="['/profile', 'script', item.id]"
+                  [routerLink]="[
+                    '/profile',
+                    'script',
+                    item.id,
+                    userService.user?.isAdmin ? 'constructor' : 'operator'
+                  ]"
                   *ngIf="!item.isFolder"
                   [label]="item.name"
                   styleClass="p-button-link"

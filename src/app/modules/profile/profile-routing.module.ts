@@ -28,9 +28,9 @@ const routes: Routes = [
         canActivate: [ScriptGuard],
       },
       {
-        path: 'script/:id',
+        path: 'script/:id/constructor',
         component: SaleScriptComponent,
-        canActivate: [ScriptGuard],
+        canActivate: [ScriptGuard, AdminGuard],
       },
       {
         path: 'script/:id/operator',

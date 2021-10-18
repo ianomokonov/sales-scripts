@@ -20,6 +20,7 @@ import { TasksInfo } from 'src/app/_models/tasks-info';
 import { TransitionType } from 'src/app/_models/transition-type';
 import { BlockService } from 'src/app/_services/back/block.service';
 import { ScriptService } from 'src/app/_services/back/script.service';
+import { UserService } from 'src/app/_services/back/user.service';
 import { LoadingService } from 'src/app/_services/front/loading.service';
 import { TasksService } from 'src/app/_services/front/tasks.service';
 import { convertToBreadCrumb } from '../../sale-scripts/breadCrumb.converter';
@@ -37,10 +38,11 @@ export class OperatorViewComponent implements OnInit {
   public subMenuItems: IdNameResponse[] | undefined;
   public script: Script | undefined;
   public breadCrumbs: MenuItem[] = [];
-  public blocks: IdNameResponse[] = [];
   public params: ScriptParam[] = [];
   public shouldBlink = false;
   private blinkInterval: any;
+  public talkInterval: any;
+  private tickes: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -50,7 +52,7 @@ export class OperatorViewComponent implements OnInit {
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-
+    public userService: UserService,
     private modalService: DialogService,
     public tasksService: TasksService,
   ) {}
@@ -59,10 +61,6 @@ export class OperatorViewComponent implements OnInit {
     this.activatedRoute.params.subscribe(({ id }) => {
       if (id) {
         this.getScript(id);
-        this.scriptService.getBlocks(id).subscribe((blocks) => {
-          this.blocks = blocks;
-          this.cdRef.detectChanges();
-        });
       }
     });
 
@@ -82,7 +80,7 @@ export class OperatorViewComponent implements OnInit {
         this.script?.blocks.push(block);
         this.cdRef.detectChanges();
 
-        document.querySelector('.block-tab:last-child')?.scrollIntoView();
+        window.scrollTo(0, document.body.scrollHeight);
       });
     }
   }
@@ -112,6 +110,30 @@ export class OperatorViewComponent implements OnInit {
         return '';
       }
     }
+  }
+  public getBtnLabel() {
+    return this.talkInterval ? 'Завершить разговор' : 'Начать разговор';
+  }
+
+  public toggleScript() {
+    if (this.talkInterval) {
+      clearInterval(this.talkInterval);
+      this.talkInterval = null;
+      this.tickes = 0;
+      // eslint-disable-next-line no-return-assign
+      this.params.forEach((p) => (p.value = undefined));
+      if (this.script) {
+        this.getScript(this.script.id);
+      }
+
+      return;
+    }
+
+    this.talkInterval = setInterval(() => {
+      this.tickes += 1000;
+      this.cdRef.detectChanges();
+    }, 1000);
+    this.cdRef.detectChanges();
   }
 
   private getScript(id: number) {
@@ -159,6 +181,14 @@ export class OperatorViewComponent implements OnInit {
       this.subMenu?.toggle(originalEvent);
       this.cdRef.detectChanges();
     }
+  }
+
+  public getTime() {
+    // const hh = Math.floor(this.tickes / 3600);
+    // const mm = Math.floor((this.tickes % 3600) / 60);
+    // const ss = this.tickes % 60;
+
+    return new Date(this.tickes);
   }
 
   public onParamChange({ target }: any) {

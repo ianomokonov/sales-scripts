@@ -16,6 +16,7 @@ import { User } from '../../_entities/user.entity';
 export class UserService {
   private baseUrl = environment.baseUrl;
   public user: User | undefined;
+  public isAdmin: boolean = false;
   public tasks: UserTask[] | undefined;
 
   constructor(
@@ -95,7 +96,11 @@ export class UserService {
   }
 
   public checkAdmin(): Observable<boolean> {
-    return this.http.get<boolean>(`${this.baseUrl}/user/check-admin`);
+    return this.http.get<boolean>(`${this.baseUrl}/user/check-admin`).pipe(
+      tap((r) => {
+        this.isAdmin = r;
+      }),
+    );
   }
 
   public refreshPassword(email: string): Observable<boolean> {

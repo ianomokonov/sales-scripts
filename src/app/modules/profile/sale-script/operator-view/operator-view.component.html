@@ -4,7 +4,8 @@
       <div class="flex align-items-center">
         <h2 class="my-0 mr-3">{{ script?.name }}</h2>
         <button
-          [routerLink]="['/profile', 'script', script.id]"
+          [routerLink]="['/profile', 'script', script.id, 'constructor']"
+          *ngIf="userService.user?.isAdmin"
           pButton
           type="button"
           [label]="'Режим конструктора'"
@@ -52,18 +53,39 @@
               pRipple
               type="button"
               [label]="transition.name"
+              [disabled]="!talkInterval"
               class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
               (click)="nextBlock(transition.nextBlockId, last, index)"
             ></button>
           </div>
         </div>
       </div>
-      <p-divider *ngIf="!last" layout="horizontal" styleClass="m-3 mx-0 p-0"></p-divider>
+      <p-divider layout="horizontal" styleClass="m-3 mx-0 p-0"></p-divider>
+    </div>
+    <div class="flex align-items-center">
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-danger"
+        [label]="getBtnLabel()"
+        (click)="toggleScript()"
+        *ngIf="talkInterval"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        [label]="getBtnLabel()"
+        (click)="toggleScript()"
+        *ngIf="!talkInterval"
+      ></button>
+      <span class="text-muted ml-3">{{ getTime() | date: 'mm.ss' }}</span>
     </div>
   </div>
   <p-divider layout="vertical" styleClass="m-3 my-0 mr-0 p-0"></p-divider>
   <div class="col-fixed px-0 flex flex-column">
-    <div class="flex-grow-1 pl-3">
+    <div class="pl-3 favorite-blocks">
       <div class="flex align-items-center justify-content-between mb-3">
         <h2 class="my-0">Быстрые переходы</h2>
         <button
@@ -89,7 +111,7 @@
       </div>
     </div>
     <p-divider layout="horizontal" styleClass="m-3 mx-0 p-0"></p-divider>
-    <div class="pl-3">
+    <div class="pl-3 params">
       <div class="flex align-items-center justify-content-between">
         <h2 class="mt-0">Данные</h2>
       </div>

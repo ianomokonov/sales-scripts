@@ -1,10 +1,25 @@
 @import '../sale-script.component.less';
 
-
 .prev-block {
-    opacity: 0.6;
+  opacity: 0.6;
 }
 
 .p-button-sm {
-    min-height: 1.5rem;
+  min-height: 1.5rem;
+}
+
+.col-fixed {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 74px);
+
+  .favorite-blocks {
+    max-height: 70%;
+    overflow-y: auto;
+  }
+
+  .params {
+    max-height: calc(30% - 16px);
+    overflow-y: auto;
+  }
 }

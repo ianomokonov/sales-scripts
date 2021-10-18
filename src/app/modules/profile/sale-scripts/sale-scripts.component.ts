@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { FormControl } from '@angular/forms';
+import { UserService } from 'src/app/_services/back/user.service';
 import { ScriptService } from '../../../_services/back/script.service';
 import { FolderResponse } from '../../../_models/responses/folder.response';
 import { IdNameResponse } from '../../../_models/responses/id-name.response';
@@ -39,6 +40,7 @@ export class SaleScriptsComponent implements OnInit {
     private cs: ConfirmationService,
     private messageService: MessageService,
     public loadingService: LoadingService,
+    public userService: UserService,
   ) {
     this.buttonItems = [
       {
@@ -85,7 +87,13 @@ export class SaleScriptsComponent implements OnInit {
         return;
       }
 
-      this.router.navigate(['/profile', 'script', script.id]);
+      setTimeout(() => {
+        if (this.userService.user?.isAdmin) {
+          this.router.navigate(['/profile', 'script', script.id, 'constructor']);
+          return;
+        }
+        this.router.navigate(['/profile', 'script', script.id, 'operator']);
+      });
     });
   }
 
