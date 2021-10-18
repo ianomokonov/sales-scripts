@@ -35,30 +35,40 @@
     >
       <ng-template pTemplate="header">
         <span class="ql-formats">
-          <select class="ql-header">
-            <option value="1">Heading</option>
-            <option value="2">Subheading</option>
-            <option selected>Normal</option>
+          <select class="ql-header" title="Стиль текста">
+            <option value="1">Заголовок</option>
+            <option value="2">Подзаголовок</option>
+            <option selected>Стандартный</option>
           </select>
-          <select class="ql-font">
-            <option selected>Sans Serif</option>
-            <option value="serif">Serif</option>
-            <option value="monospace">Monospace</option>
+          <select class="ql-font" title="Тип шрифта">
+            <option selected>Без засечек</option>
+            <option value="serif">С засечками</option>
+            <option value="monospace">Моноширинный</option>
           </select>
         </span>
         <span class="ql-formats">
-          <button class="ql-bold" aria-label="Bold"></button>
-          <button class="ql-italic" aria-label="Italic"></button>
-          <button class="ql-underline" aria-label="Underline"></button>
+          <button class="ql-bold" aria-label="Bold" title="Жирный"></button>
+          <button class="ql-italic" aria-label="Italic" title="Курсивный"></button>
+          <button class="ql-underline" aria-label="Underline" title="Подчеркнутый"></button>
         </span>
         <span class="ql-formats">
-          <select class="ql-color"></select>
-          <select class="ql-background"></select>
+          <select class="ql-color" title="Цвет текста"></select>
+          <select class="ql-background" title="Цвет фона"></select>
         </span>
         <span class="ql-formats">
-          <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
-          <button class="ql-list" value="bullet" aria-label="Unordered List"></button>
-          <select class="ql-align">
+          <button
+            class="ql-list"
+            value="ordered"
+            aria-label="Ordered List"
+            title="Нумерованный список"
+          ></button>
+          <button
+            class="ql-list"
+            value="bullet"
+            aria-label="Unordered List"
+            title="Ненумерованный список"
+          ></button>
+          <select class="ql-align" title="Выравнивание">
             <option selected></option>
             <option value="center"></option>
             <option value="right"></option>
@@ -66,12 +76,18 @@
           </select>
         </span>
         <span class="ql-formats">
-          <!-- <button class="ql-link" aria-label="Insert Link"></button>
-          <button class="ql-image" aria-label="Insert Image"></button> -->
-          <button class="ql-code-block" aria-label="Insert Code Block"></button>
-        </span>
-        <span class="ql-formats">
-          <button class="ql-clean" aria-label="Remove Styles"></button>
+          <button class="ql-clean mr-3" aria-label="Remove Styles" title="Очистить стили"></button>
+
+          <!-- <div class="p-relative inline flex flex-column">
+            <button
+              pButton
+              type="button"
+              class="p-button-text param-btn"
+              label="Доступные переменные"
+              (click)="menu.toggle($event)"
+            ></button>
+            <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+          </div> -->
         </span>
       </ng-template>
     </p-editor>

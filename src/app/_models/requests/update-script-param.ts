@@ -1,5 +1,4 @@
-import { SaveScriptParamRequest } from './save-script-param.request';
-
-export interface UpdateScriptParamRequest extends SaveScriptParamRequest {
+export interface UpdateScriptParamRequest {
   id: number;
+  name: string;
 }

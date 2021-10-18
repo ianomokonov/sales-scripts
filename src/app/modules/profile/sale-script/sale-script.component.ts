@@ -204,8 +204,8 @@ export class SaleScriptComponent implements OnInit {
     event?.stopPropagation();
     const modal = this.dialogService.open(AddBlockComponent, {
       header: `${editBlock ? 'Редактирование' : 'Создание нового'} блока или группы`,
-      width: '50%',
-      data: { block: editBlock },
+      width: '75%',
+      data: { block: editBlock, params: this.params },
     });
 
     modal.onClose.subscribe((block) => {

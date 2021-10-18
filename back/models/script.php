@@ -206,7 +206,7 @@ class Script
         try {
             $stmt->execute($query[1]);
         } catch (Exception $e) {
-            throw new Exception('Такой код переменной уже существует в скрипте', 409);
+            throw new Exception('Такое название переменной уже существует в скрипте', 409);
         }
 
 
@@ -224,7 +224,7 @@ class Script
         try {
             $stmt->execute($query[1]);
         } catch (Exception $e) {
-            throw new Exception('Такой код переменной уже существует в скрипте', 409);
+            throw new Exception('Такое название переменной уже существует в скрипте', 409);
         }
 
         return true;

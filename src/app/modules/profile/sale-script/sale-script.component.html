@@ -1,5 +1,5 @@
 <div class="m-0 grid px-3" *ngIf="script">
-  <div class="col">
+  <div class="col overflow-hidden">
     <div class="mb-3">
       <p-breadcrumb
         class="mb-3"
@@ -45,6 +45,7 @@
       <p-orderList [value]="script?.blocks || []" [dragdrop]="true" (onReorder)="onReorder($event)">
         <ng-template let-block pTemplate="item">
           <p-accordionTab
+            [transitionOptions]="'0ms'"
             [(selected)]="block.isOpened"
             class="tab-{{ block.id }}"
             [ngClass]="{ group: block.isGroup }"
@@ -218,8 +219,7 @@
       <ng-container *ngIf="params?.length; else noParams">
         <div *ngFor="let param of params" class="flex align-items-center justify-content-between">
           <div>
-            <small class="block text-muted">{{ param.name }}</small>
-            {{ param.uniquePlaceholder }}
+            {{ param.name }}
           </div>
 
           <div>

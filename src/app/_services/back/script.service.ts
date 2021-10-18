@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ScriptParam } from 'src/app/_entities/script-param';
 import { CreateScriptRequest } from 'src/app/_models/requests/create-script.request';
-import { SaveScriptParamRequest } from 'src/app/_models/requests/save-script-param.request';
 import { SaveScriptRequest } from 'src/app/_models/requests/save-script.request';
 import { UpdateScriptParamRequest } from 'src/app/_models/requests/update-script-param';
 import { FolderResponse } from 'src/app/_models/responses/folder.response';
@@ -68,8 +67,8 @@ export class ScriptService {
     return this.http.get<boolean>(`${this.baseUrl}/script/${scriptId}/is-opened`);
   }
 
-  public addScriptParam(scriptId: number, request: SaveScriptParamRequest): Observable<number> {
-    return this.http.post<number>(`${this.baseUrl}/script/${scriptId}/variable`, request);
+  public addScriptParam(scriptId: number, name: string): Observable<number> {
+    return this.http.post<number>(`${this.baseUrl}/script/${scriptId}/variable`, { name });
   }
 
   public updateScriptParam(request: UpdateScriptParamRequest, id: number): Observable<boolean> {

@@ -181,6 +181,7 @@ export class OperatorViewComponent implements OnInit {
 
   public parseDescription(text: string): SafeHtml {
     let safeText = this.sanitizer.sanitize(SecurityContext.HTML, text);
+
     if (!safeText) {
       return '';
     }
@@ -188,7 +189,7 @@ export class OperatorViewComponent implements OnInit {
       safeText =
         safeText?.replace(
           // eslint-disable-next-line no-useless-escape
-          new RegExp(`\\{\\s*${p.uniquePlaceholder}\\s*\}`, 'gi'),
+          new RegExp(`\\{\\s*${this.sanitizer.sanitize(SecurityContext.HTML, p.name)}\\s*\}`, 'gi'),
           `<input data-param-id="${p.id}" value="${
             p.value || ''
           }" class="param-input" placeholder="${p.name}"/>`,

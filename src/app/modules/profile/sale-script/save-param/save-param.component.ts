@@ -23,7 +23,6 @@ export class SaveParamComponent {
   ) {
     this.paramForm = this.fb.group({
       name: [null, Validators.required],
-      uniquePlaceholder: [null, Validators.required],
     });
 
     if (config.data.param) {
@@ -41,7 +40,7 @@ export class SaveParamComponent {
     const formValue = this.paramForm.getRawValue();
 
     if (!this.isEditing) {
-      this.scriptService.addScriptParam(this.config.data.scriptId, formValue).subscribe(
+      this.scriptService.addScriptParam(this.config.data.scriptId, formValue.name).subscribe(
         () => this.modal.close(true),
         (error) => {
           this.messageService.add({

@@ -36,7 +36,8 @@ export class ScriptTasksComponent {
 
   public remove(id: number) {
     this.userService.removeUserTask(id).subscribe(() => {
-      this.tasks = this.tasks.filter((t) => t.id !== id);
+      const index = this.tasks.findIndex((t) => t.id === id);
+      this.tasks.splice(index, 1);
     });
   }
 }
