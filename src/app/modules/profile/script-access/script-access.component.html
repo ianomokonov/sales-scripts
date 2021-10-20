@@ -4,7 +4,6 @@
       <p-dropdown
         [options]="users"
         optionLabel="email"
-        optionValue="id"
         id="dropdown"
         [filter]="true"
         [formControl]="userFormControl"
@@ -13,7 +12,7 @@
         emptyFilterMessage="Нет данных"
         emptyMessage="Нет данных"
         class="w-12 access-dropdown"
-        (onChange)="selectElems($event.value)"
+        (onChange)="selectElems()"
       >
         <ng-template let-user pTemplate="item">
           {{ user.email }}
