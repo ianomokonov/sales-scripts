@@ -30,6 +30,9 @@ export class ScriptAccessComponent implements OnInit {
     this.scriptService.getScripts().subscribe((data: ScriptShortView[]) => {
       this.scripts = data;
       this.treeData = this.getScriptsTree(data);
+      this.selectedElems.forEach((e) => {
+        e.expanded = true;
+      });
     });
   }
 
@@ -42,22 +45,23 @@ export class ScriptAccessComponent implements OnInit {
   private getScriptsTree(data: ScriptShortView[]): TreeNode[] {
     const tree: TreeNode[] = [];
     data.forEach((elem) => {
-      if (this.usersScriptsIds.includes(elem.id)) {
-        this.selectedElems.push({
-          key: elem.id.toString(),
-          label: elem.name,
-          children: this.getChildrenTree(elem.id, true),
-          expanded: true,
-        });
-      }
       if (!elem.parentFolderId) {
         tree.push({
           key: elem.id.toString(),
           label: elem.name,
-          children: this.getChildrenTree(elem.id),
+          children: this.getChildrenTree(elem.id, !!this.usersScriptsIds.includes(elem.id)),
+          expanded: !!this.usersScriptsIds.includes(elem.id),
         });
       }
     });
+    tree.forEach((tn) => {
+      if (tn.key) {
+        if (this.usersScriptsIds.includes(+tn.key)) {
+          this.selectedElems.push(tn);
+        }
+      }
+    });
+    console.log(tree, this.selectedElems);
     return tree;
   }
 
