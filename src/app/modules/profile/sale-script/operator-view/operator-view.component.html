@@ -80,11 +80,11 @@
         (click)="toggleScript()"
         *ngIf="!talkInterval"
       ></button>
-      <span class="text-muted ml-3">{{ getTime() | date: 'mm.ss' }}</span>
+      <span class="text-muted ml-3">{{ getTime() | date: 'mm:ss' }}</span>
     </div>
   </div>
   <p-divider layout="vertical" styleClass="m-3 my-0 mr-0 p-0"></p-divider>
-  <div class="col-fixed px-0 flex flex-column">
+  <div class="col-fixed col-3 px-0 flex flex-column">
     <div class="pl-3 favorite-blocks">
       <div class="flex align-items-center justify-content-between mb-3">
         <h2 class="my-0">Быстрые переходы</h2>
@@ -94,7 +94,7 @@
           type="button"
           icon="pi pi-star"
           [ngClass]="{ 'btn-blink': shouldBlink }"
-          class="p-button-text p-button-raised tasks-btn"
+          class="p-button-text p-button-raised tasks-btn ml-3"
           (click)="onOpenTasksClick()"
         ></button>
       </div>
@@ -117,16 +117,18 @@
       </div>
 
       <ng-container *ngIf="params?.length; else noParams">
-        <div *ngFor="let param of params" class="mb-1">
-          <small class="block text-muted">{{ param.name }}</small>
-          <div class="flex align-items-center justify-content-between">
+        <div class="p-field p-md-4 w-12 mb-2" *ngFor="let param of params; let index = index">
+          <span class="p-float-label">
             <input
-              class="flex-grow-1"
               type="text"
+              [id]="'inputtext' + index"
+              pInputText
+              class="p-inputtext-sm w-12"
               (input)="setNewParamValue(param)"
               [(ngModel)]="param.value"
             />
-          </div>
+            <label [for]="'inputtext' + index">{{ param.name }}</label>
+          </span>
         </div>
       </ng-container>
     </div>

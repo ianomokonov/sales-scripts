@@ -87,13 +87,13 @@ export class SaleScriptsComponent implements OnInit {
         return;
       }
 
-      setTimeout(() => {
-        if (this.userService.user?.isAdmin) {
-          this.router.navigate(['/profile', 'script', script.id, 'constructor']);
-          return;
-        }
-        this.router.navigate(['/profile', 'script', script.id, 'operator']);
-      });
+      document.querySelector('.p-dropdown-panel')?.remove();
+
+      if (this.userService.user?.isAdmin) {
+        this.router.navigate(['/profile', 'script', script.id, 'constructor']);
+        return;
+      }
+      this.router.navigate(['/profile', 'script', script.id, 'operator']);
     });
   }
 

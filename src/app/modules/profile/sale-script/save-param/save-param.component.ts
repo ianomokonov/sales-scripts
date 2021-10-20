@@ -40,7 +40,7 @@ export class SaveParamComponent {
     const formValue = this.paramForm.getRawValue();
 
     if (!this.isEditing) {
-      this.scriptService.addScriptParam(this.config.data.scriptId, formValue.name).subscribe(
+      this.scriptService.addScriptParam(this.config.data.scriptId, formValue.name.trim()).subscribe(
         () => this.modal.close(true),
         (error) => {
           this.messageService.add({
@@ -53,7 +53,10 @@ export class SaveParamComponent {
     }
 
     this.scriptService
-      .updateScriptParam({ ...formValue, id: this.config.data.param.id }, this.config.data.scriptId)
+      .updateScriptParam(
+        { name: formValue.name.trim(), id: this.config.data.param.id },
+        this.config.data.scriptId,
+      )
       .subscribe(
         () => this.modal.close(true),
         (error) => {
