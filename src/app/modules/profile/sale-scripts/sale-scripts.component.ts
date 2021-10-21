@@ -153,7 +153,9 @@ export class SaleScriptsComponent implements OnInit {
 
     modal.onClose.subscribe((newScriptId: number) => {
       if (newScriptId) {
-        this.router.navigate(['script', newScriptId], { relativeTo: this.route.parent });
+        this.router.navigate(['script', newScriptId, 'constructor'], {
+          relativeTo: this.route.parent,
+        });
       }
     });
   }
