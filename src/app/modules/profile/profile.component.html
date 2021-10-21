@@ -1,16 +1,22 @@
-<div class="container">
-  <p-menubar>
-    <ng-template pTemplate="end">
-      <div class="flex justify-content-between">
-        <p-button *ngIf="isAdmin && !checkUrl()" label="Добавить доступ к скриптам" styleClass="p-button-text"
-          routerLink="scripts-access"></p-button>
-        <p-button *ngIf="checkUrl()" label="Вернуться на главную страницу" styleClass="p-button-text"
-          routerLink="scripts"></p-button>
-        <p-button label="Выход" styleClass="p-button-text" (onClick)="logOut()"></p-button>
-      </div>
-    </ng-template>
-  </p-menubar>
-  <router-outlet></router-outlet>
-</div>
+<p-menubar>
+  <ng-template pTemplate="end">
+    <div class="flex justify-content-between">
+      <p-button
+        *ngIf="isAdmin && !checkUrl()"
+        label="Добавить доступ к скриптам"
+        styleClass="p-button-text"
+        routerLink="scripts-access"
+      ></p-button>
+      <p-button
+        *ngIf="checkUrl()"
+        label="Вернуться на главную страницу"
+        styleClass="p-button-text"
+        routerLink="scripts"
+      ></p-button>
+      <p-button label="Выход" styleClass="p-button-text" (onClick)="logOut()"></p-button>
+    </div>
+  </ng-template>
+</p-menubar>
+<router-outlet></router-outlet>
 
 <p-confirmDialog></p-confirmDialog>
