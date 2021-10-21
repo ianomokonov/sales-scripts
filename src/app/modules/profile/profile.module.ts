@@ -30,6 +30,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { MenubarModule } from 'primeng/menubar';
 import { ScriptGuard } from 'src/app/_guards/script.guard';
 import { CheckboxModule } from 'primeng/checkbox';
+import { PanelModule } from 'primeng/panel';
 import { PersonalCabinetRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { SaleScriptComponent } from './sale-script/sale-script.component';
@@ -68,6 +69,7 @@ import { ScriptTasksComponent } from './sale-script/script-tasks/script-tasks.co
     AccordionModule,
     ConfirmDialogModule,
     OrderListModule,
+    PanelModule,
     TreeModule,
     InputTextModule,
     KeyFilterModule,

@@ -157,7 +157,7 @@ export class OperatorViewComponent implements OnInit {
         this.script.blocks.forEach((b) => {
           b.safeDescription = this.parseDescription(b.description);
         });
-        const crumbs = convertToBreadCrumb(this.script.breadCrumbs, true);
+        const crumbs = convertToBreadCrumb('operator', this.script.breadCrumbs, true);
         this.breadCrumbs = crumbs.data;
         this.subMenuItems = crumbs.crumbs;
         this.loadingService.removeSubscription(sub);

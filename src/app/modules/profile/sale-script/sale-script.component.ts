@@ -178,7 +178,7 @@ export class SaleScriptComponent implements OnInit {
     const sub = this.scriptService.getScript(id).subscribe(
       (script) => {
         this.script = script;
-        const crumbs = convertToBreadCrumb(this.script.breadCrumbs, true);
+        const crumbs = convertToBreadCrumb('constructor', this.script.breadCrumbs, true);
         this.breadCrumbs = crumbs.data;
         this.subMenuItems = crumbs.crumbs;
         this.loadingService.removeSubscription(sub);
