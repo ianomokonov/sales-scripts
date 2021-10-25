@@ -6,7 +6,7 @@
     </span>
   </div>
   <div class="field col-12">
-    <p-selectButton [options]="statusOptions" optionValue="value" formControlName="status">
+    <p-selectButton [options]="statusOptions" optionValue="value" formControlName="status" class="btn-sm">
       <ng-template let-item>
         <span class="status-option {{ item.class }}">{{ item.name }}</span>
       </ng-template>

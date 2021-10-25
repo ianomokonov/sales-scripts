@@ -105,7 +105,7 @@
                       type="button"
                       (click)="onMarkedBlockClick(transition.blockId)"
                       [label]="transition.name"
-                      class="{{ getTransitionButtonClass(transition.status) }}"
+                      class="{{ getTransitionButtonClass(transition.status) }} btn-sm"
                     ></button>
                     <button
                       pButton
@@ -123,7 +123,7 @@
                       icon="pi pi-link"
                       type="button"
                       (click)="onFormTransitionClick(block.id, true, true)"
-                      class="p-button-outlined mr-1 mb-1"
+                      class="p-button-outlined mr-1 mb-1 btn-sm"
                     ></button>
                   </div>
                 </div>
@@ -138,7 +138,7 @@
                       pRipple
                       type="button"
                       [label]="transition.name"
-                      class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
+                      class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1 btn-sm"
                       (click)="onMarkedBlockClick(transition.nextBlockId)"
                     ></button>
                     <button
@@ -157,7 +157,7 @@
                       (click)="onFormTransitionClick(block.id)"
                       icon="pi pi-plus"
                       type="button"
-                      class="p-button-outlined mr-1 mb-1"
+                      class="p-button-outlined mr-1 mb-1 btn-sm"
                     ></button>
                     <button
                       pButton
@@ -165,7 +165,7 @@
                       (click)="onFormTransitionClick(block.id, true)"
                       icon="pi pi-link"
                       type="button"
-                      class="p-button-outlined mr-1 mb-1"
+                      class="p-button-outlined mr-1 mb-1 btn-sm"
                     ></button>
                   </div>
                 </div>

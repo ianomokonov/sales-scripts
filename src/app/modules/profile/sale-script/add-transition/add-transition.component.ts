@@ -61,6 +61,11 @@ export class AddTransitionComponent {
         }),
       );
     }
+
+    const removeDropdown = () => document.querySelector('.p-dropdown-panel')?.remove();
+
+    this.modal.onClose.subscribe(removeDropdown);
+    this.modal.onDestroy.subscribe(removeDropdown);
   }
 
   public delete() {
