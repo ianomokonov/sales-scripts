@@ -14,10 +14,10 @@ import { BlockType } from '../add-block/add-block.component';
   styleUrls: ['./add-transition.component.less'],
 })
 export class AddTransitionComponent {
-  public addLink = false;
   public blocks: IdNameResponse[] = [];
   public transitionForm: FormGroup;
   public currentTransition: Transition;
+  public isIncomming = false;
   public activeTabId = 0;
   public statusOptions = [
     { name: 'Хороший', class: 'success', value: TransitionType.Good },
@@ -34,38 +34,53 @@ export class AddTransitionComponent {
     private fb: FormBuilder,
     private toastService: MessageService,
   ) {
-    this.currentTransition = this.config.data?.transition;
-    this.addLink = this.config.data.addLink;
-    if (!this.addLink) {
-      this.activeTabId = 1;
-    }
-    this.blocks = this.config.data.blocks;
-    this.transitionForm = this.fb.group({
-      name: [this.config.data?.transition?.name || null, Validators.required],
-
-      status: [this.config.data?.transition?.status || TransitionType.Good, Validators.required],
-    });
-
-    this.transitionForm.addControl(
-      'nextBlockId',
-      new FormControl(this.config.data?.transition?.nextBlockId, Validators.required),
-    );
-    if (!this.addLink) {
-      this.transitionForm.controls.nextBlockId.disable();
-      this.transitionForm.addControl(
-        'block',
-        this.fb.group({
-          name: [null, Validators.required],
-          type: [BlockType.Block, Validators.required],
-          description: [null, Validators.required],
-        }),
-      );
-    }
-
     const removeDropdown = () => document.querySelector('.p-dropdown-panel')?.remove();
 
     this.modal.onClose.subscribe(removeDropdown);
     this.modal.onDestroy.subscribe(removeDropdown);
+
+    this.currentTransition = this.config.data?.transition;
+    this.isIncomming = this.config.data.isIncomming;
+    this.blocks = this.config.data.blocks;
+    this.transitionForm = this.fb.group({
+      name: [this.currentTransition?.name || null, Validators.required],
+      status: [this.currentTransition?.status || TransitionType.Good, Validators.required],
+    });
+
+    this.transitionForm.addControl(
+      'nextBlockId',
+      new FormControl(this.currentTransition?.nextBlockId, Validators.required),
+    );
+    if (!this.isIncomming) {
+      const blockForm = this.fb.group({
+        name: [null, Validators.required],
+        type: [BlockType.Block, Validators.required],
+        description: [null, Validators.required],
+      });
+      this.transitionForm.addControl('block', blockForm);
+
+      if (!this.blocks?.length) {
+        this.activeTabId = 1;
+        this.onTabChanged(1);
+        return;
+      }
+
+      this.onTabChanged(0);
+    }
+  }
+
+  public onTabChanged(activeIndex: number) {
+    const blockForm = this.transitionForm.get('block');
+    const nextIdControl = this.transitionForm.get('nextBlockId');
+
+    if (activeIndex === 0) {
+      blockForm?.disable({ emitEvent: false });
+      nextIdControl?.enable({ emitEvent: false });
+      return;
+    }
+
+    blockForm?.enable({ emitEvent: false });
+    nextIdControl?.disable({ emitEvent: false });
   }
 
   public delete() {
@@ -73,14 +88,9 @@ export class AddTransitionComponent {
   }
 
   public saveTransition() {
-    if (this.currentTransition && this.activeTabId !== 1) {
-      this.transitionForm.removeControl('block');
-    }
     if (this.transitionForm.invalid) {
       markInvalidFields(this.transitionForm);
-      if (this.blockForm && (!this.currentTransition || this.activeTabId === 1)) {
-        markInvalidFields(this.blockForm);
-      }
+      markInvalidFields(this.blockForm);
 
       this.toastService.add({
         severity: 'error',
@@ -90,9 +100,12 @@ export class AddTransitionComponent {
     }
 
     const formValue = this.transitionForm.getRawValue();
-    if (formValue.block) {
+    if (this.activeTabId === 1) {
       formValue.block.isGroup = formValue.block.type === BlockType.Group;
       delete formValue.block.type;
+      delete formValue.nextBlockId;
+    } else {
+      delete formValue.block;
     }
 
     this.modal.close(formValue);

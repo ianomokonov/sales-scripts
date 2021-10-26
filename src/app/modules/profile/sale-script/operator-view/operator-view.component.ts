@@ -122,6 +122,7 @@ export class OperatorViewComponent implements OnInit {
       this.tickes = 0;
       // eslint-disable-next-line no-return-assign
       this.params.forEach((p) => (p.value = undefined));
+      this.saveParams();
       if (this.script) {
         this.getScript(this.script.id);
       }
@@ -184,10 +185,6 @@ export class OperatorViewComponent implements OnInit {
   }
 
   public getTime() {
-    // const hh = Math.floor(this.tickes / 3600);
-    // const mm = Math.floor((this.tickes % 3600) / 60);
-    // const ss = this.tickes % 60;
-
     return new Date(this.tickes);
   }
 

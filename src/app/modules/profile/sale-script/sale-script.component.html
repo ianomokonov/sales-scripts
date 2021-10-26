@@ -82,13 +82,6 @@
                     class="p-button-rounded p-button-text"
                     (click)="onMarkBlock(block.id, $event)"
                   ></button>
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    icon="pi pi-bars"
-                    class="p-button-rounded p-button-text"
-                  ></button>
                 </div>
               </div>
             </ng-template>
@@ -113,7 +106,7 @@
                       type="button"
                       icon="pi pi-pencil"
                       class="p-button-rounded p-button-text transition_edit"
-                      (click)="onFormTransitionClick(block.id, true, true, transition)"
+                      (click)="onFormTransitionClick(block.id, true, transition)"
                     ></button>
                   </div>
                   <div class="inline-block">
@@ -122,7 +115,7 @@
                       pRipple
                       icon="pi pi-link"
                       type="button"
-                      (click)="onFormTransitionClick(block.id, true, true)"
+                      (click)="onFormTransitionClick(block.id, true)"
                       class="p-button-outlined ml-1 mr-1 mb-1 btn-sm"
                     ></button>
                   </div>
@@ -147,7 +140,7 @@
                       type="button"
                       icon="pi pi-pencil"
                       class="p-button-rounded p-button-text transition_edit"
-                      (click)="onFormTransitionClick(block.id, true, false, transition)"
+                      (click)="onFormTransitionClick(block.id, false, transition)"
                     ></button>
                   </div>
                   <div class="inline-block">
@@ -158,14 +151,6 @@
                       icon="pi pi-plus"
                       type="button"
                       class="p-button-outlined ml-1 mr-1 mb-1 btn-sm"
-                    ></button>
-                    <button
-                      pButton
-                      pRipple
-                      (click)="onFormTransitionClick(block.id, true)"
-                      icon="pi pi-link"
-                      type="button"
-                      class="p-button-outlined mr-1 mb-1 btn-sm"
                     ></button>
                   </div>
                 </div>

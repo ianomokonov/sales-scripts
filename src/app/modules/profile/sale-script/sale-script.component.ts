@@ -58,21 +58,17 @@ export class SaleScriptComponent implements OnInit {
       if (id) {
         this.getScript(id);
         this.getParams(id);
-        this.scriptService.getBlocks(id).subscribe((blocks) => {
-          this.blocks = blocks;
-        });
       }
     });
   }
 
   public onFormTransitionClick(
     blockId: number,
-    addLink: boolean = false,
     isIncomming: boolean = false,
     transition?: Transition,
   ) {
     const modal = this.modalService.open(AddTransitionComponent, {
-      data: { addLink, blocks: this.blocks, transition },
+      data: { blocks: this.blocks.filter((b) => b.id !== blockId), transition, isIncomming },
       width: '50%',
       header: `${transition ? 'Изменение' : 'Добавление'} ${
         isIncomming ? 'входящего' : 'исходящего'
@@ -178,6 +174,7 @@ export class SaleScriptComponent implements OnInit {
     const sub = this.scriptService.getScript(id).subscribe(
       (script) => {
         this.script = script;
+        this.blocks = this.script?.blocks?.map((b) => ({ id: b.id, name: b.name }));
         const crumbs = convertToBreadCrumb('constructor', this.script.breadCrumbs, true);
         this.breadCrumbs = crumbs.data;
         this.subMenuItems = crumbs.crumbs;

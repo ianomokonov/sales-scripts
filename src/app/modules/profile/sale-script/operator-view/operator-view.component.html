@@ -32,11 +32,6 @@
       class="block-tab"
       [ngClass]="{ 'prev-block': !last }"
     >
-      <div class="flex align-items-center accordion-header">
-        <div class="flex align-items-center flex-grow-1 edit-action pb-3">
-          <h4 class="m-0 pr-1 p-0">{{ block.name }}</h4>
-        </div>
-      </div>
       <div class="accordion-body block">
         <div
           class="block__description mb-3"
@@ -62,7 +57,8 @@
       </div>
       <p-divider layout="horizontal" styleClass="m-3 mx-0 p-0"></p-divider>
     </div>
-    <div class="flex align-items-center">
+    <div class="flex align-items-center justify-content-end">
+      <span class="text-muted mr-3">{{ getTime() | date: 'mm:ss' }}</span>
       <button
         pButton
         pRipple
@@ -80,7 +76,6 @@
         (click)="toggleScript()"
         *ngIf="!talkInterval"
       ></button>
-      <span class="text-muted ml-3">{{ getTime() | date: 'mm:ss' }}</span>
     </div>
   </div>
   <p-divider layout="vertical" styleClass="m-3 my-0 mr-0 p-0"></p-divider>
