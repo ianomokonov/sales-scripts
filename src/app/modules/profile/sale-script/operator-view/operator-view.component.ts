@@ -222,7 +222,7 @@ export class OperatorViewComponent implements OnInit {
           new RegExp(`\\{\\s*${this.sanitizer.sanitize(SecurityContext.HTML, p.name)}\\s*\}`, 'gi'),
           `<input data-param-id="${p.id}" value="${
             p.value || ''
-          }" class="param-input" placeholder="${p.name}"/>`,
+          }" class="param-input" style="font-weight: bold" placeholder="${p.name}"/>`,
         ) || '';
     });
     return this.sanitizer.bypassSecurityTrustHtml(safeText);

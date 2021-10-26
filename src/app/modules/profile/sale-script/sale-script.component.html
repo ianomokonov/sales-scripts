@@ -97,7 +97,7 @@
                 <div class="block__transitions mb-3 block__actions">
                   <div
                     *ngFor="let transition of block.incommingTransitions"
-                    class="block__transition mr-2 mb-1"
+                    class="block__transition mr-1 mb-1"
                   >
                     <button
                       pButton
@@ -123,7 +123,7 @@
                       icon="pi pi-link"
                       type="button"
                       (click)="onFormTransitionClick(block.id, true, true)"
-                      class="p-button-outlined mr-1 mb-1 btn-sm"
+                      class="p-button-outlined ml-1 mr-1 mb-1 btn-sm"
                     ></button>
                   </div>
                 </div>
@@ -131,14 +131,14 @@
                 <div class="block__transitions block__actions">
                   <div
                     *ngFor="let transition of block.outgoingTransitions"
-                    class="block__transition mr-2 mb-1"
+                    class="block__transition mr-1 mb-1"
                   >
                     <button
                       pButton
                       pRipple
                       type="button"
                       [label]="transition.name"
-                      class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1 btn-sm"
+                      class="{{ getTransitionButtonClass(transition.status) }} btn-sm"
                       (click)="onMarkedBlockClick(transition.nextBlockId)"
                     ></button>
                     <button
@@ -157,7 +157,7 @@
                       (click)="onFormTransitionClick(block.id)"
                       icon="pi pi-plus"
                       type="button"
-                      class="p-button-outlined mr-1 mb-1 btn-sm"
+                      class="p-button-outlined ml-1 mr-1 mb-1 btn-sm"
                     ></button>
                     <button
                       pButton

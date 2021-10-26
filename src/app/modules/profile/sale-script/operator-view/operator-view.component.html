@@ -46,7 +46,7 @@
         <div class="block__transitions block__actions">
           <div
             *ngFor="let transition of block.outgoingTransitions"
-            class="block__transition mr-2 mb-1"
+            class="block__transition mr-1 mb-1"
           >
             <button
               pButton
@@ -54,7 +54,7 @@
               type="button"
               [label]="transition.name"
               [disabled]="!talkInterval"
-              class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1"
+              class="{{ getTransitionButtonClass(transition.status) }} mr-1 mb-1 btn-sm"
               (click)="nextBlock(transition.nextBlockId, last, index)"
             ></button>
           </div>
