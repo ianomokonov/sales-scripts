@@ -65,7 +65,8 @@
                   ></button>
                 </div>
 
-                <div class="block__actions">
+                <div class="block__actions flex align-items-center">
+                  <span class="text-muted mr-2">{{ block.lastModifyDate | date: 'dd.MM.yyyy HH:mm' }}</span>
                   <button
                     pButton
                     pRipple
